@@ -100,7 +100,7 @@ if (wallpaper && hero) {
     document.addEventListener('visibilitychange', onVisibility);
     const start = performance.now() + 200;
     const animate = (time: number) => {
-      const progress = Math.max(0, Math.min(1, (time - start) / 1700));
+      const progress = Math.max(0, Math.min(1, (time - start) / 3000));
       applyEntrance(progress);
       if (progress < 1) entranceFrame = requestAnimationFrame(animate);
       else {
