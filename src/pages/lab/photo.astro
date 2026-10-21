@@ -1,0 +1,658 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Icon from '../../components/Icon.astro';
+import '../../styles/lab.css';
+const base = import.meta.env.BASE_URL;
+---
+<Layout
+  title="用字符打印照片 · Telrest"
+  description="把一张照片拆成几万个字符，再按亮度重新拼回来。先看本站图标，也可以换成你自己的照片。"
+>
+  <main id="main" class="lab-page">
+    <header class="lab-hero">
+      <a class="lab-back" href={base}><Icon name="arrow" size={15} class="flip-arrow" />回到首页</a>
+      <p class="lab-eyebrow">TELREST / LAB <span>EXPERIMENT NO. 002</span></p>
+      <h1>用字符打印照片</h1>
+      <p class="lab-lead">把一张照片拆成几万个字符，再按亮度重新拼回来。<br />页面打开时先拿本站图标做示例，然后可以换成你自己的照片。</p>
+      <p class="lab-code">示例 / Demo · <strong>本站图标</strong></p>
+    </header>
+
+    <div class="lab-body lab-body-wide">
+      <section class="card" aria-labelledby="pp-title">
+        <div class="section-head">
+          <h2 id="pp-title">字符画 <span lang="en">/ ASCII art</span></h2>
+          <span id="pp-meta" class="pivot-label" hidden></span>
+        </div>
+
+        <div class="pp-source">
+          <button id="pp-demo" type="button" class="secondary is-on">示例 · 本站图标</button>
+          <button id="pp-pick" type="button" class="secondary">选择自己的照片</button>
+          <input id="pp-file" type="file" accept="image/*" hidden />
+          <span id="pp-status" class="status" role="status">准备中 / Loading</span>
+        </div>
+
+        <div class="actions pp-actions">
+          <button id="pp-play" type="button">播放 / Play</button>
+          <button id="pp-finish" type="button" class="secondary">立即完成 / Finish</button>
+          <button id="pp-hold" type="button" class="secondary pp-hold">按住看原图 / Hold</button>
+        </div>
+
+        <div class="pp-controls">
+          <label>字符宽度 <span lang="en">/ Width</span>
+            <input id="pp-width" type="range" min="80" max="600" step="20" value="320" />
+          </label>
+          <label>字符集 <span lang="en">/ Charset</span>
+            <select id="pp-mode">
+              <option value="detail">详细字符 / Detail</option>
+              <option value="braille">点阵 / Braille</option>
+            </select>
+          </label>
+          <label>速度 <span lang="en">/ Speed</span>
+            <select id="pp-speed">
+              <option value="6">慢 / Slow</option>
+              <option value="3" selected>正常 / Normal</option>
+              <option value="1.2">快 / Fast</option>
+            </select>
+          </label>
+          <label class="pp-check"><input id="pp-light" type="checkbox" /> 浅底黑字</label>
+          <label class="pp-check"><input id="pp-enhance" type="checkbox" checked /> 增强对比</label>
+          <label class="pp-check"><input id="pp-follow" type="checkbox" checked /> 跟随打印</label>
+        </div>
+
+        <div id="pp-stage" class="pp-stage">
+          <pre id="pp-art" class="pp-art"></pre>
+          <img id="pp-original" class="pp-original" alt="原图对照" hidden />
+        </div>
+
+        <p class="hint">每个字符代表原图里的一小块，按区域平均亮度映射到字符梯度。照片只在你的浏览器里处理，不会上传到任何服务器。</p>
+      </section>
+
+      <footer class="lab-foot">
+        <p>原程序用 C 编写，这里把同一套算法搬到了浏览器：灰度公式、67 级字符梯度、直方图拉伸与锐化、点阵误差扩散。</p>
+        <p>参考 <a href="https://github.com/Telrest" target="_blank" rel="noopener noreferrer">Telrest</a> · C → JavaScript</p>
+      </footer>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  // 字符梯度与 C 版本 ascii.c 保持一致 / Same ramp as the C version.
+  const RAMP = ' .`^",:;Il!i~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$';
+  const BITS = [[0, 3], [1, 4], [2, 5], [6, 7]];
+  const MAX_COLS = 600;
+  const MAX_ROWS = 1200;
+  const MAX_SOURCE_SIDE = 2400;
+
+  const base = import.meta.env.BASE_URL;
+  const $ = (id) => document.getElementById(id);
+
+  const stageEl = $('pp-stage');
+  const artEl = $('pp-art');
+  const originalEl = $('pp-original');
+  const statusEl = $('pp-status');
+  const metaEl = $('pp-meta');
+  const widthEl = $('pp-width');
+  const modeEl = $('pp-mode');
+  const speedEl = $('pp-speed');
+  const lightEl = $('pp-light');
+  const enhanceEl = $('pp-enhance');
+  const followEl = $('pp-follow');
+  const playBtn = $('pp-play');
+  const finishBtn = $('pp-finish');
+  const holdBtn = $('pp-hold');
+  const demoSrcBtn = $('pp-demo');
+  const pickSrcBtn = $('pp-pick');
+  const fileEl = $('pp-file');
+
+  const state = {
+    source: null,
+    gray: null,
+    grayKey: '',
+    originalUrl: '',
+    fullText: '',
+    cols: 0,
+    rows: 0,
+    revealed: 0,
+    raf: 0,
+    playing: false,
+  };
+
+  /* ---------- 图片转灰度：公式与 image_io.c 一致 ---------- */
+  function toGray(source, width, height, background) {
+    const canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    ctx.fillStyle = background;
+    ctx.fillRect(0, 0, width, height);
+    ctx.drawImage(source, 0, 0, width, height);
+    const data = ctx.getImageData(0, 0, width, height).data;
+    const gray = new Uint8ClampedArray(width * height);
+    for (let i = 0, p = 0; p < gray.length; i += 4, p++) {
+      const r = data[i], g = data[i + 1], b = data[i + 2], a = data[i + 3];
+      const brightness = Math.floor((299 * r + 587 * g + 114 * b) / 1000);
+      gray[p] = Math.floor((brightness * a + 255 * (255 - a) + 127) / 255);
+    }
+    return { width, height, gray };
+  }
+
+  function stageColor() {
+    return lightEl.checked ? '#f7f7f2' : '#0f1b16';
+  }
+
+  // 只有底色变化才需要重新栅格化；拖宽度滑块时直接复用上次结果。
+  // Only the background colour forces a re-raster; width changes reuse it.
+  function buildImage() {
+    const key = lightEl.checked ? 'light' : 'dark';
+    if (state.gray && state.grayKey === key) return state.gray;
+    const img = state.source.img;
+    let image;
+    if (state.source.kind === 'demo') {
+      image = toGray(img, 1024, 1024, stageColor());
+    } else {
+      const longest = Math.max(img.naturalWidth, img.naturalHeight) || 1;
+      const scale = Math.min(1, MAX_SOURCE_SIDE / longest);
+      const width = Math.max(1, Math.round(img.naturalWidth * scale));
+      const height = Math.max(1, Math.round(img.naturalHeight * scale));
+      image = toGray(img, width, height, stageColor());
+    }
+    state.gray = image;
+    state.grayKey = key;
+    return image;
+  }
+
+  /* ---------- 转换算法：与 ascii.c 一致 ---------- */
+  function grayAverage(image, x0, y0, x1, y1) {
+    let sum = 0;
+    let count = 0;
+    for (let y = y0; y < y1; y++) {
+      const row = y * image.width;
+      for (let x = x0; x < x1; x++) {
+        sum += image.gray[row + x];
+        count++;
+      }
+    }
+    return Math.floor((sum + count / 2) / count);
+  }
+
+  function enhanceSamples(samples, width, height) {
+    const histogram = new Uint32Array(256);
+    const count = width * height;
+    for (let i = 0; i < count; i++) histogram[Math.floor(samples[i]) & 255]++;
+
+    const tail = Math.floor(count / 100);
+    let low = 0;
+    let high = 255;
+    let acc = 0;
+    while (low < 255 && acc + histogram[low] <= tail) acc += histogram[low++];
+    acc = 0;
+    while (high > 0 && acc + histogram[high] <= tail) acc += histogram[high--];
+
+    if (high - low >= 16 && high - low < 240) {
+      let gain = 255 / (high - low);
+      if (gain > 2.2) gain = 2.2;
+      const middle = (low + high) * 0.5;
+      for (let i = 0; i < count; i++) {
+        const value = (samples[i] - middle) * gain + 127.5;
+        samples[i] = value < 0 ? 0 : value > 255 ? 255 : value;
+      }
+    }
+
+    const copy = samples.slice();
+    for (let y = 1; y + 1 < height; y++) {
+      for (let x = 1; x + 1 < width; x++) {
+        const p = y * width + x;
+        const nearby = (copy[p - 1] + copy[p + 1] + copy[p - width] + copy[p + width]) * 0.25;
+        const value = copy[p] + 0.6 * (copy[p] - nearby);
+        samples[p] = value < 0 ? 0 : value > 255 ? 255 : value;
+      }
+    }
+  }
+
+  function ditherSamples(samples, width, height) {
+    for (let y = 0; y < height; y++) {
+      const direction = y % 2 ? -1 : 1;
+      const begin = direction === 1 ? 0 : width - 1;
+      const end = direction === 1 ? width : -1;
+      for (let x = begin; x !== end; x += direction) {
+        const p = y * width + x;
+        let value = samples[p];
+        if (value < 0) value = 0;
+        if (value > 255) value = 255;
+        const rounded = value >= 128 ? 255 : 0;
+        const error = value - rounded;
+        samples[p] = rounded;
+        const next = x + direction;
+        const previous = x - direction;
+        if (next >= 0 && next < width) samples[y * width + next] += error * (7 / 16);
+        if (y + 1 < height) {
+          samples[p + width] += error * (5 / 16);
+          if (previous >= 0 && previous < width) samples[(y + 1) * width + previous] += error * (3 / 16);
+          if (next >= 0 && next < width) samples[(y + 1) * width + next] += error * (1 / 16);
+        }
+      }
+    }
+  }
+
+  function renderAscii(image, options) {
+    const cellAspect = 0.5;
+    let columns = Math.round(options.columns);
+    columns = Math.max(1, Math.min(MAX_COLS, columns));
+
+    const aspect = (image.height / image.width) * cellAspect;
+    if (columns * aspect > MAX_ROWS) columns = Math.max(1, Math.floor(MAX_ROWS / aspect));
+    let height = Math.round(columns * aspect);
+    if (height < 1) height = 1;
+    if (height > MAX_ROWS) height = MAX_ROWS;
+
+    const sampleWidth = columns * (options.braille ? 2 : 1);
+    const sampleHeight = height * (options.braille ? 4 : 1);
+    const samples = new Float32Array(sampleWidth * sampleHeight);
+
+    for (let y = 0; y < sampleHeight; y++) {
+      const y0 = Math.floor((y * image.height) / sampleHeight);
+      let y1 = Math.floor(((y + 1) * image.height) / sampleHeight);
+      if (y1 <= y0) y1 = y0 + 1;
+      for (let x = 0; x < sampleWidth; x++) {
+        const x0 = Math.floor((x * image.width) / sampleWidth);
+        let x1 = Math.floor(((x + 1) * image.width) / sampleWidth);
+        if (x1 <= x0) x1 = x0 + 1;
+        samples[y * sampleWidth + x] = grayAverage(image, x0, y0, x1, y1);
+      }
+    }
+
+    if (options.enhance) enhanceSamples(samples, sampleWidth, sampleHeight);
+    if (options.braille) ditherSamples(samples, sampleWidth, sampleHeight);
+
+    const lines = [];
+    if (!options.braille) {
+      const last = RAMP.length - 1;
+      for (let row = 0; row < height; row++) {
+        let line = '';
+        for (let col = 0; col < columns; col++) {
+          let value = Math.round(samples[row * sampleWidth + col]);
+          if (options.light) value = 255 - value;
+          line += RAMP[Math.floor((value * last) / 255)];
+        }
+        lines.push(line);
+      }
+    } else {
+      for (let row = 0; row < height; row++) {
+        let line = '';
+        for (let col = 0; col < columns; col++) {
+          let mask = 0;
+          for (let dy = 0; dy < 4; dy++) {
+            for (let dx = 0; dx < 2; dx++) {
+              const bright = samples[(row * 4 + dy) * sampleWidth + col * 2 + dx] >= 128;
+              if (bright !== !!options.light) mask |= 1 << BITS[dy][dx];
+            }
+          }
+          line += mask === 0 ? ' ' : String.fromCharCode(0x2800 + mask);
+        }
+        lines.push(line);
+      }
+    }
+    return { lines, columns, height };
+  }
+
+  /* ---------- 显示与逐字播放 ---------- */
+  // 同时按宽和高收缩字号，让整幅字符画完整落在可视区域内，不用滚动。
+  // Shrink by both axes so the whole picture fits at once, without scrolling.
+  function fitStage() {
+    if (!state.cols || !state.rows) return;
+    const availWidth = stageEl.clientWidth - 36;
+    const availHeight = stageEl.clientHeight - 36;
+    if (availWidth <= 0 || availHeight <= 0) return;
+    const byWidth = availWidth / (state.cols * 0.6);
+    const byHeight = availHeight / state.rows;
+    let size = Math.min(byWidth, byHeight);
+    if (!Number.isFinite(size) || size <= 0) return;
+    size = Math.max(1.1, Math.min(14, size));
+    artEl.style.fontSize = size.toFixed(2) + 'px';
+    artEl.style.lineHeight = '1';
+  }
+
+  function stopPlayback() {
+    state.playing = false;
+    if (state.raf) cancelAnimationFrame(state.raf);
+    state.raf = 0;
+  }
+
+  // 按钮文案跟着状态走：完成态显示“运行示例”，中途暂停显示“继续”。
+  function updatePlayLabel() {
+    if (state.playing) {
+      playBtn.textContent = '暂停 / Pause';
+      return;
+    }
+    if (state.revealed > 0 && state.revealed < state.fullText.length) {
+      playBtn.textContent = '继续 / Resume';
+      return;
+    }
+    playBtn.textContent = '重播 / Replay';
+  }
+
+  function play(fromStart) {
+    stopPlayback();
+    const total = state.fullText.length;
+    if (!total) return;
+    if (fromStart || state.revealed >= total) state.revealed = 0;
+    artEl.textContent = state.fullText.slice(0, state.revealed);
+
+    const base0 = state.revealed;
+    const remaining = total - base0;
+    const duration = Math.max(320, Number(speedEl.value) * 1000 * (remaining / total));
+    // 字符很多时降低重绘频率，避免每帧重排十万字符。
+    // Repaint in chunks so huge outputs do not reflow on every frame.
+    const paintStep = Math.max(1, Math.floor(total / 120));
+    const started = performance.now();
+    let last = -1;
+    state.playing = true;
+    updatePlayLabel();
+
+    const tick = (now) => {
+      if (!state.playing) return;
+      const progress = Math.min(1, (now - started) / duration);
+      if (progress >= 1) {
+        state.playing = false;
+        state.revealed = total;
+        artEl.textContent = state.fullText;
+        updatePlayLabel();
+        if (followEl.checked) stageEl.scrollTop = stageEl.scrollHeight;
+        return;
+      }
+      const reveal = base0 + Math.floor(progress * remaining);
+      if (last < 0 || reveal - last >= paintStep) {
+        last = reveal;
+        state.revealed = reveal;
+        artEl.textContent = state.fullText.slice(0, reveal);
+        if (followEl.checked) stageEl.scrollTop = stageEl.scrollHeight;
+      }
+      state.raf = requestAnimationFrame(tick);
+    };
+    state.raf = requestAnimationFrame(tick);
+  }
+
+  function finishNow() {
+    stopPlayback();
+    state.revealed = state.fullText.length;
+    artEl.textContent = state.fullText;
+    updatePlayLabel();
+  }
+
+  function render() {
+    if (!state.source) return;
+    stopPlayback();
+    const image = buildImage();
+    const result = renderAscii(image, {
+      columns: Number(widthEl.value),
+      braille: modeEl.value === 'braille',
+      light: lightEl.checked,
+      enhance: enhanceEl.checked,
+    });
+
+    stageEl.classList.toggle('is-light', lightEl.checked);
+    state.fullText = result.lines.join('\n');
+    state.cols = result.lines.length ? result.lines[0].length : 0;
+    state.rows = result.lines.length;
+
+    metaEl.hidden = false;
+    metaEl.textContent = `${image.width}×${image.height} → ${result.columns}×${result.lines.length}`;
+    statusEl.textContent = '就绪 / Ready';
+
+    fitStage();
+    // 打开即从空白开始逐字打印。
+    // Start typing right away when the page loads.
+    play(true);
+  }
+
+  /* ---------- 原图对照：按住显示，松开恢复 ---------- */
+  function showOriginal(show) {
+    if (!state.originalUrl) return;
+    originalEl.hidden = !show;
+    artEl.hidden = show;
+    holdBtn.classList.toggle('is-on', show);
+  }
+
+  function setOriginal(url) {
+    // 换源时释放上一张的 blob，避免重复选图累积内存。
+    // Release the previous blob when the source changes.
+    if (state.originalUrl && state.originalUrl.startsWith('blob:') && state.originalUrl !== url) {
+      URL.revokeObjectURL(state.originalUrl);
+    }
+    state.originalUrl = url;
+    originalEl.src = url;
+  }
+
+  /* ---------- 载入来源 ---------- */
+  async function loadDemo() {
+    statusEl.textContent = '载入图标 / Loading';
+    try {
+      // 图标 SVG 没有宽高属性，补上再转 data URL，保证能稳定栅格化。
+      // The icon has no width/height, so size it before rasterizing.
+      const response = await fetch(`${base}favicon.svg`);
+      if (!response.ok) throw new Error('fetch failed');
+      const source = await response.text();
+      const sized = source.replace('<svg ', '<svg width="1024" height="1024" ');
+      const url = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(sized);
+      const img = new Image();
+      await new Promise((resolve, reject) => {
+        img.onload = resolve;
+        img.onerror = () => reject(new Error('decode failed'));
+        img.src = url;
+      });
+      state.source = { img, kind: 'demo' };
+      state.gray = null;
+      setOriginal(url);
+      render();
+    } catch (error) {
+      statusEl.textContent = '图标载入失败 / Failed';
+      console.error(error);
+    }
+  }
+
+  function loadFile(file) {
+    const url = URL.createObjectURL(file);
+    statusEl.textContent = '读取照片 / Reading';
+    const img = new Image();
+    img.onload = () => {
+      state.source = { img, kind: 'photo' };
+      state.gray = null;
+      setOriginal(url);
+      render();
+    };
+    img.onerror = () => {
+      statusEl.textContent = '无法读取这张图片 / Cannot read';
+      URL.revokeObjectURL(url);
+    };
+    img.src = url;
+  }
+
+  function markSource(activeButton, otherButton) {
+    activeButton.classList.add('is-on');
+    otherButton.classList.remove('is-on');
+  }
+
+  /* ---------- 事件绑定 ---------- */
+  let widthTimer = 0;
+  widthEl.addEventListener('input', () => {
+    clearTimeout(widthTimer);
+    widthTimer = setTimeout(render, 180);
+  });
+  modeEl.addEventListener('change', render);
+  lightEl.addEventListener('change', render);
+  enhanceEl.addEventListener('change', render);
+
+  playBtn.addEventListener('click', () => {
+    if (state.playing) {
+      stopPlayback();
+      updatePlayLabel();
+    } else {
+      play(false);
+    }
+  });
+  finishBtn.addEventListener('click', finishNow);
+
+  holdBtn.addEventListener('pointerdown', (event) => {
+    event.preventDefault();
+    if (holdBtn.setPointerCapture) {
+      try { holdBtn.setPointerCapture(event.pointerId); } catch {}
+    }
+    showOriginal(true);
+  });
+  for (const name of ['pointerup', 'pointercancel', 'pointerleave']) {
+    holdBtn.addEventListener(name, () => showOriginal(false));
+  }
+  holdBtn.addEventListener('keydown', (event) => {
+    if (event.key === ' ' || event.key === 'Enter') {
+      event.preventDefault();
+      showOriginal(true);
+    }
+  });
+  holdBtn.addEventListener('keyup', () => showOriginal(false));
+  holdBtn.addEventListener('blur', () => showOriginal(false));
+
+  demoSrcBtn.addEventListener('click', () => {
+    markSource(demoSrcBtn, pickSrcBtn);
+    loadDemo();
+  });
+  pickSrcBtn.addEventListener('click', () => fileEl.click());
+  fileEl.addEventListener('change', () => {
+    const file = fileEl.files && fileEl.files[0];
+    if (!file) return;
+    markSource(pickSrcBtn, demoSrcBtn);
+    loadFile(file);
+    fileEl.value = '';
+  });
+
+  window.addEventListener('resize', fitStage);
+  // 容器尺寸变化（窗口缩放、字体加载）时重新适配字号。
+  if ('ResizeObserver' in window) {
+    new ResizeObserver(() => fitStage()).observe(stageEl);
+  }
+
+  // 默认底色跟随站点主题 / Follow the site theme by default.
+  lightEl.checked = document.documentElement.dataset.theme === 'light';
+  loadDemo();
+</script>
+
+<style>
+  /* 字符画页需要更宽的画布，才装得下高密度字符 / Wider canvas for dense output. */
+  .lab-body-wide { width: min(1440px, 100%); }
+
+  .pp-source {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin: 6px 0 18px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .pp-source .status { margin-left: auto; }
+  .lab-page .pp-source button.is-on {
+    background: #23483a;
+    border-color: #23483a;
+    color: #f3f6eb;
+  }
+  [data-theme=dark] .lab-page .pp-source button.is-on {
+    background: #2f5a48;
+    border-color: #2f5a48;
+  }
+
+  .pp-actions { margin-bottom: 6px; }
+
+  .pp-controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(168px, 1fr));
+    gap: 16px 20px;
+    margin: 20px 0 22px;
+    padding-top: 4px;
+  }
+  .lab-page .pp-controls label {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 0;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .lab-page .pp-controls select {
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    padding: 9px 10px;
+    font-size: 11px;
+    border-radius: 9px;
+  }
+  .pp-controls input[type='range'] {
+    width: 100%;
+    margin: 0;
+    accent-color: #23483a;
+    cursor: pointer;
+  }
+  [data-theme=dark] .pp-controls input[type='range'] { accent-color: #8fae78; }
+  .lab-page .pp-controls .pp-check {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    font-weight: 400;
+    font-size: 11.5px;
+    color: var(--muted);
+    padding-top: 20px;
+  }
+  .pp-check input[type='checkbox'] {
+    width: 15px;
+    height: 15px;
+    accent-color: #23483a;
+    margin: 0;
+    cursor: pointer;
+  }
+  [data-theme=dark] .pp-check input[type='checkbox'] { accent-color: #8fae78; }
+
+  .pp-stage {
+    height: clamp(400px, 72vh, 920px);
+    overflow: auto;
+    padding: 18px;
+    border-radius: 16px;
+    background: #0f1b16;
+    border: 1px solid #26382e;
+  }
+  .pp-stage.is-light {
+    background: #f7f7f2;
+    border-color: #dde3d6;
+  }
+  .pp-art {
+    margin: 0 auto;
+    width: max-content;
+    font-family: ui-monospace, Consolas, 'Courier New', monospace;
+    font-size: 6px;
+    line-height: 1;
+    letter-spacing: 0;
+    white-space: pre;
+    color: #dbe7d3;
+  }
+  .pp-stage.is-light .pp-art { color: #24342b; }
+  .pp-original {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 8px;
+  }
+  .lab-page .pp-hold.is-on {
+    background: #2c5846;
+    border-color: #2c5846;
+    color: #f3f6eb;
+  }
+  [data-theme=dark] .lab-page .pp-hold.is-on {
+    background: #3a6b56;
+    border-color: #3a6b56;
+  }
+
+  @media (max-width: 760px) {
+    .pp-stage { height: clamp(320px, 64vh, 640px); padding: 14px; }
+    .pp-controls { grid-template-columns: 1fr; gap: 14px; }
+    .lab-page .pp-controls .pp-check { padding-top: 0; }
+    .pp-source .status { margin-left: 0; }
+  }
+</style>

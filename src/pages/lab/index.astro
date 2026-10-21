@@ -1,0 +1,136 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Icon from '../../components/Icon.astro';
+import { labs } from '../../data/labs';
+import '../../styles/lab.css';
+const base = import.meta.env.BASE_URL;
+const total = String(labs.length).padStart(2, '0');
+---
+<Layout
+  title="实验室 · Telrest"
+  description="Telrest 的小实验室：一些用 C 写成、跑在浏览器里的小东西。"
+>
+  <main id="main" class="lab-page">
+    <header class="lab-hero">
+      <a class="lab-back" href={base}><Icon name="arrow" size={15} class="flip-arrow" />回到首页</a>
+      <p class="lab-eyebrow">TELREST / LAB <span>ALL EXPERIMENTS</span></p>
+      <h1>实验室</h1>
+      <p class="lab-lead">一些自己写着玩的小东西：把 C 写的算法搬进浏览器，再用这站的主题包一层。<br />以后还会陆续加。</p>
+      <p class="lab-code">共 <strong>{total}</strong> 个实验</p>
+    </header>
+
+    <div class="lab-body">
+      <ol class="lab-list">
+        {labs.map((lab) => (
+          <li>
+            <a class="lab-row" href={`${base}${lab.href}`}>
+              <span class="lab-row-num">{lab.number}</span>
+              <span class="lab-row-main">
+                <span class="lab-row-title"><Icon name={lab.icon} size={16} />{lab.title.replace(/\n/g, '')}</span>
+                <span class="lab-row-summary">{lab.summary}</span>
+              </span>
+              <span class="lab-row-meta">{lab.meta}</span>
+              <span class="lab-row-go"><Icon name="arrow" size={16} /></span>
+            </a>
+          </li>
+        ))}
+      </ol>
+
+      <footer class="lab-foot">
+        <p>实验还在增加中。想看别的，欢迎给我写信。</p>
+      </footer>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .lab-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .lab-row {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 22px;
+    padding: 24px 26px;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    background: var(--panel);
+    box-shadow: 0 18px 50px #26463207;
+    transition: transform .2s, border-color .2s, box-shadow .2s;
+  }
+  .lab-row:hover {
+    transform: translateY(-2px);
+    border-color: #c6d5b4;
+    box-shadow: 0 16px 44px #26463214;
+  }
+  [data-theme=dark] .lab-row:hover { border-color: #4e6a45; }
+
+  .lab-row-num {
+    font-family: Georgia, serif;
+    font-size: 26px;
+    line-height: 1;
+    color: #b3c39c;
+    letter-spacing: 1px;
+  }
+  [data-theme=dark] .lab-row-num { color: #7d936a; }
+
+  .lab-row-main { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+  .lab-row-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-family: var(--serif);
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: .4px;
+    color: var(--ink);
+  }
+  .lab-row-title :global(svg) { flex-shrink: 0; color: var(--accent); }
+  .lab-row-summary {
+    font-size: 11.5px;
+    line-height: 1.9;
+    color: var(--muted);
+  }
+  .lab-row-meta {
+    font-size: 9px;
+    letter-spacing: 1.4px;
+    color: var(--muted);
+    border: 1px solid var(--line);
+    border-radius: 50px;
+    padding: 6px 11px;
+    white-space: nowrap;
+  }
+  .lab-row-go {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    color: var(--muted);
+    transition: color .2s, border-color .2s, transform .2s;
+  }
+  .lab-row:hover .lab-row-go {
+    color: var(--ink);
+    border-color: #b9cba2;
+    transform: translateX(2px);
+  }
+  [data-theme=dark] .lab-row:hover .lab-row-go { border-color: #4e6a45; }
+
+  @media (max-width: 760px) {
+    .lab-row {
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 14px;
+      padding: 20px;
+    }
+    .lab-row-meta { display: none; }
+    .lab-row-num { font-size: 20px; }
+    .lab-row-title { font-size: 16px; }
+  }
+</style>

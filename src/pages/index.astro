@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import Icon from '../components/Icon.astro';
 import { site, categories, posts } from '../data/site';
+import { labs } from '../data/labs';
 import '../styles/immersive.css';
 const base = import.meta.env.BASE_URL;
 ---
@@ -81,10 +82,16 @@ const base = import.meta.env.BASE_URL;
       </section>
 
       <section id="lab" class="lab-section wrap section-block" aria-labelledby="lab-title">
-        <div class="section-heading" data-reveal><div><p class="eyebrow"><span>02</span> THE LITTLE LAB</p><h2 id="lab-title" class="screen-reader-only">实验室</h2></div><span class="label-outline"><span class="status-dot"></span> 1 个实验已开放</span></div>
-        <div class="lab-banner" data-reveal>
-          <div class="lab-copy"><span class="lab-badge"><Icon name="code" size={15} /> EXPERIMENT NO. 001</span><h3>小伙的快乐排序，<br />现在可以玩了。</h3><p>C 写的快排，编译成 WebAssembly 在浏览器里跑。<br />输入数字，一步步看它怎样分组。</p><a class="coming-soon lab-enter" href={`${base}lab/quicksort/`}>进入实验 <span>OPEN THE LAB</span><Icon name="arrow" size={18} /></a></div>
-          <div class="lab-art" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><span class="floating-spark spark-one">✳</span><span class="floating-spark spark-two">✦</span><div class="mini-window"><div class="mini-toolbar"><i></i><i></i><i></i><span>hello, curiosity.</span></div><div class="mini-content"><span class="code-symbol">&lt; / &gt;</span><span class="mini-caption">MADE OF LITTLE IDEAS</span></div></div><span class="floating-tag tag-play">▷ &nbsp; play a little</span><span class="floating-tag tag-build">✧ &nbsp; build something</span></div>
+        <div class="section-heading" data-reveal><div><p class="eyebrow"><span>02</span> THE LITTLE LAB</p><h2 id="lab-title" class="screen-reader-only">实验室</h2></div><a class="label-outline lab-all" href={`${base}lab/`}><span class="status-dot"></span><span>{labs.length} 个实验已开放</span><span class="lab-all-more">查看全部<Icon name="arrow" size={12} /></span></a></div>
+        <div class="lab-grid" data-reveal>
+          {labs.map((lab) => (
+            <a class="lab-card" href={`${base}${lab.href}`}>
+              <span class="lab-badge"><Icon name={lab.icon} size={15} /> EXPERIMENT NO. {lab.number}</span>
+              <h3>{lab.title}</h3>
+              <p>{lab.summary}</p>
+              <span class="coming-soon lab-enter">进入实验 <span>OPEN</span><Icon name="arrow" size={18} /></span>
+            </a>
+          ))}
         </div>
       </section>
 
@@ -153,6 +160,96 @@ const base = import.meta.env.BASE_URL;
   .lab-enter svg { transition: transform .2s; }
   .lab-enter:hover { color: #eef3e2; gap: 16px; }
   .lab-enter:hover svg { transform: translateX(3px); }
+
+  .lab-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  .lab-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 30px 32px 28px;
+    border-radius: 24px;
+    border: 1px solid #345449;
+    background: linear-gradient(155deg, #22493c, #1a3a30 58%, #16302a);
+    color: #f1f3e7;
+    transition: transform .25s, box-shadow .25s, border-color .25s;
+  }
+  .lab-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: radial-gradient(ellipse at 86% 12%, rgba(184,206,136,.18), transparent 60%);
+    pointer-events: none;
+  }
+  .lab-card > * { position: relative; z-index: 1; }
+  .lab-card:hover {
+    transform: translateY(-4px);
+    border-color: #4d7358;
+    box-shadow: 0 18px 50px #0b241e2e;
+  }
+  .lab-card .lab-badge { margin-bottom: 18px; }
+  .lab-card h3 {
+    font-family: var(--serif);
+    font-size: 25px;
+    line-height: 1.5;
+    font-weight: 500;
+    margin-bottom: 12px;
+    white-space: pre-line;
+  }
+  .lab-card p {
+    font-size: 11.5px;
+    line-height: 2;
+    color: #b3c3b6;
+    margin-bottom: 22px;
+  }
+  .lab-card .coming-soon { margin-top: auto; }
+
+  .lab-all {
+    color: var(--accent);
+    transition: border-color .25s, color .25s, background-color .25s;
+  }
+  .lab-all:focus-visible {
+    outline: 3px solid #b8ce88;
+    outline-offset: 3px;
+  }
+  .lab-all-more {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    max-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    transition: max-width .32s cubic-bezier(.2,.8,.3,1), opacity .22s ease, margin-left .32s;
+  }
+  @media (hover: hover) {
+    .lab-all:hover,
+    .lab-all:focus-visible {
+      border-color: #bccda6;
+      color: var(--ink);
+      background-color: #eef3e4;
+    }
+    .lab-all:hover .lab-all-more,
+    .lab-all:focus-visible .lab-all-more {
+      max-width: 130px;
+      opacity: 1;
+      margin-left: 4px;
+    }
+  }
+  @media (hover: none) {
+    .lab-all-more { max-width: 130px; opacity: 1; margin-left: 4px; }
+  }
+  [data-theme=dark] .lab-all:hover,
+  [data-theme=dark] .lab-all:focus-visible {
+    background-color: #ffffff0f;
+    border-color: #5c7350;
+    color: #e6efdb;
+  }
 
   .about-contact {
     margin: 20px 0 0;
