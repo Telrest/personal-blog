@@ -1,0 +1,55 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Icon from '../../components/Icon.astro';
+import { site } from '../../data/site';
+import { aboutLetter } from '../../data/about';
+import '../../styles/about.css';
+const base = import.meta.env.BASE_URL;
+---
+<Layout title="关于我 · Telrest" description="一封来自 Telrest 的自我介绍。">
+  <div class="letter-page">
+    <div class="letter-background" aria-hidden="true"><img src={`${base}images/forest-wallpaper.jpg`} alt="" width="4800" height="2700" /></div>
+    <div class="letter-shell">
+      <nav class="letter-navigation" aria-label="信件页面导航">
+        <a class="button glass letter-back" href={`${base}#about`}><Icon name="arrow" class="flip-arrow" size={16} /> 回到个人名片</a>
+        <button class="icon-button glass letter-theme-toggle" aria-label="切换为浅色模式" aria-pressed="true"><Icon name="sun" size={18} /></button>
+      </nav>
+
+      <main id="main" class="letter-paper" aria-labelledby="letter-title">
+        <header class="letter-heading">
+          <div><p class="letter-recipient">致，{aboutLetter.recipient}。</p><h1 id="letter-title">{aboutLetter.title}</h1></div>
+          <img class="letter-portrait" src={`${base}images/avatar.jpg`} alt="Telrest 的头像" width="640" height="640" />
+        </header>
+        <article class="letter-body" aria-label="自我介绍正文">
+          {aboutLetter.paragraphs.map(paragraph => <p>{paragraph}</p>)}
+        </article>
+
+        {aboutLetter.unfinished && (
+          <aside class="letter-unfinished" aria-label="自我介绍仍在补充">
+            <Icon name="pen" size={21} />
+            <div><p>{aboutLetter.unfinishedTitle}</p><span>{aboutLetter.unfinishedNote}</span></div>
+          </aside>
+        )}
+
+        <div class="letter-signoff"><span>很高兴在这里遇见你。</span><p>Telrest<Icon name="leaf" size={22} /></p></div>
+        <footer class="letter-footer"><a class="letter-action" href={`mailto:${site.email}`}><Icon name="pen" size={16} /> 给我回信 <Icon name="arrow" size={15} /></a><a class="letter-action" href={`${base}lab/`}>去实验室逛逛 <Icon name="arrow" size={15} /></a></footer>
+      </main>
+      <p class="letter-colophon">Telrest · 个人博客</p>
+    </div>
+  </div>
+  <script>
+    const themeButton = document.querySelector<HTMLButtonElement>('.letter-theme-toggle');
+    const updateThemeButton = () => {
+      const dark = document.documentElement.dataset.theme !== 'light';
+      themeButton?.setAttribute('aria-pressed', String(dark));
+      themeButton?.setAttribute('aria-label', dark ? '切换为浅色模式' : '切换为深色模式');
+    };
+    updateThemeButton();
+    themeButton?.addEventListener('click', () => {
+      const next = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light';
+      document.documentElement.dataset.theme = next;
+      try { localStorage.setItem('telrest-theme-v2', next); } catch {}
+      updateThemeButton();
+    });
+  </script>
+</Layout>

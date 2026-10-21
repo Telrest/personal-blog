@@ -706,5 +706,8 @@ const base = import.meta.env.BASE_URL;
     .pp-controls { grid-template-columns: 1fr; gap: 14px; }
     .lab-page .pp-controls .pp-check { padding-top: 0; }
     .pp-source .status { margin-left: 0; }
+    /* iOS 聚焦小于 16px 的控件会强制放大页面。 */
+    /* iOS zooms the page when a focused control is under 16px. */
+    .lab-page .pp-controls select { font-size: 16px; }
   }
 </style>

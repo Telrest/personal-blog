@@ -161,3 +161,11 @@ html:not([data-theme=light]) .content-surface .category-tab.selected{color:#d2ee
 @media(max-height:600px){.hero-avatar-image{width:104px}.hero-intro-copy{top:calc(50% + 52px + var(--avatar-lift,0px) + 17px)}.hero .hero-name{font-size:30px;margin-bottom:8px}.hero-intro-copy>p{font-size:12px}.wallpaper-scroll{bottom:0;min-height:34px}}
 @media(prefers-reduced-motion:reduce){.hero-avatar-image,.hero-intro-copy{animation:none}.reveal-ready [data-reveal]{opacity:1;transform:none;filter:none;transition:none}}
 @media print{.wallpaper-scene,.site-header,.wallpaper-scroll{display:none}.content-surface{--ink:#203d36;--muted:#566c62;--card-surface:white}.content-surface::before{display:none}.content-surface .lab-card,.content-surface .journal-panel{background:white;color:#203d36;box-shadow:none}.content-surface .section-heading h2,.content-surface .section-heading .eyebrow,.content-surface .about-section,.content-surface .about-right>p,.content-surface .site-footer{color:#203d36}.reveal-ready [data-reveal]{opacity:1;transform:none;filter:none}}
+
+/* The profile opens a letter. 个人名片是自我介绍信的入口。 */
+.about-profile-link { margin: -14px; padding: 14px; border: 1px solid transparent; border-radius: 21px; transition: background .25s, border-color .25s; }
+.about-profile-link:hover { background: rgba(220, 248, 222, .06); border-color: rgba(222, 245, 222, .18); }
+.about-profile-link > div { min-width: 0; }
+.profile-read-more { display: inline-flex; align-items: center; gap: 7px; margin-top: 9px; font-size: 11px; color: #c7e2ce; }
+.profile-read-more svg { transition: transform .25s; }
+.about-profile-link:hover .profile-read-more svg { transform: translate(2px, -2px); }

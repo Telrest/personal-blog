@@ -1,0 +1,75 @@
+/* A quiet letter over the familiar wallpaper. 在熟悉的壁纸上，留一页安静的信。 */
+.letter-page {
+  --letter-paper: rgba(19, 38, 31, .96);
+  --letter-ink: #edf3e7;
+  --letter-muted: #b2c4b6;
+  --letter-accent: #b4d8bf;
+  --letter-line: rgba(201, 230, 207, .14);
+  --letter-edge: rgba(215, 242, 219, .22);
+  position: relative;
+  isolation: isolate;
+  min-height: 100svh;
+  color: var(--letter-ink);
+  /* 壁纸是固定层；这里补底色，避免 iOS 橡皮筋滚动时露出白底。 */
+  /* The wallpaper is a fixed layer; this stops white flash on iOS overscroll. */
+  background: #173c31;
+  padding: 28px 24px 20px;
+}
+html[data-theme='light'] .letter-page {
+  --letter-paper: rgba(247, 248, 237, .97);
+  --letter-ink: #29493d;
+  --letter-muted: #627363;
+  --letter-accent: #47765d;
+  --letter-line: rgba(47, 82, 53, .15);
+  --letter-edge: rgba(255, 255, 242, .8);
+}
+.letter-background { position: fixed; z-index: -1; inset: 0; overflow: hidden; pointer-events: none; background: #173c31; }
+.letter-background > img { width: calc(100% + 32px); height: calc(100% + 32px); max-width: none; position: absolute; inset: -16px; object-fit: cover; object-position: 61% 50%; filter: blur(7px); }
+.letter-background::after { content: ''; position: absolute; inset: 0; background: rgba(5, 24, 18, .52); }
+.letter-shell { width: min(860px, 100%); margin: 0 auto; }
+.letter-navigation { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 26px; color: #edf4e8; }
+.letter-back { min-height: 42px; padding-inline: 17px; font-size: 12px; background-color: rgba(15, 44, 31, .25); }
+.letter-back .flip-arrow { transform: rotate(180deg); }
+.letter-theme-toggle { width: 42px; height: 42px; }
+.letter-paper { position: relative; padding: 46px 62px 26px; background: var(--letter-paper); border: 1px solid var(--letter-edge); border-radius: 26px; box-shadow: 0 30px 100px rgba(4, 21, 13, .25), inset 0 1px 0 rgba(255, 255, 240, .1); }
+.letter-heading { display: flex; align-items: center; justify-content: space-between; gap: 28px; padding-bottom: 28px; margin-bottom: 30px; border-bottom: 1px solid var(--letter-line); }
+.letter-recipient { font-size: 12px; letter-spacing: 1.5px; color: var(--letter-muted); margin: 0 0 15px; }
+.letter-heading h1 { font-family: var(--serif); font-size: clamp(26px, 3vw, 35px); line-height: 1.6; font-weight: 500; letter-spacing: 1px; margin: 0; text-wrap: balance; }
+.letter-portrait { width: 66px; height: 66px; border-radius: 50%; border: 2px solid rgba(255, 255, 245, .8); object-fit: cover; flex-shrink: 0; box-shadow: 0 0 0 5px rgba(157, 197, 161, .08); }
+.letter-body { font-family: var(--serif); font-size: 16px; line-height: 2.1; letter-spacing: .4px; }
+.letter-body p { margin: 0 0 20px; overflow-wrap: anywhere; }
+.letter-body p:last-child { margin-bottom: 0; }
+.letter-unfinished { display: flex; align-items: flex-start; gap: 15px; margin: 30px 0; padding: 19px 21px; border: 1px dashed var(--letter-line); border-radius: 14px; color: var(--letter-muted); background: rgba(139, 179, 134, .035); }
+.letter-unfinished > svg { color: var(--letter-accent); margin-top: 2px; }
+.letter-unfinished p { color: var(--letter-accent); font-size: 13px; line-height: 1.8; margin: 0 0 4px; }
+.letter-unfinished span { display: block; font-size: 12px; line-height: 1.9; }
+.letter-signoff { margin: 34px 0 30px; text-align: right; }
+.letter-signoff > span { font-size: 12px; line-height: 1.8; color: var(--letter-muted); }
+.letter-signoff > p { display: flex; align-items: center; justify-content: flex-end; gap: 12px; font-family: Georgia, serif; font-style: italic; font-size: 29px; color: var(--letter-accent); margin: 11px 0 0; }
+.letter-footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; border-top: 1px solid var(--letter-line); padding-top: 20px; }
+.letter-action { display: inline-flex; align-items: center; gap: 9px; font-size: 12px; padding: 10px 13px; border: 1px solid var(--letter-line); border-radius: 30px; color: var(--letter-accent); transition: background .2s; }
+.letter-action:hover { background: rgba(147, 195, 147, .08); }
+.letter-colophon { text-align: center; font-size: 10px; letter-spacing: 1px; color: #c4d7c6; margin: 22px 0 4px; }
+@media (max-width: 600px) {
+  .letter-page { padding: 20px 16px 16px; }
+  .letter-navigation { margin-bottom: 20px; }
+  .letter-back { font-size: 11px; padding-inline: 13px; }
+  .letter-paper { padding: 28px 24px 22px; border-radius: 21px; }
+  .letter-heading { align-items: flex-start; gap: 16px; padding-bottom: 23px; margin-bottom: 24px; }
+  .letter-heading h1 { font-size: 25px; letter-spacing: .3px; }
+  .letter-recipient { font-size: 10px; letter-spacing: .5px; margin-bottom: 12px; }
+  .letter-portrait { width: 46px; height: 46px; margin-top: 2px; }
+  .letter-body { font-size: 14px; line-height: 2.1; }
+  .letter-body p { margin-bottom: 18px; }
+  .letter-unfinished { padding: 16px 14px; gap: 11px; margin-block: 24px; }
+  .letter-unfinished p { font-size: 12px; }
+  .letter-unfinished span { font-size: 11px; }
+  .letter-signoff { margin-block: 27px; }
+  .letter-signoff > p { font-size: 26px; }
+  .letter-action { font-size: 11px; padding-inline: 11px; }
+}
+@media print {
+  .letter-background, .letter-navigation, .letter-footer, .letter-colophon { display: none; }
+  .letter-page { padding: 0; color: #29493d; }
+  .letter-paper { background: white; border: 0; box-shadow: none; }
+}
