@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Icon from '../components/Icon.astro';
+import LabPreview from '../components/LabPreview.astro';
 import { site, categories, posts } from '../data/site';
 import { labs } from '../data/labs';
 import '../styles/immersive.css';
@@ -11,19 +12,12 @@ const base = import.meta.env.BASE_URL;
   <div class="wallpaper-scene" aria-hidden="true">
     <img class="wallpaper-image" src={`${base}images/forest-wallpaper.jpg`} alt="" width="4800" height="2700" fetchpriority="high" />
     <img class="wallpaper-image wallpaper-image-soft" src={`${base}images/forest-wallpaper.jpg`} alt="" width="4800" height="2700" decoding="async" />
-    <div class="wallpaper-shade"></div>
-    <div class="wallpaper-depth-shade"></div>
+    <div class="wallpaper-shade"></div><div class="wallpaper-depth-shade"></div>
   </div>
   <header class="site-header">
-    <a href="#home" class="brand" aria-label="Telrest 首页">
-      <span class="brand-mark">T<span class="brand-leaf"></span></span>
-      <span class="brand-name">Telrest<span>PERSONAL SPACE</span></span>
-    </a>
+    <a href="#home" class="brand" aria-label="Telrest 首页"><span class="brand-mark">T<span class="brand-leaf"></span></span><span class="brand-name">Telrest<span>PERSONAL SPACE</span></span></a>
     <nav class="navigation glass" aria-label="主导航">
-      <a href="#home" class="nav-link active" aria-current="location">首页</a>
-      <a href="#writing" class="nav-link">文章与思考</a>
-      <a href="#lab" class="nav-link">实验室</a>
-      <a href="#about" class="nav-link">关于</a>
+      <a href="#home" class="nav-link active" aria-current="location">首页</a><a href="#lab" class="nav-link">实验室</a><a href="#writing" class="nav-link">文章与思考</a><a href="#about" class="nav-link">关于</a>
     </nav>
     <div class="header-actions">
       <button class="icon-button glass theme-toggle" aria-label="切换为浅色模式" aria-pressed="true"><Icon name="sun" /></button>
@@ -31,238 +25,73 @@ const base = import.meta.env.BASE_URL;
       <button class="icon-button glass menu-toggle" aria-label="打开导航菜单" aria-expanded="false" aria-controls="mobile-navigation"><Icon name="menu" /></button>
     </div>
     <nav id="mobile-navigation" class="mobile-navigation glass" aria-label="手机导航" hidden>
-      <a href="#home">首页 <span>Home</span></a>
-      <a href="#writing">文章与思考 <span>Writing</span></a>
-      <a href="#lab">实验室 <span>Lab</span></a>
-      <a href="#about">关于 <span>About</span></a>
+      <a href="#home">首页 <span>Home</span></a><a href="#lab">实验室 <span>Lab</span></a><a href="#writing">文章与思考 <span>Writing</span></a><a href="#about">关于 <span>About</span></a>
     </nav>
   </header>
-
   <main id="main">
-    <section id="home" class="hero" aria-label="Telrest 的个人空间">
-      <h1 class="screen-reader-only">Telrest 的个人空间</h1>
-      <div class="hero-avatar">
-        <img class="hero-avatar-image" src={`${base}images/avatar.jpg`} alt="Telrest 的头像" width="640" height="640" loading="eager" decoding="async" />
-      </div>
-      <!-- Space for your future introduction. 预留后续介绍文字的位置。 -->
-      <div class="hero-intro-copy">
-        <p>Telrest，普通大一学生的个人博客！？</p>
-      </div>
-      <a class="wallpaper-scroll glass" href="#writing" aria-label="向下浏览文章与思考"><Icon name="down" size={21} /></a>
+    <section id="home" class="hero" aria-labelledby="home-title">
+      <div class="hero-avatar"><img class="hero-avatar-image" src={`${base}images/avatar.jpg`} alt="Telrest 的头像" width="640" height="640" loading="eager" decoding="async" /></div>
+      <div class="hero-intro-copy"><h1 id="home-title" class="hero-name">Telrest<span class="hero-name-dot">.</span></h1><p>普通大一学生的个人博客！？</p></div>
+      <a class="wallpaper-scroll glass" href="#lab" aria-label="向下探索实验室"><span>向下逛逛</span><Icon name="down" size={16} /></a>
     </section>
-
     <div class="content-surface">
-      <section id="writing" class="writing-section wrap section-block" aria-labelledby="writing-title">
-        <div class="section-heading" data-reveal>
-          <div><p class="eyebrow"><span>01</span> WORDS & THOUGHTS</p><h2 id="writing-title" class="screen-reader-only">文章与思考</h2></div>
-          <span class="section-count"><strong>{String(posts.length).padStart(2, '0')}</strong> 篇记录</span>
-        </div>
-        <div class="writing-layout">
-          <div class="journal-panel" data-reveal>
-            <div class="category-tabs" role="group" aria-label="按文章分类筛选">
-              {categories.map((category, index) => <button class:list={['category-tab', { selected: index === 0 }]} data-category={category} aria-pressed={index === 0}>{category}</button>)}
-            </div>
-            <div class="empty-journal" aria-live="polite">
-              <div class="journal-illustration" aria-hidden="true"><span class="paper-line"></span><Icon name="pen" size={31} /><span class="paper-line short"></span><span class="paper-line"></span><span class="paper-line short"></span><span class="paper-spark">✳</span></div>
-              <p class="empty-kicker">A BLANK PAGE, A NEW BEGINNING</p>
-              <h3 id="empty-title">第一篇？？？ 未知发布时间。。。</h3>
-              <p id="empty-description">暂时还没有写什么，可能需要我再经历更多</p>
-              <span class="empty-footnote"><Icon name="clock" size={14} /> 未来的文章将在这里按发布时间呈现</span>
-            </div>
-          </div>
-          <aside class="intro-card" aria-label="关于这个空间" data-reveal data-reveal-delay="100">
-            <span class="intro-icon"><Icon name="leaf" size={29} /></span>
-            <p class="eyebrow">A PLACE TO GROW</p>
-            <h3>可能有想法，<br />可能又想玩。</h3>
-            <p>这里会收藏我的见解、学习笔记和生活碎片。（真的吗？？？？）</p>
-            <div class="intro-divider"></div>
-            <a href="#about">认识一下我 <Icon name="arrow" size={18} /></a>
-          </aside>
-        </div>
-      </section>
-
       <section id="lab" class="lab-section wrap section-block" aria-labelledby="lab-title">
-        <div class="section-heading" data-reveal><div><p class="eyebrow"><span>02</span> THE LITTLE LAB</p><h2 id="lab-title" class="screen-reader-only">实验室</h2></div><a class="label-outline lab-all" href={`${base}lab/`}><span class="status-dot"></span><span>{labs.length} 个实验已开放</span><span class="lab-all-more">查看全部<Icon name="arrow" size={12} /></span></a></div>
-        <div class="lab-grid" data-reveal>
-          {labs.map((lab) => (
-            <a class="lab-card" href={`${base}${lab.href}`}>
-              <span class="lab-badge"><Icon name={lab.icon} size={15} /> EXPERIMENT NO. {lab.number}</span>
-              <h3>{lab.title}</h3>
-              <p>{lab.summary}</p>
-              <span class="coming-soon lab-enter">进入实验 <span>OPEN</span><Icon name="arrow" size={18} /></span>
+        <div class="section-heading" data-reveal><div class="section-heading-name"><p class="eyebrow"><span>01</span> PLAY & BUILD</p><h2 id="lab-title">实验室<span class="heading-dot">.</span></h2></div><a class="lab-all" href={`${base}lab/`}>全部实验 <span class="lab-total">{String(labs.length).padStart(2, '0')}</span><Icon name="arrow" size={16} /></a></div>
+        <div class="lab-grid">
+          {labs.map((lab, index) => (
+            <a class={`lab-card lab-card-${lab.id}`} href={`${base}${lab.href}`} data-reveal data-reveal-delay={String(index * 80)}>
+              <div class="lab-card-meta"><span class="lab-number">{lab.number}</span><span>{lab.meta}</span><Icon name={lab.icon} size={18} /></div>
+              <LabPreview kind={lab.id} />
+              <div class="lab-card-copy"><h3>{lab.title.replace(/\n/g, '')}</h3><p>{lab.summary}</p></div>
+              <div class="lab-card-footer"><span><span class="status-dot"></span>可以玩了</span><span class="lab-enter">试试看 <Icon name="arrow" size={18} /></span></div>
             </a>
           ))}
         </div>
       </section>
-
-      <section id="about" class="about-section wrap section-block" aria-labelledby="about-title">
-        <div class="about-left" data-reveal><p class="eyebrow"><span>03</span> THE PERSON BEHIND THE PAGE</p><h2 id="about-title">我是 Telrest<span>。</span><br /><span class="about-subtitle">很高兴在这里遇见你。</span></h2><p class="about-contact">如果想要和我交流，可以给我发<a href={`mailto:${site.email}`}>邮件</a>。</p></div>
-        <div class="about-right" data-reveal data-reveal-delay="100"><p>分享一些思考或者感想，也可以说是想玩一玩</p><p>感觉，分享一下，也许会挺好</p><a class="text-link" href={site.github} target="_blank" rel="noopener noreferrer"><Icon name="github" size={19} /> 在 GitHub 找到我 <Icon name="arrow" size={17} /></a></div>
+      <section id="writing" class="writing-section wrap section-block" aria-labelledby="writing-title">
+        <div class="section-heading" data-reveal><div class="section-heading-name"><p class="eyebrow"><span>02</span> WORDS & THOUGHTS</p><h2 id="writing-title">文章与思考<span class="heading-dot">.</span></h2></div><span class="section-count"><strong>{String(posts.length).padStart(2, '0')}</strong> 篇记录</span></div>
+        <div class="journal-panel" data-reveal>
+          <div class="category-tabs" role="group" aria-label="按文章分类筛选">{categories.map((category, index) => <button class:list={['category-tab', { selected: index === 0 }]} data-category={category} aria-pressed={index === 0}>{category}</button>)}</div>
+          <div class="empty-journal" aria-live="polite">
+            <div class="empty-journal-icon" aria-hidden="true"><Icon name="pen" size={25} /></div>
+            <div class="empty-journal-copy"><h3 id="empty-title">第一篇，还没想好写什么。</h3><p id="empty-description">暂时还没有写什么，可能需要我再经历更多。</p></div>
+            <span class="empty-footnote"><Icon name="clock" size={15} /> 等一个想写下来的瞬间</span>
+          </div>
+        </div>
       </section>
-      <footer class="site-footer wrap"><a href="#home" class="footer-brand"><Icon name="leaf" size={20} /> Telrest<span> / personal blog</span></a><p>© 2026 Telrest · 保持好奇，慢慢生长。</p><div class="footer-links"><a href={`${base}admin/`}>写作空间 <Icon name="arrow" size={13} /></a><a href="#home" aria-label="回到顶部">回到顶部 ↑</a></div></footer>
+      <section id="about" class="about-section wrap section-block" aria-labelledby="about-title">
+        <div class="about-identity" data-reveal><p class="eyebrow"><span>03</span> A LITTLE ABOUT ME</p><div class="about-person"><img src={`${base}images/avatar.jpg`} alt="" width="640" height="640" loading="lazy" /><div><h2 id="about-title">我是 Telrest<span>。</span></h2><p>可能有想法，可能又想玩。</p></div></div></div>
+        <div class="about-right" data-reveal data-reveal-delay="80"><p>分享一些思考或者感想，也可以说是想玩一玩。</p><p>感觉，分享一下，也许会挺好。</p><div class="about-links"><a class="about-link" href={site.github} target="_blank" rel="noopener noreferrer"><Icon name="github" size={17} /> GitHub <Icon name="arrow" size={14} /></a><a class="about-link" href={`mailto:${site.email}`}><Icon name="pen" size={16} /> 给我写信 <Icon name="arrow" size={14} /></a></div></div>
+      </section>
+      <footer class="site-footer wrap"><a href="#home" class="footer-brand">Telrest<span> / personal blog</span></a><p>© 2026 Telrest · 保持好奇，慢慢生长。</p><div class="footer-links"><a href={`${base}admin/`}>写作空间 <Icon name="arrow" size={12} /></a><a href="#home" aria-label="回到顶部">回到顶部 ↑</a></div></footer>
     </div>
   </main>
-
   <script>
     import '../scripts/immersive';
     const themeButton = document.querySelector<HTMLButtonElement>('.theme-toggle');
-    const updateThemeButton = () => {
-      const dark = document.documentElement.dataset.theme === 'dark';
-      themeButton?.setAttribute('aria-pressed', String(dark));
-      themeButton?.setAttribute('aria-label', dark ? '切换为浅色模式' : '切换为深色模式');
-    };
+    const updateThemeButton = () => { const dark = document.documentElement.dataset.theme === 'dark'; themeButton?.setAttribute('aria-pressed', String(dark)); themeButton?.setAttribute('aria-label', dark ? '切换为浅色模式' : '切换为深色模式'); };
     updateThemeButton();
-    themeButton?.addEventListener('click', () => {
-      const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
-      document.documentElement.dataset.theme = next;
-      try { localStorage.setItem('telrest-theme', next); } catch {}
-      updateThemeButton();
-    });
-
+    themeButton?.addEventListener('click', () => { const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'; document.documentElement.dataset.theme = next; try { localStorage.setItem('telrest-theme', next); } catch {} updateThemeButton(); });
     const menuButton = document.querySelector<HTMLButtonElement>('.menu-toggle');
     const mobileMenu = document.querySelector<HTMLElement>('#mobile-navigation');
     function closeMenu() { if (mobileMenu) mobileMenu.hidden = true; menuButton?.setAttribute('aria-expanded', 'false'); menuButton?.setAttribute('aria-label', '打开导航菜单'); }
-    menuButton?.addEventListener('click', () => {
-      if (!mobileMenu) return;
-      const open = mobileMenu.hidden;
-      mobileMenu.hidden = !open;
-      menuButton.setAttribute('aria-expanded', String(open));
-      menuButton.setAttribute('aria-label', open ? '关闭导航菜单' : '打开导航菜单');
-    });
+    menuButton?.addEventListener('click', () => { if (!mobileMenu) return; const open = mobileMenu.hidden; mobileMenu.hidden = !open; menuButton.setAttribute('aria-expanded', String(open)); menuButton.setAttribute('aria-label', open ? '关闭导航菜单' : '打开导航菜单'); });
     mobileMenu?.querySelectorAll('a').forEach(link => link.addEventListener('click', closeMenu));
     document.addEventListener('keydown', event => { if (event.key === 'Escape' && mobileMenu && !mobileMenu.hidden) { closeMenu(); menuButton?.focus(); } });
     document.addEventListener('click', event => { if (event.target instanceof Node && !document.querySelector('.site-header')?.contains(event.target)) closeMenu(); });
-
     document.querySelectorAll<HTMLButtonElement>('.category-tab').forEach(button => button.addEventListener('click', () => {
       document.querySelectorAll('.category-tab').forEach(tab => { tab.classList.remove('selected'); tab.setAttribute('aria-pressed', 'false'); });
       button.classList.add('selected'); button.setAttribute('aria-pressed', 'true');
       const title = document.querySelector('#empty-title');
       const description = document.querySelector('#empty-description');
-      if (title) title.textContent = button.dataset.category === '全部' ? '第一篇？？？ 未知发布时间。。。' : `「${button.dataset.category}」的第一篇？？？？？？xxxx xx xx会发布的（`;
-      if (description) description.textContent = '暂时还没有写什么，可能需要我再经历更多';
+      if (title) title.textContent = button.dataset.category === '全部' ? '第一篇，还没想好写什么。' : `「${button.dataset.category}」还没有文章。`;
+      if (description) description.textContent = '暂时还没有写什么，可能需要我再经历更多。';
     }));
-
     const header = document.querySelector('.site-header');
     const updateHeader = () => header?.classList.toggle('scrolled', window.scrollY > 70);
     updateHeader(); window.addEventListener('scroll', updateHeader, { passive: true });
     const navLinks = document.querySelectorAll<HTMLAnchorElement>('.nav-link');
-    const observer = new IntersectionObserver(entries => {
-      for (const entry of entries) if (entry.isIntersecting) {
-        navLinks.forEach(link => { const active = link.hash === `#${entry.target.id}`; link.classList.toggle('active', active); if (active) link.setAttribute('aria-current', 'location'); else link.removeAttribute('aria-current'); });
-      }
-    }, { rootMargin: '-18% 0px -42% 0px', threshold: 0 });
+    const observer = new IntersectionObserver(entries => { for (const entry of entries) if (entry.isIntersecting) { navLinks.forEach(link => { const active = link.hash === `#${entry.target.id}`; link.classList.toggle('active', active); if (active) link.setAttribute('aria-current', 'location'); else link.removeAttribute('aria-current'); }); } }, { rootMargin: '-18% 0px -42% 0px', threshold: 0 });
     document.querySelectorAll('main section[id]').forEach(section => observer.observe(section));
   </script>
 </Layout>
-
-<style>
-  .lab-enter { transition: color .2s, gap .2s; }
-  .lab-enter svg { transition: transform .2s; }
-  .lab-enter:hover { color: #eef3e2; gap: 16px; }
-  .lab-enter:hover svg { transform: translateX(3px); }
-
-  .lab-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
-  }
-  .lab-card {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    padding: 30px 32px 28px;
-    border-radius: 24px;
-    border: 1px solid #345449;
-    background: linear-gradient(155deg, #22493c, #1a3a30 58%, #16302a);
-    color: #f1f3e7;
-    transition: transform .25s, box-shadow .25s, border-color .25s;
-  }
-  .lab-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    background: radial-gradient(ellipse at 86% 12%, rgba(184,206,136,.18), transparent 60%);
-    pointer-events: none;
-  }
-  .lab-card > * { position: relative; z-index: 1; }
-  .lab-card:hover {
-    transform: translateY(-4px);
-    border-color: #4d7358;
-    box-shadow: 0 18px 50px #0b241e2e;
-  }
-  .lab-card .lab-badge { margin-bottom: 18px; }
-  .lab-card h3 {
-    font-family: var(--serif);
-    font-size: 25px;
-    line-height: 1.5;
-    font-weight: 500;
-    margin-bottom: 12px;
-    white-space: pre-line;
-  }
-  .lab-card p {
-    font-size: 11.5px;
-    line-height: 2;
-    color: #b3c3b6;
-    margin-bottom: 22px;
-  }
-  .lab-card .coming-soon { margin-top: auto; }
-
-  .lab-all {
-    color: var(--accent);
-    transition: border-color .25s, color .25s, background-color .25s;
-  }
-  .lab-all:focus-visible {
-    outline: 3px solid #b8ce88;
-    outline-offset: 3px;
-  }
-  .lab-all-more {
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
-    max-width: 0;
-    opacity: 0;
-    overflow: hidden;
-    white-space: nowrap;
-    transition: max-width .32s cubic-bezier(.2,.8,.3,1), opacity .22s ease, margin-left .32s;
-  }
-  @media (hover: hover) {
-    .lab-all:hover,
-    .lab-all:focus-visible {
-      border-color: #bccda6;
-      color: var(--ink);
-      background-color: #eef3e4;
-    }
-    .lab-all:hover .lab-all-more,
-    .lab-all:focus-visible .lab-all-more {
-      max-width: 130px;
-      opacity: 1;
-      margin-left: 4px;
-    }
-  }
-  @media (hover: none) {
-    .lab-all-more { max-width: 130px; opacity: 1; margin-left: 4px; }
-  }
-  [data-theme=dark] .lab-all:hover,
-  [data-theme=dark] .lab-all:focus-visible {
-    background-color: #ffffff0f;
-    border-color: #5c7350;
-    color: #e6efdb;
-  }
-
-  .about-contact {
-    margin: 20px 0 0;
-    font-size: 12.5px;
-    line-height: 2;
-    letter-spacing: .4px;
-    color: var(--muted);
-  }
-  .about-contact a {
-    color: var(--ink);
-    border-bottom: 1px solid currentColor;
-    overflow-wrap: anywhere;
-    transition: color .2s, border-color .2s;
-  }
-  .about-contact a:hover { color: var(--accent); }
-</style>

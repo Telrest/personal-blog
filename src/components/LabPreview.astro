@@ -1,0 +1,589 @@
+---
+interface Props {
+  kind: string;
+}
+
+const { kind } = Astro.props;
+
+const isQuickSort = kind === 'quicksort';
+const isPhoto = kind === 'photo';
+const heading = isQuickSort ? 'QUICK SORT' : isPhoto ? 'CHARACTER ART' : 'CODE SYMBOL';
+
+const asciiArt = [
+  '          .                    .                     .',
+  '                                    _.-~~~-._',
+  '        .                     .-~           ~-.        .',
+  '                        .   /       .           \\',
+  '                          /       / \\           \\',
+  '      .                 /       /   \\           \\      .',
+  '                       /       /  .  \\           \\',
+  '                      /_______/__/_____\\___________\\',
+  '   .   _.-~^~-._.-~^~-._.-~^~-._.-~^~-._.-~^~-._.-~^~-._',
+  '      /  ~   ~   ~   ~   ~   ~   ~   ~   ~   ~   ~   ~  \\',
+  '     /____~____~____~____~____~____~____~____~____~____~_\\',
+].join('\n');
+---
+
+<div class="lab-preview" aria-hidden="true">
+  <div class="frame">
+    <div class="frame-head">
+      <div class="head-left">
+        <span class="window-dots"><i></i><i></i><i></i></span>
+        <span class="head-label">{heading}</span>
+      </div>
+
+      {isQuickSort ? (
+        <span class="head-meta pivot-meta"><span class="pivot-mark"></span>PIVOT 55</span>
+      ) : isPhoto ? (
+        <span class="head-meta art-meta"><span class="status-dot"></span>ASCII</span>
+      ) : (
+        <span class="head-meta">GENERIC</span>
+      )}
+    </div>
+
+    {isQuickSort ? (
+      <div class="quick-body">
+        <div class="chart">
+          <svg class="branches" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+            <line class="pivot-rule" x1="0" y1="32" x2="100" y2="32"></line>
+            <path class="branch branch-mint" d="M68.75 32V10C60 10 51 7 43.75 4H31.25V7"></path>
+            <path class="branch branch-lav" d="M68.75 10C78 10 87 7 93.75 4H81.25V7"></path>
+          </svg>
+
+          <div class="bars">
+            <div class="bar-slot"><span class="bar b1"></span></div>
+            <div class="bar-slot"><span class="bar b2"></span></div>
+            <div class="bar-slot"><span class="bar b3"></span></div>
+            <div class="bar-slot"><span class="bar b4"></span></div>
+            <div class="bar-slot"><span class="bar b5"></span></div>
+            <div class="bar-slot is-pivot"><span class="bar b6"></span></div>
+            <div class="bar-slot"><span class="bar b7"></span></div>
+            <div class="bar-slot"><span class="bar b8"></span></div>
+          </div>
+        </div>
+
+        <div class="bar-values">
+          <span>28</span>
+          <span>61</span>
+          <span>17</span>
+          <span>74</span>
+          <span>46</span>
+          <span class="is-pivot">55</span>
+          <span>33</span>
+          <span>68</span>
+        </div>
+      </div>
+    ) : isPhoto ? (
+      <div class="photo-body">
+        <pre class="ascii">{asciiArt}</pre>
+      </div>
+    ) : (
+      <div class="generic-body">
+        <svg class="code-symbol" viewBox="0 0 200 100" fill="none" aria-hidden="true" focusable="false">
+          <path class="code-orbit" d="M20 50h22M158 50h22M100 17v10M100 73v10"></path>
+          <path class="code-ghost" d="M68 28 44 50l24 22M132 28l24 22-24 22M111 22 89 78"></path>
+          <path class="code-main" d="M68 28 44 50l24 22M111 22 89 78"></path>
+          <path class="code-lav" d="M132 28l24 22-24 22"></path>
+          <path class="code-node" d="M98.5 48.5h3v3h-3z"></path>
+        </svg>
+      </div>
+    )}
+  </div>
+</div>
+
+<style>
+  .lab-preview {
+    --mint-100: #d8f1e4;
+    --mint-300: #a8d8c2;
+    --mint-500: #6f9c89;
+    --slate-700: #365247;
+    --lav-300: #c8b9df;
+    --lav-500: #9d8bb9;
+    --line: rgba(163, 216, 194, 0.16);
+    --line-soft: rgba(163, 216, 194, 0.075);
+    position: relative;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    box-sizing: border-box;
+    pointer-events: none;
+    background: transparent;
+    color: var(--mint-300);
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    -webkit-font-smoothing: antialiased;
+    user-select: none;
+  }
+
+  .lab-preview *,
+  .lab-preview *::before,
+  .lab-preview *::after {
+    box-sizing: border-box;
+  }
+
+  .frame {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    container-type: inline-size;
+    isolation: isolate;
+    border: 1px solid rgba(157, 214, 191, 0.2);
+    border-radius: 10px;
+    background:
+      radial-gradient(110% 90% at 8% 0%, rgba(75, 150, 121, 0.13), transparent 58%),
+      radial-gradient(90% 100% at 96% 105%, rgba(137, 121, 163, 0.11), transparent 64%),
+      linear-gradient(180deg, rgba(7, 29, 23, 0.92) 0%, rgba(6, 22, 18, 0.84) 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(201, 240, 222, 0.06),
+      inset 0 0 40px rgba(67, 142, 113, 0.035);
+  }
+
+  .frame::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(to right, rgba(171, 222, 199, 0.035) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(171, 222, 199, 0.03) 1px, transparent 1px);
+    background-size: 28px 28px;
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.55), transparent 78%);
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.55), transparent 78%);
+  }
+
+  .frame::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    pointer-events: none;
+    border-radius: inherit;
+    box-shadow:
+      inset 0 0 0 1px rgba(2, 12, 9, 0.24),
+      inset 0 -18px 38px rgba(2, 10, 8, 0.2);
+  }
+
+  .frame-head {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex: 0 0 27px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 0 clamp(9px, 2.2cqw, 14px);
+    border-bottom: 1px solid var(--line);
+    background: linear-gradient(180deg, rgba(152, 215, 190, 0.05), rgba(152, 215, 190, 0));
+  }
+
+  .head-left {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: clamp(6px, 1.6cqw, 10px);
+  }
+
+  .window-dots {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 3px;
+  }
+
+  .window-dots i {
+    display: block;
+    width: 3px;
+    height: 3px;
+    border: 1px solid rgba(166, 221, 198, 0.5);
+    border-radius: 50%;
+    background: rgba(166, 221, 198, 0.14);
+  }
+
+  .window-dots i:nth-child(2) {
+    border-color: rgba(196, 180, 220, 0.46);
+    background: rgba(196, 180, 220, 0.14);
+  }
+
+  .window-dots i:nth-child(3) {
+    border-color: rgba(166, 221, 198, 0.26);
+    background: transparent;
+  }
+
+  .head-label {
+    overflow: hidden;
+    color: var(--mint-100);
+    font-size: clamp(6.5px, 1.6cqw, 8px);
+    font-weight: 500;
+    letter-spacing: 0.17em;
+    line-height: 1;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .head-meta {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 5px;
+    color: rgba(183, 218, 203, 0.55);
+    font-size: clamp(5.5px, 1.35cqw, 7px);
+    letter-spacing: 0.12em;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .pivot-meta {
+    color: rgba(205, 190, 228, 0.84);
+  }
+
+  .pivot-mark {
+    width: 4px;
+    height: 4px;
+    transform: rotate(45deg);
+    background: var(--lav-300);
+    box-shadow: 0 0 6px rgba(186, 168, 214, 0.45);
+  }
+
+  .status-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #7be2a9;
+    box-shadow:
+      0 0 0 2px rgba(123, 226, 169, 0.09),
+      0 0 7px rgba(123, 226, 169, 0.55);
+  }
+
+  .quick-body {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+    padding: clamp(8px, 2.3cqw, 13px) clamp(10px, 2.4cqw, 16px) clamp(7px, 2cqw, 10px);
+  }
+
+  .chart {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    border-bottom: 1px solid rgba(163, 216, 194, 0.2);
+    background: repeating-linear-gradient(
+      to top,
+      rgba(163, 216, 194, 0.055) 0,
+      rgba(163, 216, 194, 0.055) 1px,
+      transparent 1px,
+      transparent 25%
+    );
+  }
+
+  .chart::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      to right,
+      transparent 0,
+      transparent calc(12.5% - 1px),
+      rgba(163, 216, 194, 0.035) calc(12.5% - 1px),
+      rgba(163, 216, 194, 0.035) 12.5%
+    );
+  }
+
+  .branches {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  .branch,
+  .pivot-rule {
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .branch {
+    stroke-width: 1;
+  }
+
+  .branch-mint {
+    stroke: rgba(166, 222, 198, 0.34);
+  }
+
+  .branch-lav {
+    stroke: rgba(193, 176, 220, 0.35);
+  }
+
+  .pivot-rule {
+    stroke: rgba(193, 176, 220, 0.24);
+    stroke-width: 1;
+    stroke-dasharray: 1 4;
+  }
+
+  .bars {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    align-items: end;
+    gap: clamp(3px, 1.1%, 8px);
+  }
+
+  .bar-slot {
+    display: flex;
+    min-width: 0;
+    height: 100%;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .bar {
+    --bar-top: #a7d4c1;
+    --bar-mid: #658b7a;
+    --bar-bottom: #324d42;
+    position: relative;
+    display: block;
+    width: min(78%, 50px);
+    border: 1px solid rgba(196, 235, 217, 0.2);
+    border-bottom: 0;
+    border-radius: 3px 3px 0 0;
+    background: linear-gradient(180deg, var(--bar-top) 0%, var(--bar-mid) 56%, var(--bar-bottom) 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(235, 255, 247, 0.32),
+      0 6px 14px rgba(1, 9, 7, 0.12);
+  }
+
+  .bar::after {
+    content: "";
+    position: absolute;
+    inset: 1px 1px auto;
+    height: 1px;
+    background: rgba(235, 255, 247, 0.38);
+  }
+
+  .b1 {
+    height: 40%;
+  }
+
+  .b2 {
+    height: 73%;
+    --bar-top: #b9e4d1;
+    --bar-mid: #6c9785;
+    --bar-bottom: #355447;
+  }
+
+  .b3 {
+    height: 30%;
+    --bar-top: #89ab9b;
+    --bar-mid: #526f62;
+    --bar-bottom: #283f36;
+  }
+
+  .b4 {
+    height: 86%;
+    --bar-top: #c2ead8;
+    --bar-mid: #74a08c;
+    --bar-bottom: #3a5a4c;
+  }
+
+  .b5 {
+    height: 59%;
+    --bar-top: #9bc5b2;
+    --bar-mid: #5e8574;
+    --bar-bottom: #2e4a3f;
+  }
+
+  .b6 {
+    height: 68%;
+    --bar-top: #d7cbea;
+    --bar-mid: #a391bf;
+    --bar-bottom: #65567e;
+    border-color: rgba(208, 193, 231, 0.46);
+    box-shadow:
+      inset 0 1px 0 rgba(246, 240, 255, 0.48),
+      0 0 12px rgba(160, 142, 193, 0.18),
+      0 6px 14px rgba(1, 9, 7, 0.12);
+  }
+
+  .b7 {
+    height: 45%;
+    --bar-top: #7f9f91;
+    --bar-mid: #4f6e61;
+    --bar-bottom: #293f37;
+  }
+
+  .b8 {
+    height: 80%;
+    --bar-top: #afe0ca;
+    --bar-mid: #64907d;
+    --bar-bottom: #315044;
+  }
+
+  .is-pivot .bar::before {
+    content: "";
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    width: 4px;
+    height: 4px;
+    transform: translateX(-50%) rotate(45deg);
+    background: var(--lav-300);
+    box-shadow: 0 0 7px rgba(188, 170, 216, 0.58);
+  }
+
+  .bar-values {
+    display: grid;
+    flex: 0 0 auto;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    gap: clamp(3px, 1.1%, 8px);
+    margin-top: 5px;
+  }
+
+  .bar-values span {
+    color: rgba(175, 216, 198, 0.58);
+    font-size: clamp(6px, 1.35cqw, 7.5px);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.03em;
+    line-height: 1;
+    text-align: center;
+  }
+
+  .bar-values .is-pivot {
+    color: rgba(211, 197, 233, 0.94);
+    text-shadow: 0 0 8px rgba(188, 170, 216, 0.32);
+  }
+
+  .photo-body {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+    overflow: hidden;
+    padding: clamp(6px, 1.8cqw, 10px) clamp(8px, 2cqw, 14px);
+  }
+
+  .photo-body::before {
+    content: "";
+    position: absolute;
+    inset: 8% 5% 10%;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(38% 44% at 66% 23%, rgba(178, 160, 207, 0.16), transparent 70%),
+      radial-gradient(52% 46% at 30% 72%, rgba(88, 165, 132, 0.12), transparent 74%);
+  }
+
+  .photo-body::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      to bottom,
+      rgba(3, 15, 12, 0.13) 0,
+      rgba(3, 15, 12, 0.13) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    opacity: 0.5;
+  }
+
+  .ascii {
+    position: relative;
+    z-index: 1;
+    width: max-content;
+    max-width: 100%;
+    margin: 0;
+    color: #b9dcca;
+    font-family: inherit;
+    font-size: clamp(7px, 2.25cqw, 11px);
+    font-variant-ligatures: none;
+    letter-spacing: 0.035em;
+    line-height: 1.13;
+    text-shadow: 0 0 14px rgba(120, 200, 166, 0.13);
+    white-space: pre;
+  }
+
+  .generic-body {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    flex: 1;
+    min-height: 0;
+    place-items: center;
+    overflow: hidden;
+    padding: 14px;
+  }
+
+  .generic-body::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: min(64%, 300px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(128, 191, 162, 0.1), transparent 67%);
+    transform: translate(-50%, -50%);
+  }
+
+  .code-symbol {
+    position: relative;
+    z-index: 1;
+    width: clamp(135px, 44cqw, 240px);
+    height: auto;
+    overflow: visible;
+  }
+
+  .code-orbit,
+  .code-ghost,
+  .code-main,
+  .code-lav {
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .code-orbit {
+    stroke: rgba(160, 215, 193, 0.22);
+    stroke-width: 1;
+    stroke-dasharray: 2 4;
+  }
+
+  .code-ghost {
+    stroke: rgba(143, 211, 182, 0.09);
+    stroke-width: 6;
+  }
+
+  .code-main {
+    stroke: rgba(185, 228, 209, 0.84);
+    stroke-width: 1.25;
+  }
+
+  .code-lav {
+    stroke: rgba(198, 183, 221, 0.78);
+    stroke-width: 1.25;
+  }
+
+  .code-node {
+    fill: var(--lav-300);
+  }
+</style>

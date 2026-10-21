@@ -4,7 +4,7 @@ const hero = document.querySelector<HTMLElement>('#home');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
 const scrollHeader = document.querySelector<HTMLElement>('.site-header');
-const firstContent = document.querySelector<HTMLElement>('#writing .section-heading');
+const firstContent = document.querySelector<HTMLElement>('.content-surface .section-heading');
 if (scrollHeader && firstContent) {
   const setHeaderVisible = (visible: boolean) => {
     scrollHeader.classList.toggle('header-visible', visible);
@@ -61,12 +61,12 @@ if (wallpaper && hero) {
   let entranceFrame = 0;
   let entranceComplete = false;
   const entranceSize = () => ({
-    peek: Math.min(192, Math.max(120, window.innerHeight * 0.24)),
-    lift: Math.min(28, window.innerHeight * 0.034),
+    peek: window.innerHeight <= 600 ? Math.min(72, window.innerHeight * 0.12) : Math.min(180, window.innerHeight * 0.24),
+    lift: window.innerHeight <= 600 ? 28 : Math.min(42, window.innerHeight * 0.045),
   });
   const applyEntrance = (progress: number) => {
     const eased = 1 - Math.pow(1 - progress, 3);
-    entranceDepth = eased * 0.88;
+    entranceDepth = eased * 0.72;
     if (!layoutUnderUserControl) {
       const size = entranceSize();
       hero.style.setProperty('--intro-peek', `${(size.peek * eased).toFixed(2)}px`);

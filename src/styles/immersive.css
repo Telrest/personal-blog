@@ -1,250 +1,163 @@
-/* A single wallpaper stays beneath the whole homepage. 整个首页共用固定壁纸。 */
-.wallpaper-scene {
-  --wallpaper-depth: 0;
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
-  pointer-events: none;
-  background: #244b43;
-  contain: strict;
-}
-.wallpaper-scene .wallpaper-image {
-  position: absolute;
-  inset: -24px;
-  width: calc(100% + 48px);
-  height: calc(100% + 48px);
-  max-width: none;
-  object-fit: cover;
-  object-position: 61% 50%;
-}
-.wallpaper-scene .wallpaper-image-soft {
-  filter: blur(12px);
-  opacity: var(--wallpaper-depth);
-  will-change: opacity;
-}
-.wallpaper-shade,
-.wallpaper-depth-shade {
-  position: absolute;
-  inset: 0;
-}
-.wallpaper-shade {
-  background: linear-gradient(180deg, rgba(5,27,23,.32), rgba(5,27,23,.02) 22%, transparent 68%, rgba(5,27,23,.24));
-}
-.wallpaper-depth-shade {
-  background: rgba(8,27,23,.3);
-  opacity: var(--wallpaper-depth);
-  will-change: opacity;
-}
-.wallpaper-scene ~ main {
-  position: relative;
-  z-index: 1;
-}
-.wallpaper-scene ~ main .hero {
-  background: transparent;
-  isolation: auto;
-  height: calc(100svh - var(--intro-peek, 0px));
-  min-height: calc(100svh - var(--intro-peek, 0px));
-  max-height: none;
-}
-.screen-reader-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-  border: 0;
-}
-.hero-avatar {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  pointer-events: none;
-  transform: translate3d(0, var(--avatar-lift, 0px), 0);
-}
-.hero-intro-copy {
-  position: absolute;
-  top: calc(50% + clamp(72px, 8vw, 104px) + var(--avatar-lift, 0px) + 28px);
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(680px, calc(100% - 48px));
-  color: #f1f5eb;
-  text-align: center;
-  line-height: 1.9;
-  animation: intro-copy-arrive 3s cubic-bezier(.16,1,.3,1) .25s both;
-}
-@keyframes intro-copy-arrive {
-  from { opacity: 0; filter: blur(3px); }
-  to { opacity: 1; filter: none; }
-}
-.hero-avatar-image {
-  display: block;
-  width: clamp(144px, 16vw, 208px);
-  height: auto;
-  aspect-ratio: 1;
-  object-fit: cover;
-  border: 4px solid rgba(255,255,255,.95);
-  border-radius: 50%;
-  box-shadow: 0 14px 48px rgba(5,26,24,.25), 0 0 0 1px rgba(255,255,255,.15);
-  animation: avatar-arrive 3s cubic-bezier(.16,1,.3,1) .25s both;
-}
-@keyframes avatar-arrive {
-  from { opacity: 0; transform: translate3d(0, 16px, 0) scale(.94); filter: blur(4px); }
-  to { opacity: 1; transform: none; filter: none; }
-}
-.wallpaper-scroll {
-  position: absolute;
-  bottom: 32px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 44px;
-  height: 54px;
-  border-radius: 28px;
-  display: grid;
-  place-items: center;
-  color: white;
-  transition: background .2s, box-shadow .2s;
-}
-.wallpaper-scroll:hover { background-color: rgba(255,255,255,.19); box-shadow: 0 8px 30px rgba(7,36,25,.18); }
-.wallpaper-scroll svg { animation: nudge 3s ease-in-out infinite; }
-.wallpaper-scene ~ .site-header:not(.scrolled) .navigation {
-  background: linear-gradient(135deg, rgba(24,52,43,.3), rgba(24,52,43,.12));
-}
-.scroll-header-ready .wallpaper-scene ~ .site-header {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transform: translate3d(0, -24px, 0);
-  transition: opacity .65s ease, transform .8s cubic-bezier(.16,1,.3,1),
-    visibility 0s linear .65s, padding .25s, background .25s, box-shadow .25s;
-}
-.scroll-header-ready .wallpaper-scene ~ .site-header.header-visible {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-  transform: none;
-  transition-delay: 0s;
-}
+/* Forest, glass, and clear reading surfaces. 森林背景、玻璃控件与清晰的阅读面。 */
+.wallpaper-scene{--wallpaper-depth:0;position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:#183b34;contain:strict}
+.wallpaper-scene .wallpaper-image{position:absolute;inset:-16px;width:calc(100% + 32px);height:calc(100% + 32px);max-width:none;object-fit:cover;object-position:61% 50%}
+.wallpaper-scene .wallpaper-image-soft{filter:blur(6px);opacity:var(--wallpaper-depth);will-change:opacity}
+.wallpaper-shade,.wallpaper-depth-shade{position:absolute;inset:0}
+.wallpaper-shade{background:radial-gradient(ellipse at 50% 46%,rgba(6,23,23,.30),transparent 60%),linear-gradient(180deg,rgba(5,25,22,.18),rgba(5,25,22,.06) 52%,rgba(5,25,22,.38))}
+.wallpaper-depth-shade{background:rgba(7,24,22,.28);opacity:var(--wallpaper-depth);will-change:opacity}
+.wallpaper-scene~main{position:relative;z-index:1}
+.wallpaper-scene~main .hero{background:transparent;isolation:auto;height:calc(100svh - var(--intro-peek,0px));min-height:calc(100svh - var(--intro-peek,0px));max-height:none}
+.screen-reader-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
 
-/* Translucent reading surfaces leave the wallpaper visible around and through them. */
-/* 阅读面板采用半透明玻璃，壁纸贯穿页面与面板。 */
-.content-surface {
-  --section-glass: rgba(240,247,231,.66);
-  --inner-glass: rgba(255,255,248,.36);
-  --glass-edge: rgba(255,255,255,.56);
-  position: relative;
-  padding: 26px 0 24px;
-  background: transparent;
-}
-.content-surface .section-block {
-  padding: 36px;
-  margin-block: 0 30px;
-  border: 1px solid var(--glass-edge);
-  border-radius: 28px;
-  background: var(--section-glass);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.36), 0 20px 70px rgba(4,27,21,.12);
-  backdrop-filter: blur(18px) saturate(115%);
-  -webkit-backdrop-filter: blur(18px) saturate(115%);
-}
-.content-surface .journal-panel {
-  background: var(--inner-glass);
-  border-color: rgba(255,255,255,.52);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.25);
-}
-.content-surface .intro-card {
-  background: rgba(222,234,204,.54);
-  border: 1px solid rgba(255,255,255,.35);
-}
-.content-surface .lab-banner {
-  background: rgba(21,57,45,.76);
-  border-color: rgba(223,245,207,.23);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.12);
-}
-.content-surface .about-section {
-  padding-block: 40px;
-}
-.content-surface .site-footer {
-  border: 1px solid var(--glass-edge);
-  border-radius: 22px;
-  padding: 24px 30px;
-  background: var(--section-glass);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-}
-[data-theme=dark] .content-surface {
-  --section-glass: rgba(15,36,29,.58);
-  --inner-glass: rgba(34,62,46,.38);
-  --glass-edge: rgba(218,239,203,.2);
-}
-[data-theme=dark] .content-surface .journal-panel {
-  border-color: rgba(218,239,203,.18);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
-}
-[data-theme=dark] .content-surface .intro-card {
-  background: rgba(57,80,45,.44);
-  border-color: rgba(218,239,203,.16);
-}
-[data-theme=dark] .content-surface .intro-card > p:not(.eyebrow) {
-  color: #b9c8ae;
-}
+/* Portrait and name share one focal point. 头像与名字形成一个视觉重心。 */
+.hero-avatar{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;transform:translate3d(0,var(--avatar-lift,0px),0)}
+.hero-avatar-image{display:block;width:clamp(140px,13vw,172px);height:auto;aspect-ratio:1;object-fit:cover;border:3px solid rgba(255,255,255,.94);border-radius:50%;box-shadow:0 0 0 7px rgba(235,255,248,.07),0 20px 60px rgba(3,20,19,.22);animation:avatar-arrive 3s cubic-bezier(.16,1,.3,1) .25s both}
+.hero-intro-copy{position:absolute;top:calc(50% + clamp(70px,6.5vw,86px) + var(--avatar-lift,0px) + 23px);left:50%;transform:translateX(-50%);width:min(680px,calc(100% - 40px));color:#f6fbf7;text-align:center;animation:intro-copy-arrive 3s cubic-bezier(.16,1,.3,1) .25s both}
+.hero .hero-name{font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:clamp(34px,3.8vw,48px);line-height:1.12;font-weight:600;letter-spacing:-1.6px;margin:0 0 13px;text-shadow:0 3px 25px rgba(4,22,20,.25)}
+.hero-name-dot{color:#bfe6d9}
+.hero-intro-copy>p{margin:0;font-size:15px;line-height:1.8;letter-spacing:1px;color:#e2efea;text-shadow:0 2px 12px #071c18}
+.wallpaper-scroll{position:absolute;bottom:25px;left:50%;transform:translateX(-50%);min-height:42px;padding:0 17px;border-radius:40px;display:inline-flex;align-items:center;gap:12px;color:#f5faf6;font-size:11px;letter-spacing:1px;background:rgba(18,44,39,.26);border-color:rgba(255,255,255,.3);transition:background .25s,box-shadow .25s}
+.wallpaper-scroll:hover{background:rgba(34,63,55,.5)}
+.wallpaper-scroll svg{animation:nudge 3s ease-in-out infinite}
+@keyframes avatar-arrive{from{opacity:0;transform:translate3d(0,14px,0) scale(.96);filter:blur(4px)}to{opacity:1;transform:none;filter:none}}
+@keyframes intro-copy-arrive{from{opacity:0;filter:blur(3px)}to{opacity:1;filter:none}}
 
-/* A soft rise, a little focus, then stillness. 轻轻上浮、由虚到实，随后安静停留。 */
-.reveal-ready [data-reveal] {
-  opacity: 0;
-  transform: translate3d(0, 64px, 0) scale(.985);
-  filter: blur(7px);
-  transition: opacity .9s ease var(--reveal-delay, 0ms),
-    transform 1.05s cubic-bezier(.16,1,.3,1) var(--reveal-delay, 0ms),
-    filter .9s ease var(--reveal-delay, 0ms);
+.wallpaper-scene~.site-header{padding:20px max(32px,calc((100vw - 1180px)/2))}
+.wallpaper-scene~.site-header.scrolled{padding-block:12px;background:rgba(12,31,27,.86);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);box-shadow:0 1px 0 rgba(235,255,246,.08)}
+.wallpaper-scene~.site-header .brand-mark{font-size:36px;width:31px}
+.wallpaper-scene~.site-header .brand-name{font-size:17px}
+.wallpaper-scene~.site-header .brand-name>span{font-size:7px;letter-spacing:1.7px}
+.wallpaper-scene~.site-header .navigation{background:rgba(20,46,40,.36);border-color:rgba(255,255,255,.2);box-shadow:inset 0 1px 0 rgba(255,255,255,.15)}
+.wallpaper-scene~.site-header .nav-link{padding:10px 18px;font-size:12px}
+.wallpaper-scene~.site-header .nav-link.active{background:rgba(226,249,237,.13);box-shadow:inset 0 1px 0 rgba(255,255,255,.15)}
+.wallpaper-scene~.site-header .icon-button{width:38px;height:38px;border-color:rgba(255,255,255,.2);box-shadow:inset 0 1px 0 rgba(255,255,255,.16)}
+.scroll-header-ready .wallpaper-scene~.site-header{opacity:0;visibility:hidden;pointer-events:none;transform:translate3d(0,-20px,0);transition:opacity .65s ease,transform .8s cubic-bezier(.16,1,.3,1),visibility 0s linear .65s,padding .25s,background .25s}
+.scroll-header-ready .wallpaper-scene~.site-header.header-visible{opacity:1;visibility:visible;pointer-events:auto;transform:none;transition-delay:0s}
+
+/* One layer per card; wallpaper breathes between sections. 每张卡片只有一层底色，分区之间留给壁纸。 */
+.content-surface{--ink:#203d36;--muted:#566c62;--accent:#3d7868;--card-surface:rgba(245,249,241,.95);--card-edge:rgba(255,255,255,.7);--subtle-line:rgba(39,81,65,.13);position:relative;padding:30px 0 24px;background:transparent;isolation:isolate}
+[data-theme=dark] .content-surface{--ink:#edf4ee;--muted:#b0c4bc;--accent:#a8d8c6;--card-surface:rgba(17,36,31,.94);--card-edge:rgba(222,251,237,.15);--subtle-line:rgba(203,236,218,.12)}
+.content-surface::before{content:'';position:absolute;z-index:-1;inset:0;background:linear-gradient(180deg,transparent,rgba(7,22,18,.34) 220px,rgba(7,22,18,.68));pointer-events:none}
+[data-theme=dark] .content-surface::before{background:linear-gradient(180deg,transparent,rgba(7,22,18,.34) 220px,rgba(7,22,18,.68))}
+.content-surface .wrap{width:min(1080px,calc(100% - 96px))}
+.content-surface .section-block{padding:0;margin-block:0 76px;border:0;border-radius:0;background:transparent;box-shadow:none;color:var(--ink);scroll-margin-top:0}
+.content-surface .section-heading{align-items:center;margin-bottom:25px;min-height:58px}
+.section-heading-name{display:flex;align-items:center;gap:22px}
+.content-surface .eyebrow{font-size:10px;letter-spacing:2px;color:var(--accent);margin:0;line-height:1.7}
+.content-surface .eyebrow>span{color:var(--muted)}
+.content-surface .section-heading .eyebrow{color:#d0e5db}
+.content-surface .section-heading .eyebrow>span{color:#c3d7cd}
+.content-surface .section-heading h2{font-family:inherit;font-size:25px;font-weight:500;line-height:1.4;letter-spacing:.5px;margin:0;color:#f2f8f0;order:-1}
+.content-surface .section-heading .heading-dot{color:#b6dcc9;padding-left:3px}
+.section-heading-name .eyebrow{order:2}
+.lab-all{display:inline-flex;align-items:center;gap:10px;border:1px solid rgba(237,255,244,.25);border-radius:30px;padding:10px 15px;font-size:12px;color:#e8f3ea;background:rgba(18,44,35,.4);transition:background .2s}
+.lab-all:hover{background:rgba(46,78,63,.65)}
+.lab-total{font-family:ui-monospace,monospace;color:#b7d7c6;padding-left:4px}
+.content-surface .section-count{display:inline-flex;align-items:center;gap:7px;color:#d0e3d7;font-size:12px;padding:0}
+.content-surface .section-count strong{font-family:ui-monospace,monospace;font-size:14px;color:#e7f1e8;margin:0}
+
+.content-surface .lab-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+.content-surface .lab-card{display:flex;flex-direction:column;min-width:0;padding:25px 28px 23px;border-radius:24px;border:1px solid var(--card-edge);background:var(--card-surface);color:var(--ink);position:relative;overflow:hidden;box-shadow:0 16px 48px rgba(3,20,15,.12),inset 0 1px 0 rgba(255,255,255,.05);transition:transform .3s,box-shadow .3s,border-color .3s}
+.content-surface .lab-card:hover{transform:translateY(-5px);border-color:rgba(196,237,216,.4)}
+.lab-card-meta{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:11px;letter-spacing:.3px}
+.lab-card-meta>svg{margin-left:auto;color:var(--accent)}
+.lab-number{font:12px ui-monospace,monospace;border-right:1px solid var(--subtle-line);padding-right:12px;color:var(--accent)}
+.lab-card>.lab-preview{margin:24px 0;border-radius:12px}
+.lab-card-copy h3{font-family:inherit;font-size:24px;line-height:1.5;font-weight:500;letter-spacing:.3px;margin:0 0 10px}
+.lab-card-copy>p{font-size:14px;line-height:1.9;color:var(--muted);margin:0 0 25px;max-width:38em}
+.lab-card-footer{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:auto;border-top:1px solid var(--subtle-line);padding-top:19px}
+.lab-card-footer>span:first-child{display:inline-flex;align-items:center;gap:8px;color:var(--muted);font-size:11px}
+.lab-card-footer .status-dot{width:4px;height:4px;background:#8bc8ad;box-shadow:0 0 0 3px rgba(133,202,169,.08)}
+.lab-enter{display:inline-flex;align-items:center;gap:10px;color:var(--accent);font-size:13px}
+.lab-enter svg{transition:transform .25s}
+.lab-card:hover .lab-enter svg{transform:translate(2px,-2px)}
+
+.content-surface .journal-panel{border:1px solid var(--card-edge);border-radius:22px;background:var(--card-surface);overflow:hidden;box-shadow:0 16px 48px rgba(3,20,15,.1)}
+.content-surface .category-tabs{gap:5px;padding:16px 24px;border-color:var(--subtle-line)}
+.content-surface .category-tab{font-size:13px;padding:10px 16px;color:var(--muted)}
+.content-surface .category-tab.selected{color:#245448;background:#e1ece2}
+[data-theme=dark] .content-surface .category-tab.selected{color:#d2eee0;background:#2b473c}
+.content-surface .category-tab:hover{background:rgba(127,183,154,.12)}
+.content-surface .empty-journal{min-height:0;padding:34px 32px;display:flex;align-items:center;text-align:left;gap:22px}
+.empty-journal-icon{display:grid;place-items:center;width:58px;height:64px;flex-shrink:0;border:1px solid var(--subtle-line);border-radius:15px;background:rgba(121,167,141,.07);color:var(--accent);transform:rotate(-5deg)}
+.empty-journal-copy{min-width:0}
+.content-surface .empty-journal h3{font-family:inherit;font-size:18px;letter-spacing:.2px;font-weight:400;line-height:1.7;margin:0 0 6px}
+.empty-journal-copy p{font-size:13px;line-height:1.9;color:var(--muted);margin:0}
+.content-surface .empty-footnote{display:inline-flex;gap:8px;align-items:center;font-size:11px;line-height:1.7;margin-left:auto;padding-left:20px;color:var(--muted);white-space:nowrap}
+
+.content-surface .about-section{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:60px;padding:36px 0 0;border-top:1px solid rgba(220,247,229,.22);margin-bottom:50px;color:#eff6ed}
+.about-identity>.eyebrow{color:#c3dfd0;margin-bottom:24px}
+.about-identity>.eyebrow>span{color:#c3dfd0}
+.about-person{display:flex;align-items:center;gap:20px}
+.about-person>img{width:64px;height:64px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,.65)}
+.content-surface .about-section h2{font-family:inherit;font-size:25px;font-weight:500;line-height:1.5;letter-spacing:.4px;margin:0 0 5px}
+.content-surface .about-section h2>span{color:#bedfc8}
+.about-person p{font-size:13px;color:#c7dacd;line-height:1.8;margin:0}
+.content-surface .about-right{padding:0}
+.content-surface .about-right>p{font-size:14px;line-height:1.9;color:#d6e5db;margin:0 0 4px}
+.about-links{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
+.about-link{display:inline-flex;align-items:center;gap:9px;padding:10px 14px;border-radius:30px;border:1px solid rgba(230,251,238,.24);color:#e4f0e7;background:rgba(14,37,27,.3);font-size:12px}
+.content-surface .site-footer{color:#d0e1d4;padding:22px 0 0;border:0;border-top:1px solid rgba(220,247,229,.16);background:none;border-radius:0;backdrop-filter:none;box-shadow:none}
+.content-surface .footer-brand{font-size:14px;font-weight:500}
+.content-surface .footer-brand>span{font-size:10px;color:#bfd3c7}
+.content-surface .site-footer>p{font-size:11px;color:#bfd3c7}
+.content-surface .footer-links{font-size:11px;color:#cdded2}
+
+/* Motion ends in crisp, still content. 动效结束后内容清晰、稳定。 */
+.reveal-ready [data-reveal]{opacity:0;transform:translate3d(0,32px,0);filter:blur(3px);transition:opacity .7s ease var(--reveal-delay,0ms),transform .85s cubic-bezier(.16,1,.3,1) var(--reveal-delay,0ms),filter .7s ease var(--reveal-delay,0ms)}
+.reveal-ready [data-reveal].is-visible,.reveal-ready [data-reveal]:focus-within{opacity:1;transform:none;filter:none}
+.content-surface .lab-card.is-visible:hover{transform:translateY(-5px)}
+@media(max-width:1050px){
+  .content-surface .wrap{width:calc(100% - 64px)}
+  .section-heading-name{gap:18px}
+  .content-surface .empty-journal{flex-wrap:wrap}
+  .content-surface .empty-footnote{width:100%;padding-left:80px;margin:-8px 0 0}
+  .content-surface .about-section{gap:32px}
 }
-.reveal-ready [data-reveal].is-visible,
-.reveal-ready [data-reveal]:focus-within {
-  opacity: 1;
-  transform: none;
-  filter: none;
+@media(max-width:760px){
+  .wallpaper-scene .wallpaper-image{object-position:62% 50%}
+  .wallpaper-shade{background:linear-gradient(180deg,rgba(5,25,22,.14),rgba(5,25,22,.12) 45%,rgba(5,25,22,.42))}
+  .wallpaper-scene~.site-header{padding:17px 22px}
+  .wallpaper-scene~.site-header.scrolled{padding:12px 22px}
+  .wallpaper-scene~.site-header .mobile-navigation{background:rgba(14,36,29,.98)}
+  .hero-intro-copy{top:calc(50% + 70px + var(--avatar-lift,0px) + 23px)}
+  .hero-avatar-image{width:140px}
+  .hero .hero-name{font-size:37px}
+  .hero-intro-copy>p{font-size:13px;letter-spacing:.6px}
+  .wallpaper-scroll{bottom:20px;min-height:38px;font-size:10px}
+  .content-surface{padding-top:25px}
+  .content-surface .wrap{width:calc(100% - 40px)}
+  .content-surface .section-block{margin-bottom:50px;scroll-margin-top:0}
+  .content-surface .section-heading{margin-bottom:20px;gap:10px}
+  .section-heading-name{display:flex;flex-direction:column;align-items:flex-start;gap:5px}
+  .content-surface .section-heading h2{font-size:23px}
+  .content-surface .section-heading .eyebrow{font-size:8px;letter-spacing:1.3px}
+  .content-surface .lab-grid{grid-template-columns:1fr;gap:18px}
+  .content-surface .lab-card{padding:22px;border-radius:21px}
+  .lab-card>.lab-preview{margin:21px 0}
+  .lab-card-copy h3{font-size:22px}
+  .lab-card-copy>p{font-size:13px;margin-bottom:22px}
+  .lab-all{font-size:11px;padding:10px 12px;gap:7px}
+  .content-surface .section-count{display:inline-flex;align-self:center;font-size:11px}
+  .content-surface .category-tabs{padding:12px 13px;gap:3px}
+  .content-surface .category-tab{font-size:11px;padding:10px 11px}
+  .content-surface .empty-journal{padding:26px 23px;gap:16px;align-items:flex-start}
+  .empty-journal-icon{width:42px;height:48px;border-radius:12px}
+  .empty-journal-copy{flex:1}
+  .content-surface .empty-journal h3{font-size:16px}
+  .empty-journal-copy p{font-size:12px}
+  .content-surface .empty-footnote{padding-left:58px;font-size:10px;margin-top:0;white-space:normal}
+  .content-surface .about-section{display:grid;grid-template-columns:1fr;gap:26px;padding-top:28px;margin-bottom:34px}
+  .about-identity>.eyebrow{font-size:8px;margin-bottom:20px}
+  .about-person{gap:16px}
+  .content-surface .about-section h2{font-size:23px}
+  .about-person>img{width:56px;height:56px}
+  .about-person p,.content-surface .about-right>p{font-size:13px}
+  .content-surface .site-footer{gap:18px;padding-top:22px}
+  .content-surface .site-footer>p{font-size:10px}
+  .content-surface .footer-links{font-size:10px}
 }
-@media (max-width: 760px) {
-  .wallpaper-scene .wallpaper-image { object-position: 62% 50%; }
-  .wallpaper-shade {
-    background: linear-gradient(180deg, rgba(5,27,23,.35), transparent 27%, transparent 70%, rgba(5,27,23,.25));
-  }
-  .content-surface { padding-top: 20px; }
-  .content-surface .section-block { padding: 25px 20px; margin-bottom: 22px; border-radius: 23px; }
-  .content-surface .writing-section { padding-inline: 14px; }
-  .content-surface .writing-section > .section-heading { padding-inline: 5px; }
-  .content-surface .about-section { padding: 30px 24px; }
-  .content-surface .section-heading h2 { font-size: 23px; }
-  .content-surface .lab-section .section-heading h2 { font-size: 22px; }
-  .content-surface .category-tabs { padding-inline: 8px; gap: 2px; }
-  .content-surface .category-tab { padding-inline: 10px; }
-  .content-surface .site-footer { padding: 24px 20px; }
-  .reveal-ready [data-reveal] { transform: translate3d(0, 40px, 0) scale(.99); }
-  .reveal-ready [data-reveal].is-visible,
-  .reveal-ready [data-reveal]:focus-within { transform: none; }
-}
-@media (max-width: 380px) {
-  .content-surface .section-heading h2 { font-size: 21px; }
-  .content-surface .category-tab { padding-inline: 8px; }
-  .content-surface .intro-card { grid-template-columns: 1fr; }
-  .content-surface .intro-card h3 { grid-row: auto; margin-bottom: 12px; }
-  .content-surface .intro-card > a { grid-column: 1; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .hero-avatar-image { animation: none; }
-  .hero-intro-copy { animation: none; }
-  .reveal-ready [data-reveal] { opacity: 1; transform: none; filter: none; transition: none; }
-}
-@media (max-height: 520px) {
-  .hero-avatar-image { width: 112px; }
-  .hero-intro-copy { top: calc(50% + 56px + var(--avatar-lift, 0px) + 20px); }
-}
-@media print {
-  .wallpaper-scene { display: none; }
-  .content-surface .section-block,
-  .content-surface .site-footer { background: white; color: #203d34; box-shadow: none; }
-  .reveal-ready [data-reveal] { opacity: 1; transform: none; filter: none; }
-}
+@media(max-width:380px){.content-surface .wrap{width:calc(100% - 32px)}.content-surface .lab-card{padding:19px}.content-surface .category-tabs{padding-inline:9px}.content-surface .category-tab{padding-inline:9px}.lab-total{display:none}.content-surface .empty-journal{padding-inline:18px}}
+@media(max-height:600px){.hero-avatar-image{width:104px}.hero-intro-copy{top:calc(50% + 52px + var(--avatar-lift,0px) + 17px)}.hero .hero-name{font-size:30px;margin-bottom:8px}.hero-intro-copy>p{font-size:12px}.wallpaper-scroll{bottom:14px;min-height:34px}}
+@media(prefers-reduced-motion:reduce){.hero-avatar-image,.hero-intro-copy{animation:none}.reveal-ready [data-reveal]{opacity:1;transform:none;filter:none;transition:none}}
+@media print{.wallpaper-scene,.site-header,.wallpaper-scroll{display:none}.content-surface{--ink:#203d36;--muted:#566c62;--card-surface:white}.content-surface::before{display:none}.content-surface .lab-card,.content-surface .journal-panel{background:white;color:#203d36;box-shadow:none}.content-surface .section-heading h2,.content-surface .section-heading .eyebrow,.content-surface .about-section,.content-surface .about-right>p,.content-surface .site-footer{color:#203d36}.reveal-ready [data-reveal]{opacity:1;transform:none;filter:none}}
