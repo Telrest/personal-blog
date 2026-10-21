@@ -25,7 +25,7 @@ export const labs: Lab[] = [
     id: 'photo',
     number: '002',
     icon: 'image',
-    title: '用字符\n打印照片',
+    title: '小伙的\n照片打印',
     summary: '把照片拆成几万个字符再拼回来。示例用本站图标，也可以换成你自己的照片。',
     href: 'lab/photo/',
     meta: 'C → JavaScript',
