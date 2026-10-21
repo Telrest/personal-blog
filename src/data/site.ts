@@ -3,6 +3,7 @@ export const site = {
   title: "Telrest's personal blog",
   description: '记录想法，分享见解，也为有趣的小作品留一个位置。这里是 Telrest 的个人空间。',
   github: 'https://github.com/Telrest',
+  email: 'telrest@buaa.edu.cn',
 };
 
 // Only published material belongs here. 私密草稿应保存在独立的受保护存储中。
