@@ -66,6 +66,9 @@ document.querySelectorAll<HTMLButtonElement>('[data-format]').forEach(button=>bu
     case 'code':text=`\n\`\`\`\n${selected||'在这里写代码'}\n\`\`\`\n`;break;
   }
   if(['heading','quote','list'].includes(button.dataset.format||'')&&start>0&&body.value[start-1]!=='\n')text='\n'+text;
+  // Keep a closing code fence intact when inserting immediately after it.
+  // 在代码围栏行末插入格式时先换行，避免破坏围栏。
+  if(start===end && /(?:^|\n)[ \t]*(`{3,}|~{3,})[ \t]*$/.test(body.value.slice(0,start)))text='\n\n'+text;
   body.setRangeText(text,start,end,'select');body.focus();dirty=true;render();notify('排版已更新，记得导出备份。');
 }));
 function setView(view:string){document.querySelector('.workbench-columns')?.setAttribute('data-view',view);document.querySelectorAll<HTMLButtonElement>('[data-view][aria-pressed]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.view===view)));}
