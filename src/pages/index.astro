@@ -6,6 +6,7 @@ import '../styles/immersive.css';
 const base = import.meta.env.BASE_URL;
 ---
 <Layout>
+  <script is:inline>document.documentElement.classList.add('scroll-header-ready');</script>
   <div class="wallpaper-scene" aria-hidden="true">
     <img class="wallpaper-image" src={`${base}images/forest-wallpaper.jpg`} alt="" width="4800" height="2700" fetchpriority="high" />
     <img class="wallpaper-image wallpaper-image-soft" src={`${base}images/forest-wallpaper.jpg`} alt="" width="4800" height="2700" decoding="async" />
@@ -45,7 +46,7 @@ const base = import.meta.env.BASE_URL;
     <div class="content-surface">
       <section id="writing" class="writing-section wrap section-block" aria-labelledby="writing-title">
         <div class="section-heading" data-reveal>
-          <div><p class="eyebrow"><span>01</span> WORDS & THOUGHTS</p><h2 id="writing-title">文字，是想法的落脚点<span>。</span></h2><p class="section-description">记录值得留下的事，也给还没想明白的问题留一点空间。</p></div>
+          <div><p class="eyebrow"><span>01</span> WORDS & THOUGHTS</p><h2 id="writing-title" class="screen-reader-only">文章与思考</h2></div>
           <span class="section-count"><strong>{String(posts.length).padStart(2, '0')}</strong> 篇记录</span>
         </div>
         <div class="writing-layout">
@@ -73,7 +74,7 @@ const base = import.meta.env.BASE_URL;
       </section>
 
       <section id="lab" class="lab-section wrap section-block" aria-labelledby="lab-title">
-        <div class="section-heading" data-reveal><div><p class="eyebrow"><span>02</span> THE LITTLE LAB</p><h2 id="lab-title">给好奇心，一个游乐场<span>。</span></h2><p class="section-description">把「如果可以」变成「试试看」。小游戏、小工具，以及其他灵光一闪。</p></div><span class="label-outline"><span class="status-dot"></span> 正在慢慢搭建</span></div>
+        <div class="section-heading" data-reveal><div><p class="eyebrow"><span>02</span> THE LITTLE LAB</p><h2 id="lab-title" class="screen-reader-only">实验室</h2></div><span class="label-outline"><span class="status-dot"></span> 正在慢慢搭建</span></div>
         <div class="lab-banner" data-reveal>
           <div class="lab-copy"><span class="lab-badge"><Icon name="code" size={15} /> EXPERIMENT NO. 001</span><h3>下一件小作品，<br />从这里开始。</h3><p>也许是一个让人停不下来的小游戏，<br />也许是一个刚好用得上的小工具。</p><span class="coming-soon">敬请期待 <span>COMING SOON</span><Icon name="arrow" size={18} /></span></div>
           <div class="lab-art" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><span class="floating-spark spark-one">✳</span><span class="floating-spark spark-two">✦</span><div class="mini-window"><div class="mini-toolbar"><i></i><i></i><i></i><span>hello, curiosity.</span></div><div class="mini-content"><span class="code-symbol">&lt; / &gt;</span><span class="mini-caption">MADE OF LITTLE IDEAS</span></div></div><span class="floating-tag tag-play">▷ &nbsp; play a little</span><span class="floating-tag tag-build">✧ &nbsp; build something</span></div>

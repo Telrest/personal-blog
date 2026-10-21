@@ -3,6 +3,35 @@ const wallpaper = document.querySelector<HTMLElement>('.wallpaper-scene');
 const hero = document.querySelector<HTMLElement>('#home');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
+const scrollHeader = document.querySelector<HTMLElement>('.site-header');
+const firstContent = document.querySelector<HTMLElement>('#writing .section-heading');
+if (scrollHeader && firstContent) {
+  const setHeaderVisible = (visible: boolean) => {
+    scrollHeader.classList.toggle('header-visible', visible);
+    scrollHeader.inert = !visible;
+    if (!visible) {
+      const menu = scrollHeader.querySelector<HTMLElement>('#mobile-navigation');
+      const menuButton = scrollHeader.querySelector<HTMLButtonElement>('.menu-toggle');
+      if (menu) menu.hidden = true;
+      menuButton?.setAttribute('aria-expanded', 'false');
+      menuButton?.setAttribute('aria-label', '打开导航菜单');
+    }
+  };
+  setHeaderVisible(false);
+  if ('IntersectionObserver' in window) {
+    // Share the content's reveal boundary. 与第一组内容在同一边界浮现。
+    const headerObserver = new IntersectionObserver(entries => {
+      const entry = entries[0];
+      setHeaderVisible(entry.isIntersecting || entry.boundingClientRect.top < 0);
+    }, { rootMargin: '0px 0px -32px 0px', threshold: 0.06 });
+    headerObserver.observe(firstContent);
+  } else {
+    const updateHeader = () => setHeaderVisible(firstContent.getBoundingClientRect().top < window.innerHeight - 32);
+    updateHeader();
+    window.addEventListener('scroll', updateHeader, { passive: true });
+  }
+}
+
 if (wallpaper && hero) {
   let framePending = false;
   let heroHeight = hero.offsetHeight;
