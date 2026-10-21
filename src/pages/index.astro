@@ -36,7 +36,7 @@ const base = import.meta.env.BASE_URL;
     </section>
     <div class="content-surface">
       <section id="lab" class="lab-section wrap section-block" aria-labelledby="lab-title">
-        <div class="section-heading" data-reveal><div class="section-heading-name"><p class="eyebrow"><span>01</span> PLAY & BUILD</p><h2 id="lab-title">实验室<span class="heading-dot">.</span></h2></div><a class="lab-all" href={`${base}lab/`}>全部实验 <span class="lab-total">{String(labs.length).padStart(2, '0')}</span><Icon name="arrow" size={16} /></a></div>
+        <div class="section-heading" data-reveal><div class="section-heading-name"><h2 id="lab-title">实验室<span class="heading-dot">.</span></h2></div><a class="lab-all" href={`${base}lab/`}>全部实验 <span class="lab-total">{String(labs.length).padStart(2, '0')}</span><Icon name="arrow" size={16} /></a></div>
         <div class="lab-grid">
           {labs.map((lab, index) => (
             <a class={`lab-card lab-card-${lab.id}`} href={`${base}${lab.href}`} data-reveal data-reveal-delay={String(index * 80)}>
@@ -49,7 +49,7 @@ const base = import.meta.env.BASE_URL;
         </div>
       </section>
       <section id="writing" class="writing-section wrap section-block" aria-labelledby="writing-title">
-        <div class="section-heading" data-reveal><div class="section-heading-name"><p class="eyebrow"><span>02</span> WORDS & THOUGHTS</p><h2 id="writing-title">文章与思考<span class="heading-dot">.</span></h2></div><span class="section-count"><strong>{String(posts.length).padStart(2, '0')}</strong> 篇记录</span></div>
+        <div class="section-heading" data-reveal><div class="section-heading-name"><h2 id="writing-title">文章与思考<span class="heading-dot">.</span></h2></div><span class="section-count"><strong>{String(posts.length).padStart(2, '0')}</strong> 篇记录</span></div>
         <div class="journal-panel" data-reveal>
           <div class="category-tabs" role="group" aria-label="按文章分类筛选">{categories.map((category, index) => <button class:list={['category-tab', { selected: index === 0 }]} data-category={category} aria-pressed={index === 0}>{category}</button>)}</div>
           <div class="empty-journal" aria-live="polite">
@@ -60,7 +60,7 @@ const base = import.meta.env.BASE_URL;
         </div>
       </section>
       <section id="about" class="about-section wrap section-block" aria-labelledby="about-title">
-        <div class="about-identity" data-reveal><p class="eyebrow"><span>03</span> A LITTLE ABOUT ME</p><div class="about-person"><img src={`${base}images/avatar.jpg`} alt="" width="640" height="640" loading="lazy" /><div><h2 id="about-title">Telrest</h2><p>可能有想法，可能又想玩。</p></div></div></div>
+        <div class="about-identity" data-reveal><div class="about-person"><img src={`${base}images/avatar.jpg`} alt="" width="640" height="640" loading="lazy" /><div><h2 id="about-title">Telrest</h2><p>可能有想法，可能又想玩。</p></div></div></div>
         <div class="about-right" data-reveal data-reveal-delay="80"><p>分享一些思考或者感想，也可以说是想玩一玩。</p><p>感觉，分享一下，也许会挺好。</p><div class="about-links"><a class="about-link" href={site.github} target="_blank" rel="noopener noreferrer"><Icon name="github" size={17} /> GitHub <Icon name="arrow" size={14} /></a><a class="about-link" href={`mailto:${site.email}`}><Icon name="pen" size={16} /> 给我写信 <Icon name="arrow" size={14} /></a></div></div>
       </section>
       <footer class="site-footer wrap"><a href="#home" class="footer-brand">Telrest<span> / personal blog</span></a><p>© 2026 Telrest · 保持好奇，慢慢生长。</p><div class="footer-links"><a href={`${base}admin/`}>写作空间 <Icon name="arrow" size={12} /></a><a href="#home" aria-label="回到顶部">回到顶部 ↑</a></div></footer>
