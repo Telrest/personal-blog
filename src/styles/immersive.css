@@ -58,6 +58,28 @@
   white-space: nowrap;
   border: 0;
 }
+.hero-avatar {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+.hero-avatar-image {
+  display: block;
+  width: clamp(144px, 16vw, 208px);
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border: 4px solid rgba(255,255,255,.95);
+  border-radius: 50%;
+  box-shadow: 0 14px 48px rgba(5,26,24,.25), 0 0 0 1px rgba(255,255,255,.15);
+  animation: avatar-arrive 1.6s cubic-bezier(.16,1,.3,1) .25s both;
+}
+@keyframes avatar-arrive {
+  from { opacity: 0; transform: translate3d(0, 16px, 0) scale(.94); filter: blur(4px); }
+  to { opacity: 1; transform: none; filter: none; }
+}
 .wallpaper-scroll {
   position: absolute;
   bottom: 32px;
@@ -197,6 +219,7 @@
   .content-surface .intro-card > a { grid-column: 1; }
 }
 @media (prefers-reduced-motion: reduce) {
+  .hero-avatar-image { animation: none; }
   .reveal-ready [data-reveal] { opacity: 1; transform: none; filter: none; transition: none; }
 }
 @media print {
