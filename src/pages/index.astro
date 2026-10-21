@@ -2,9 +2,16 @@
 import Layout from '../layouts/Layout.astro';
 import Icon from '../components/Icon.astro';
 import { site, categories, posts } from '../data/site';
+import '../styles/immersive.css';
 const base = import.meta.env.BASE_URL;
 ---
 <Layout>
+  <div class="wallpaper-scene" aria-hidden="true">
+    <img class="wallpaper-image" src={`${base}images/forest-wallpaper.jpg`} alt="" width="4800" height="2700" fetchpriority="high" />
+    <img class="wallpaper-image wallpaper-image-soft" src={`${base}images/forest-wallpaper.jpg`} alt="" width="4800" height="2700" decoding="async" />
+    <div class="wallpaper-shade"></div>
+    <div class="wallpaper-depth-shade"></div>
+  </div>
   <header class="site-header">
     <a href="#home" class="brand" aria-label="Telrest 首页">
       <span class="brand-mark">T<span class="brand-leaf"></span></span>
@@ -30,34 +37,19 @@ const base = import.meta.env.BASE_URL;
   </header>
 
   <main id="main">
-    <section id="home" class="hero" aria-labelledby="hero-title">
-      <img class="hero-image" src={`${base}images/forest-wallpaper.jpg`} alt="" width="4800" height="2700" fetchpriority="high" />
-      <div class="hero-shade"></div>
-      <div class="hero-content wrap">
-        <div class="hero-eyebrow"><span class="little-line"></span> A LITTLE CORNER OF THE INTERNET</div>
-        <p class="hero-greeting">你好，欢迎来到我的世界。</p>
-        <h1 id="hero-title">记录此刻，<br />让想法<span class="serif-word">自由生长。</span></h1>
-        <p class="hero-description">一些见解，一些灵感，还有一些有趣的尝试。<br />在这里，慢慢写，也慢慢发现。</p>
-        <div class="hero-buttons">
-          <a class="button button-light" href="#writing"><Icon name="book" /> 开始阅读 <Icon name="right" size={18} /></a>
-          <a class="button button-glass glass" href="#lab"><Icon name="spark" /> 探索实验室 <Icon name="arrow" size={17} /></a>
-        </div>
-      </div>
-      <div class="hero-bottom wrap">
-        <a class="scroll-hint" href="#writing"><span class="scroll-circle glass"><Icon name="down" size={17} /></span><span>往下看看<small>SCROLL TO EXPLORE</small></span></a>
-        <span class="hero-signature"><span class="status-dot"></span> 保持好奇，慢慢生长。<span class="signature-line"></span></span>
-      </div>
-      <span class="hero-edge" aria-hidden="true">THOUGHTS · WORDS · LITTLE EXPERIMENTS</span>
+    <section id="home" class="hero" aria-label="Telrest 的个人空间">
+      <h1 class="screen-reader-only">Telrest 的个人空间</h1>
+      <a class="wallpaper-scroll glass" href="#writing" aria-label="向下浏览文章与思考"><Icon name="down" size={21} /></a>
     </section>
 
     <div class="content-surface">
       <section id="writing" class="writing-section wrap section-block" aria-labelledby="writing-title">
-        <div class="section-heading">
+        <div class="section-heading" data-reveal>
           <div><p class="eyebrow"><span>01</span> WORDS & THOUGHTS</p><h2 id="writing-title">文字，是想法的落脚点<span>。</span></h2><p class="section-description">记录值得留下的事，也给还没想明白的问题留一点空间。</p></div>
           <span class="section-count"><strong>{String(posts.length).padStart(2, '0')}</strong> 篇记录</span>
         </div>
         <div class="writing-layout">
-          <div class="journal-panel">
+          <div class="journal-panel" data-reveal>
             <div class="category-tabs" role="group" aria-label="按文章分类筛选">
               {categories.map((category, index) => <button class:list={['category-tab', { selected: index === 0 }]} data-category={category} aria-pressed={index === 0}>{category}</button>)}
             </div>
@@ -69,7 +61,7 @@ const base = import.meta.env.BASE_URL;
               <span class="empty-footnote"><Icon name="clock" size={14} /> 未来的文章将在这里按发布时间呈现</span>
             </div>
           </div>
-          <aside class="intro-card" aria-label="关于这个空间">
+          <aside class="intro-card" aria-label="关于这个空间" data-reveal data-reveal-delay="100">
             <span class="intro-icon"><Icon name="leaf" size={29} /></span>
             <p class="eyebrow">A PLACE TO GROW</p>
             <h3>不必每个想法，<br />都有标准答案。</h3>
@@ -81,22 +73,23 @@ const base = import.meta.env.BASE_URL;
       </section>
 
       <section id="lab" class="lab-section wrap section-block" aria-labelledby="lab-title">
-        <div class="section-heading"><div><p class="eyebrow"><span>02</span> THE LITTLE LAB</p><h2 id="lab-title">给好奇心，一个游乐场<span>。</span></h2><p class="section-description">把「如果可以」变成「试试看」。小游戏、小工具，以及其他灵光一闪。</p></div><span class="label-outline"><span class="status-dot"></span> 正在慢慢搭建</span></div>
-        <div class="lab-banner">
+        <div class="section-heading" data-reveal><div><p class="eyebrow"><span>02</span> THE LITTLE LAB</p><h2 id="lab-title">给好奇心，一个游乐场<span>。</span></h2><p class="section-description">把「如果可以」变成「试试看」。小游戏、小工具，以及其他灵光一闪。</p></div><span class="label-outline"><span class="status-dot"></span> 正在慢慢搭建</span></div>
+        <div class="lab-banner" data-reveal>
           <div class="lab-copy"><span class="lab-badge"><Icon name="code" size={15} /> EXPERIMENT NO. 001</span><h3>下一件小作品，<br />从这里开始。</h3><p>也许是一个让人停不下来的小游戏，<br />也许是一个刚好用得上的小工具。</p><span class="coming-soon">敬请期待 <span>COMING SOON</span><Icon name="arrow" size={18} /></span></div>
           <div class="lab-art" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><span class="floating-spark spark-one">✳</span><span class="floating-spark spark-two">✦</span><div class="mini-window"><div class="mini-toolbar"><i></i><i></i><i></i><span>hello, curiosity.</span></div><div class="mini-content"><span class="code-symbol">&lt; / &gt;</span><span class="mini-caption">MADE OF LITTLE IDEAS</span></div></div><span class="floating-tag tag-play">▷ &nbsp; play a little</span><span class="floating-tag tag-build">✧ &nbsp; build something</span></div>
         </div>
       </section>
 
       <section id="about" class="about-section wrap section-block" aria-labelledby="about-title">
-        <div class="about-left"><p class="eyebrow"><span>03</span> THE PERSON BEHIND THE PAGE</p><h2 id="about-title">我是 Telrest<span>。</span><br /><span class="about-subtitle">很高兴在这里遇见你。</span></h2></div>
-        <div class="about-right"><p>我想给自己的文字和小作品，找一个可以长久安放的地方。于是，就有了这个小小的网站。</p><p>这里还在生长中。未来会有新的文章、新的尝试，也会有一些暂时没有答案的思考。</p><a class="text-link" href={site.github} target="_blank" rel="noopener noreferrer"><Icon name="github" size={19} /> 在 GitHub 找到我 <Icon name="arrow" size={17} /></a></div>
+        <div class="about-left" data-reveal><p class="eyebrow"><span>03</span> THE PERSON BEHIND THE PAGE</p><h2 id="about-title">我是 Telrest<span>。</span><br /><span class="about-subtitle">很高兴在这里遇见你。</span></h2></div>
+        <div class="about-right" data-reveal data-reveal-delay="100"><p>我想给自己的文字和小作品，找一个可以长久安放的地方。于是，就有了这个小小的网站。</p><p>这里还在生长中。未来会有新的文章、新的尝试，也会有一些暂时没有答案的思考。</p><a class="text-link" href={site.github} target="_blank" rel="noopener noreferrer"><Icon name="github" size={19} /> 在 GitHub 找到我 <Icon name="arrow" size={17} /></a></div>
       </section>
       <footer class="site-footer wrap"><a href="#home" class="footer-brand"><Icon name="leaf" size={20} /> Telrest<span> / personal blog</span></a><p>© 2026 Telrest · 保持好奇，慢慢生长。</p><div class="footer-links"><a href={`${base}admin/`}>写作空间 <Icon name="arrow" size={13} /></a><a href="#home" aria-label="回到顶部">回到顶部 ↑</a></div></footer>
     </div>
   </main>
 
   <script>
+    import '../scripts/immersive';
     const themeButton = document.querySelector<HTMLButtonElement>('.theme-toggle');
     const updateThemeButton = () => {
       const dark = document.documentElement.dataset.theme === 'dark';

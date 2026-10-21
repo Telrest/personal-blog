@@ -1,0 +1,192 @@
+/* A single wallpaper stays beneath the whole homepage. 整个首页共用固定壁纸。 */
+.wallpaper-scene {
+  --wallpaper-depth: 0;
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: #244b43;
+  contain: strict;
+}
+.wallpaper-scene .wallpaper-image {
+  position: absolute;
+  inset: -24px;
+  width: calc(100% + 48px);
+  height: calc(100% + 48px);
+  max-width: none;
+  object-fit: cover;
+  object-position: 61% 50%;
+}
+.wallpaper-scene .wallpaper-image-soft {
+  filter: blur(12px);
+  opacity: var(--wallpaper-depth);
+  will-change: opacity;
+}
+.wallpaper-shade,
+.wallpaper-depth-shade {
+  position: absolute;
+  inset: 0;
+}
+.wallpaper-shade {
+  background: linear-gradient(180deg, rgba(5,27,23,.32), rgba(5,27,23,.02) 22%, transparent 68%, rgba(5,27,23,.24));
+}
+.wallpaper-depth-shade {
+  background: rgba(8,27,23,.3);
+  opacity: var(--wallpaper-depth);
+  will-change: opacity;
+}
+.wallpaper-scene ~ main {
+  position: relative;
+  z-index: 1;
+}
+.wallpaper-scene ~ main .hero {
+  background: transparent;
+  isolation: auto;
+  height: 100svh;
+  min-height: 100svh;
+  max-height: none;
+}
+.screen-reader-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+.wallpaper-scroll {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 44px;
+  height: 54px;
+  border-radius: 28px;
+  display: grid;
+  place-items: center;
+  color: white;
+  transition: background .2s, box-shadow .2s;
+}
+.wallpaper-scroll:hover { background-color: rgba(255,255,255,.19); box-shadow: 0 8px 30px rgba(7,36,25,.18); }
+.wallpaper-scroll svg { animation: nudge 3s ease-in-out infinite; }
+.wallpaper-scene ~ .site-header:not(.scrolled) .navigation {
+  background: linear-gradient(135deg, rgba(24,52,43,.3), rgba(24,52,43,.12));
+}
+
+/* Translucent reading surfaces leave the wallpaper visible around and through them. */
+/* 阅读面板采用半透明玻璃，壁纸贯穿页面与面板。 */
+.content-surface {
+  --section-glass: rgba(240,247,231,.66);
+  --inner-glass: rgba(255,255,248,.36);
+  --glass-edge: rgba(255,255,255,.56);
+  position: relative;
+  padding: 26px 0 24px;
+  background: transparent;
+}
+.content-surface .section-block {
+  padding: 36px;
+  margin-block: 0 30px;
+  border: 1px solid var(--glass-edge);
+  border-radius: 28px;
+  background: var(--section-glass);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.36), 0 20px 70px rgba(4,27,21,.12);
+  backdrop-filter: blur(18px) saturate(115%);
+  -webkit-backdrop-filter: blur(18px) saturate(115%);
+}
+.content-surface .journal-panel {
+  background: var(--inner-glass);
+  border-color: rgba(255,255,255,.52);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.25);
+}
+.content-surface .intro-card {
+  background: rgba(222,234,204,.54);
+  border: 1px solid rgba(255,255,255,.35);
+}
+.content-surface .lab-banner {
+  background: rgba(21,57,45,.76);
+  border-color: rgba(223,245,207,.23);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.12);
+}
+.content-surface .about-section {
+  padding-block: 40px;
+}
+.content-surface .site-footer {
+  border: 1px solid var(--glass-edge);
+  border-radius: 22px;
+  padding: 24px 30px;
+  background: var(--section-glass);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+[data-theme=dark] .content-surface {
+  --section-glass: rgba(15,36,29,.58);
+  --inner-glass: rgba(34,62,46,.38);
+  --glass-edge: rgba(218,239,203,.2);
+}
+[data-theme=dark] .content-surface .journal-panel {
+  border-color: rgba(218,239,203,.18);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+}
+[data-theme=dark] .content-surface .intro-card {
+  background: rgba(57,80,45,.44);
+  border-color: rgba(218,239,203,.16);
+}
+[data-theme=dark] .content-surface .intro-card > p:not(.eyebrow) {
+  color: #b9c8ae;
+}
+
+/* A soft rise, a little focus, then stillness. 轻轻上浮、由虚到实，随后安静停留。 */
+.reveal-ready [data-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 64px, 0) scale(.985);
+  filter: blur(7px);
+  transition: opacity .9s ease var(--reveal-delay, 0ms),
+    transform 1.05s cubic-bezier(.16,1,.3,1) var(--reveal-delay, 0ms),
+    filter .9s ease var(--reveal-delay, 0ms);
+}
+.reveal-ready [data-reveal].is-visible,
+.reveal-ready [data-reveal]:focus-within {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+@media (max-width: 760px) {
+  .wallpaper-scene .wallpaper-image { object-position: 62% 50%; }
+  .wallpaper-shade {
+    background: linear-gradient(180deg, rgba(5,27,23,.35), transparent 27%, transparent 70%, rgba(5,27,23,.25));
+  }
+  .wallpaper-scene ~ main .hero { min-height: 100svh; }
+  .content-surface { padding-top: 20px; }
+  .content-surface .section-block { padding: 25px 20px; margin-bottom: 22px; border-radius: 23px; }
+  .content-surface .writing-section { padding-inline: 14px; }
+  .content-surface .writing-section > .section-heading { padding-inline: 5px; }
+  .content-surface .about-section { padding: 30px 24px; }
+  .content-surface .section-heading h2 { font-size: 23px; }
+  .content-surface .lab-section .section-heading h2 { font-size: 22px; }
+  .content-surface .category-tabs { padding-inline: 8px; gap: 2px; }
+  .content-surface .category-tab { padding-inline: 10px; }
+  .content-surface .site-footer { padding: 24px 20px; }
+  .reveal-ready [data-reveal] { transform: translate3d(0, 40px, 0) scale(.99); }
+  .reveal-ready [data-reveal].is-visible,
+  .reveal-ready [data-reveal]:focus-within { transform: none; }
+}
+@media (max-width: 380px) {
+  .content-surface .section-heading h2 { font-size: 21px; }
+  .content-surface .category-tab { padding-inline: 8px; }
+  .content-surface .intro-card { grid-template-columns: 1fr; }
+  .content-surface .intro-card h3 { grid-row: auto; margin-bottom: 12px; }
+  .content-surface .intro-card > a { grid-column: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal-ready [data-reveal] { opacity: 1; transform: none; filter: none; transition: none; }
+}
+@media print {
+  .wallpaper-scene { display: none; }
+  .content-surface .section-block,
+  .content-surface .site-footer { background: white; color: #203d34; box-shadow: none; }
+  .reveal-ready [data-reveal] { opacity: 1; transform: none; filter: none; }
+}
