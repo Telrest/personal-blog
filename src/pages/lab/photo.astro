@@ -287,7 +287,12 @@ const base = import.meta.env.BASE_URL;
               if (bright !== !!options.light) mask |= 1 << BITS[dy][dx];
             }
           }
-          line += mask === 0 ? ' ' : String.fromCharCode(0x2800 + mask);
+          // 空格也要用 U+2800（盲文空白），不能用普通空格：
+          // 普通空格来自主字体、盲文来自回退字体，两者步进宽度不同，
+          // 混排后每行像素宽度不一致，右边缘就会参差不齐。
+          // Use BRAILLE PATTERN BLANK for empty cells: a plain space comes from a
+          // different font, so mixed advance widths make the right edge ragged.
+          line += String.fromCharCode(0x2800 + mask);
         }
         lines.push(line);
       }
@@ -296,19 +301,54 @@ const base = import.meta.env.BASE_URL;
   }
 
   /* ---------- 显示与逐字播放 ---------- */
+  // 量出当前字体下一个字符的真实宽度比例。
+  // Consolas 没有盲文点阵字形，浏览器会回退到别的字体，宽度和 0.6em 差很远；
+  // 硬按 0.6em 估算会让点阵模式溢出，滚动条一出现一消失就反复重排 —— 看起来就是抖动。
+  // Measure the real advance width: braille glyphs fall back to another font.
+  let ratioCache = { key: '', value: 0.6 };
+  function charRatio() {
+    const sample = modeEl.value === 'braille' ? '\u28ff' : 'M';
+    const fontFamily = getComputedStyle(artEl).fontFamily;
+    const key = sample + '|' + fontFamily;
+    if (ratioCache.key === key) return ratioCache.value;
+    const probe = document.createElement('span');
+    probe.setAttribute('aria-hidden', 'true');
+    probe.textContent = sample.repeat(50);
+    probe.style.cssText =
+      'position:fixed;top:-2000px;left:0;visibility:hidden;white-space:pre;' +
+      'font-size:100px;line-height:1;letter-spacing:0;pointer-events:none;';
+    probe.style.fontFamily = fontFamily;
+    document.body.appendChild(probe);
+    const width = probe.getBoundingClientRect().width;
+    probe.remove();
+    ratioCache = { key, value: width > 0 ? width / 50 / 100 : 0.6 };
+    return ratioCache.value;
+  }
+
+  let lastFit = { width: 0, height: 0, size: 0 };
+
   // 同时按宽和高收缩字号，让整幅字符画完整落在可视区域内，不用滚动。
   // Shrink by both axes so the whole picture fits at once, without scrolling.
-  function fitStage() {
+  function fitStage(force) {
     if (!state.cols || !state.rows) return;
     const availWidth = stageEl.clientWidth - 36;
     const availHeight = stageEl.clientHeight - 36;
     if (availWidth <= 0 || availHeight <= 0) return;
-    const byWidth = availWidth / (state.cols * 0.6);
-    const byHeight = availHeight / state.rows;
-    let size = Math.min(byWidth, byHeight);
+    // 留 2% 余量：取整误差若让字符画刚好超出，就会出现横向滚动条，
+    // 滚动条又吃掉高度、再次触发重排 —— 这才是抖动的来源。
+    // Keep a small margin so rounding never spawns a horizontal scrollbar.
+    const byWidth = (availWidth * 0.98) / (state.cols * charRatio());
+    // 优先铺满宽度；太高的图就纵向滚动，和原程序的行为一致。
+    // Fill the width first; tall pictures scroll vertically, like the original program.
+    let size = byWidth;
     if (!Number.isFinite(size) || size <= 0) return;
     size = Math.max(1.1, Math.min(14, size));
-    artEl.style.fontSize = size.toFixed(2) + 'px';
+    // 没有实质变化就不重设字号，避免和 ResizeObserver 互相触发形成死循环。
+    // Skip no-op updates so the observer cannot ping-pong with us.
+    const next = Number(size.toFixed(2));
+    if (!force && next === lastFit.size && availWidth === lastFit.width && availHeight === lastFit.height) return;
+    lastFit = { width: availWidth, height: availHeight, size: next };
+    artEl.style.fontSize = next + 'px';
     artEl.style.lineHeight = '1';
   }
 
@@ -391,6 +431,9 @@ const base = import.meta.env.BASE_URL;
     });
 
     stageEl.classList.toggle('is-light', lightEl.checked);
+    // 点阵字符走固定字体，避免浏览器按字符随机回退导致宽度不齐。
+    // Pin a braille-capable font so every cell has the same advance width.
+    artEl.classList.toggle('is-braille', modeEl.value === 'braille');
     state.fullText = result.lines.join('\n');
     state.cols = result.lines.length ? result.lines[0].length : 0;
     state.rows = result.lines.length;
@@ -399,7 +442,7 @@ const base = import.meta.env.BASE_URL;
     metaEl.textContent = `${image.width}×${image.height} → ${result.columns}×${result.lines.length}`;
     statusEl.textContent = '就绪 / Ready';
 
-    fitStage();
+    fitStage(true);
     // 打开即从空白开始逐字打印。
     // Start typing right away when the page loads.
     play(true);
@@ -527,7 +570,8 @@ const base = import.meta.env.BASE_URL;
   window.addEventListener('resize', fitStage);
   // 容器尺寸变化（窗口缩放、字体加载）时重新适配字号。
   if ('ResizeObserver' in window) {
-    new ResizeObserver(() => fitStage()).observe(stageEl);
+    // 延后到下一帧再测，避免和本次字号修改互相触发。
+    new ResizeObserver(() => requestAnimationFrame(() => fitStage())).observe(stageEl);
   }
 
   // 默认底色跟随站点主题 / Follow the site theme by default.
@@ -612,6 +656,9 @@ const base = import.meta.env.BASE_URL;
   .pp-stage {
     height: clamp(400px, 72vh, 920px);
     overflow: auto;
+    /* 常驻滚动条位置，避免滚动条出现/消失改变可用尺寸。 */
+    /* Reserve the scrollbar gutter so its appearance cannot shift the layout. */
+    scrollbar-gutter: stable;
     padding: 18px;
     border-radius: 16px;
     background: #0f1b16;
@@ -632,6 +679,11 @@ const base = import.meta.env.BASE_URL;
     color: #dbe7d3;
   }
   .pp-stage.is-light .pp-art { color: #24342b; }
+  /* 盲文区块在等宽字体里通常缺失，显式指定带字形的字体，宽度才一致。 */
+  /* Monospace fonts rarely ship the braille block; use fonts that do. */
+  .pp-art.is-braille {
+    font-family: 'Segoe UI Symbol', 'Apple Symbols', 'Noto Sans Symbols 2', 'DejaVu Sans', 'Symbols Nerd Font', ui-monospace, monospace;
+  }
   .pp-original {
     display: block;
     margin: 0 auto;
