@@ -28,6 +28,6 @@ Expected URL: https://telrest.github.io/personal-blog/
 - 个人信息：`src/data/site.ts`；首页：`src/pages/index.astro`；样式：`src/styles/global.css`。
 - Wallpaper: `public/images/forest-wallpaper.jpg`. Supplied by the owner; artist and license currently unconfirmed. See `ASSETS.md`.
 - There are no published articles yet. Category names are provisional. No sample posts are presented as real writing.
-- `admin/` is an honest placeholder, not an authenticated CMS. Login, editing, uploading, saving and publishing are not implemented in this phase.
+- `admin/` supports session-only Markdown writing, .md/.markdown/.txt import, paste import, formatting, sanitized preview and Markdown export. Refreshing or closing loses unexported content; no draft text is stored in localStorage or sent to a server. Login, cloud saving, image upload, publishing and comments are not connected yet.
 - Do not add confidential drafts or attachments to this repository, including Git history. A `draft` flag only hides content; it does not make a public file private. Future CMS work must use separate authenticated private storage and export only explicitly published content.
 - No article-wide CC license has been applied yet. Third-party artwork is excluded from any future license applied to original articles.

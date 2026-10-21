@@ -1,8 +1,30 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import Icon from '../../components/Icon.astro';
+import '../../styles/writing.css';
+import '../../styles/prose.css';
 const base = import.meta.env.BASE_URL;
 ---
-<Layout title="写作空间 · Telrest">
-  <main id="main" class="admin-page"><div class="admin-card"><span class="intro-icon"><Icon name="pen" size={30} /></span><p class="eyebrow">THE WRITING ROOM</p><h1>写作空间，<br />正在搭建。</h1><p>这里将成为我记录想法、整理文章的地方。<br />登录与发布功能尚未开放。</p><div class="admin-note"><Icon name="leaf" size={19} /><span>慢慢准备，等一个新的故事。</span></div><a href={base} class="button button-forest"><Icon name="right" size={18} class="flip-arrow" /> 回到首页</a></div></main>
+<Layout title="写作空间 · Telrest" description="导入文章，慢慢整理想法。Telrest 的写作空间。">
+  <main id="main" class="writing-room">
+    <header class="writing-header"><a class="writing-back" href={base}><Icon name="arrow" size={17} class="flip-arrow" />回到首页</a><div class="writing-header-actions"><span class="session-badge">本次试写</span><button id="writing-theme" class="icon-button glass" aria-label="切换为浅色模式"><Icon name="sun" size={18} /></button></div></header>
+    <div class="writing-heading"><div><p>留一点时间，给自己的文字。</p><h1>写作空间<span>。</span></h1></div><div class="writing-actions"><button id="import-file" class="writing-button"><Icon name="book" size={16} />导入文件</button><button id="paste-open" class="writing-button">粘贴导入</button><button id="export-file" class="writing-button primary"><Icon name="down" size={16} />导出 Markdown</button></div></div>
+    <p class="session-notice"><Icon name="leaf" size={17} /><span>今天先在这里试写。内容只保留在本次页面中，刷新或关闭前请导出。登录、云端保存和发布稍后接入。</span></p>
+    <input id="article-file" type="file" accept=".md,.markdown,.txt,text/markdown,text/plain" hidden />
+    <section class="writing-metadata" aria-label="文章信息">
+      <label class="title-label">文章标题<input id="article-title" placeholder="给这个想法起个名字" maxlength="180" autocomplete="off" /></label>
+      <div class="metadata-row"><label>分类<input id="article-category" value="见解与思考" list="category-options" maxlength="60" /></label><datalist id="category-options"><option>见解与思考</option><option>学习笔记</option><option>生活随记</option></datalist><label>标签<input id="article-tags" placeholder="用逗号分隔，比如：生活，学习" /></label></div>
+      <details><summary>摘要与文章地址</summary><div class="metadata-row"><label>摘要<textarea id="article-summary" rows="2" maxlength="600" placeholder="可选，简单介绍这篇文章"></textarea></label><label>文章地址<input id="article-slug" placeholder="可选，例如：my-first-post" maxlength="100" /><small>以后发布时使用，小写字母、数字和连字符。</small></label></div></details>
+    </section>
+    <section class="writing-workbench" aria-label="正文编辑与预览">
+      <div class="workbench-header"><div class="view-tabs" role="group" aria-label="切换编辑视图"><button data-view="split" aria-pressed="true">双栏</button><button data-view="edit" aria-pressed="false">编辑</button><button data-view="preview" aria-pressed="false">预览</button></div><span id="word-count">0 字符</span></div>
+      <div class="workbench-columns" data-view="split">
+        <div class="editor-pane"><div class="format-toolbar" role="group" aria-label="正文排版工具"><button data-format="heading" title="二级标题">标题</button><button data-format="bold" title="加粗"><strong>B</strong></button><button data-format="italic" title="斜体"><em>I</em></button><button data-format="quote">引用</button><button data-format="list">列表</button><button data-format="link">链接</button><button data-format="code">代码</button></div><label class="screen-reader-only" for="article-body">文章正文，使用 Markdown 编辑</label><textarea id="article-body" spellcheck="false" placeholder="从这里开始写，或者导入已经写好的 .md / .txt 文章。&#10;&#10;选中文字后，可以用上面的按钮调整排版。"></textarea></div>
+        <section class="preview-pane" aria-label="文章阅读预览"><p class="preview-label">阅读预览</p><h2 id="preview-title">未命名文章</h2><div id="article-preview" class="prose"><p class="preview-empty">文字会在这里慢慢成形。</p></div></section>
+      </div>
+    </section>
+    <footer class="writing-status"><p id="writing-message" role="status" aria-live="polite">支持 Markdown、纯文本文件，也可以粘贴文章导入。</p><button id="new-article" class="writing-text-button">新建空白文章</button></footer>
+  </main>
+  <dialog id="paste-dialog"><form method="dialog"><div class="paste-heading"><h2>把文章放进来</h2><button value="cancel" class="writing-text-button" aria-label="关闭粘贴导入">关闭</button></div><p>粘贴 Markdown 或纯文本，导入后再调整排版。</p><label class="screen-reader-only" for="paste-content">待导入的文章</label><textarea id="paste-content" rows="10" placeholder="# 文章标题&#10;&#10;在这里粘贴正文……"></textarea><div class="paste-actions"><button value="cancel" class="writing-button">取消</button><button type="button" id="paste-confirm" class="writing-button primary">导入为本次试写</button></div></form></dialog>
+  <script>import '../../scripts/writing';</script>
 </Layout>

@@ -1,0 +1,76 @@
+import { marked } from 'marked';
+import DOMPurify from 'dompurify';
+import { parseImportedArticle } from '../lib/import-article';
+import { exportMarkdown, validateDraft } from '../lib/article';
+const get = <T extends HTMLElement>(id:string) => document.getElementById(id) as T;
+const title = get<HTMLInputElement>('article-title');
+const body = get<HTMLTextAreaElement>('article-body');
+const category = get<HTMLInputElement>('article-category');
+const tags = get<HTMLInputElement>('article-tags');
+const summary = get<HTMLTextAreaElement>('article-summary');
+const slug = get<HTMLInputElement>('article-slug');
+const message = get<HTMLParagraphElement>('writing-message');
+const preview = get<HTMLDivElement>('article-preview');
+const pasteDialog = get<HTMLDialogElement>('paste-dialog');
+const fields = [title,body,category,tags,summary,slug];
+const read = () => ({title:title.value.trim(),markdown:body.value,category:category.value.trim(),tags:tags.value.split(/[,，]/).map(t=>t.trim()).filter(Boolean),summary:summary.value.trim(),slug:slug.value.trim()});
+let dirty = false;
+let timer: ReturnType<typeof setTimeout>;
+function notify(text:string, error=false) { message.textContent=text; message.classList.toggle('is-error',error); }
+function render() {
+  get('preview-title').textContent=title.value.trim()||'未命名文章';
+  get('word-count').textContent=`${[...body.value].length.toLocaleString('zh-CN')} 字符`;
+  if (body.value.length>1_000_000) { notify('正文超过 100 万字符，暂时停止预览。',true); return; }
+  preview.innerHTML = body.value.trim() ? DOMPurify.sanitize(marked.parse(body.value,{async:false,gfm:true}), {
+    USE_PROFILES:{html:true},FORBID_TAGS:['style','form','input','button','iframe','object','embed'],FORBID_ATTR:['style','srcset'],
+  }) : '<p class="preview-empty">文字会在这里慢慢成形。</p>';
+  preview.querySelectorAll<HTMLAnchorElement>('a').forEach(link => {link.target='_blank';link.rel='noopener noreferrer';});
+  preview.querySelectorAll<HTMLImageElement>('img').forEach(image=>{image.loading='lazy';image.referrerPolicy='no-referrer';});
+}
+fields.forEach(field=>field.addEventListener('input',()=>{dirty=true;clearTimeout(timer);timer=setTimeout(render,180);notify('本次修改仅在当前页面中，离开前请导出。');}));
+window.addEventListener('beforeunload',event=>{if(dirty){event.preventDefault();event.returnValue='';}});
+const canReplace=()=>!dirty||window.confirm('当前试写尚未导出。要替换它吗？建议先取消并导出备份。');
+function importText(text:string,filename:string) {
+  const article=parseImportedArticle(text,filename);
+  validateDraft(article);
+  if(!canReplace())return false;
+  title.value=article.title;body.value=article.markdown;category.value=article.category;tags.value=article.tags.join('，');summary.value=article.summary;slug.value=article.slug;
+  dirty=true;render();notify(article.warnings.length?article.warnings.join(' '):'文章已导入本次试写；编辑完成后请导出。');return true;
+}
+get('import-file').addEventListener('click',()=>get<HTMLInputElement>('article-file').click());
+get<HTMLInputElement>('article-file').addEventListener('change',async event=>{
+  const input=event.target as HTMLInputElement; const file=input.files?.[0];if(!file)return;
+  try { if(file.size>4_000_000)throw new Error('文件过大，请使用 4 MB 以内的文章。');importText(await file.text(),file.name); }
+  catch(error){notify(error instanceof Error?error.message:'导入未完成。',true);}finally{input.value='';}
+});
+get('paste-open').addEventListener('click',()=>{pasteDialog.showModal();get<HTMLTextAreaElement>('paste-content').focus();});
+get('paste-confirm').addEventListener('click',()=>{try{if(importText(get<HTMLTextAreaElement>('paste-content').value,'粘贴的文章.md')){pasteDialog.close();get<HTMLTextAreaElement>('paste-content').value='';}}catch(error){notify(error instanceof Error?error.message:'导入未完成。',true);pasteDialog.close();}});
+get('export-file').addEventListener('click',()=>{
+  try {
+    const article=read();validateDraft(article);if(!article.title&&!article.markdown.trim())throw new Error('先写一点内容，再导出吧。');
+    const blob=new Blob([exportMarkdown(article)],{type:'text/markdown;charset=utf-8'});const url=URL.createObjectURL(blob);const link=document.createElement('a');
+    link.href=url;link.download=`${(article.title||'未命名文章').replace(/[<>:"/\\|?*\u0000-\u001f]/g,'-').slice(0,100)}.md`;document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+    dirty=false;notify('已生成 Markdown 下载文件，请确认下载完成；没有保存到云端。');
+  }catch(error){notify(error instanceof Error?error.message:'导出未完成。',true);}
+});
+get('new-article').addEventListener('click',()=>{if(!canReplace())return;title.value='';body.value='';category.value='见解与思考';tags.value='';summary.value='';slug.value='';dirty=false;render();notify('已新建空白试写。');body.focus();});
+document.querySelectorAll<HTMLButtonElement>('[data-format]').forEach(button=>button.addEventListener('click',()=>{
+  const start=body.selectionStart,end=body.selectionEnd,selected=body.value.slice(start,end);let text='';
+  switch(button.dataset.format){
+    case 'heading':text=`## ${selected||'小标题'}`;break;
+    case 'bold':text=`**${selected||'加粗文字'}**`;break;
+    case 'italic':text=`*${selected||'斜体文字'}*`;break;
+    case 'quote':text=(selected||'引用的文字').split('\n').map(line=>`> ${line}`).join('\n');break;
+    case 'list':text=(selected||'列表内容').split('\n').map(line=>`- ${line}`).join('\n');break;
+    case 'link':text=`[${selected||'链接文字'}](https://example.com)`;break;
+    case 'code':text=`\n\`\`\`\n${selected||'在这里写代码'}\n\`\`\`\n`;break;
+  }
+  if(['heading','quote','list'].includes(button.dataset.format||'')&&start>0&&body.value[start-1]!=='\n')text='\n'+text;
+  body.setRangeText(text,start,end,'select');body.focus();dirty=true;render();notify('排版已更新，记得导出备份。');
+}));
+function setView(view:string){document.querySelector('.workbench-columns')?.setAttribute('data-view',view);document.querySelectorAll<HTMLButtonElement>('[data-view][aria-pressed]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.view===view)));}
+document.querySelectorAll<HTMLButtonElement>('[data-view][aria-pressed]').forEach(button=>button.addEventListener('click',()=>setView(button.dataset.view!)));
+if(matchMedia('(max-width:760px)').matches)setView('edit');
+const themeButton=get<HTMLButtonElement>('writing-theme');
+const updateTheme=()=>{const dark=document.documentElement.dataset.theme!=='light';themeButton.setAttribute('aria-label',dark?'切换为浅色模式':'切换为深色模式');};
+themeButton.addEventListener('click',()=>{const next=document.documentElement.dataset.theme==='light'?'dark':'light';document.documentElement.dataset.theme=next;try{localStorage.setItem('telrest-theme-v2',next);}catch{}updateTheme();});updateTheme();render();
