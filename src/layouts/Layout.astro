@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import '../styles/rainbow.css';
 import { site } from '../data/site';
 interface Props { title?: string; description?: string; }
 const { title = site.title, description = site.description } = Astro.props;
@@ -27,5 +28,6 @@ const base = import.meta.env.BASE_URL;
   <body>
     <a href="#main" class="skip-link">跳转到正文 / Skip to content</a>
     <slot />
+    <script>import '../scripts/rainbow-controls';</script>
   </body>
 </html>

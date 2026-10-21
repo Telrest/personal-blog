@@ -1,0 +1,52 @@
+/* A rainbow edge on hover, without replacing the button face. 悬停时亮起彩虹边缘，保留按钮底色。 */
+@property --rainbow-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+.rainbow-hover { isolation: isolate; }
+.rainbow-positioned { position: relative; }
+.rainbow-hover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: inherit;
+  padding: 1.6px;
+  background: conic-gradient(from var(--rainbow-angle), #ff86aa, #ffbf72, #f1e99a, #8ce3b3, #71d9f4, #9e9aff, #e49af1, #ff86aa);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .22s ease;
+  animation: rainbow-orbit 3.8s linear infinite;
+  animation-play-state: paused;
+}
+@keyframes rainbow-orbit { to { --rainbow-angle: 360deg; } }
+@media (hover: hover) and (pointer: fine) {
+  .rainbow-hover:not(:disabled):not([aria-disabled='true']):hover::after {
+    opacity: 1;
+    animation-play-state: running;
+  }
+  .rainbow-hover:not(:disabled):not([aria-disabled='true']):hover {
+    box-shadow: -4px -2px 14px rgba(255,134,170,.2),
+      4px -2px 14px rgba(113,217,244,.2),
+      0 5px 16px rgba(158,154,255,.22);
+  }
+}
+.rainbow-hover:not(:disabled):not([aria-disabled='true']):focus-visible::after,
+.rainbow-hover:not(:disabled):not([aria-disabled='true']):active::after {
+  opacity: 1;
+  animation-play-state: running;
+}
+.rainbow-hover:not(:disabled):not([aria-disabled='true']):focus-visible {
+  box-shadow: -4px -2px 14px rgba(255,134,170,.18),
+    4px -2px 14px rgba(113,217,244,.18),
+    0 5px 16px rgba(158,154,255,.2);
+}
+@media (prefers-reduced-motion: reduce) {
+  .rainbow-hover::after { animation: none; transition: none; }
+}
+@media print { .rainbow-hover::after { display: none; } }
