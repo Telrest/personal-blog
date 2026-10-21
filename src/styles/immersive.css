@@ -16,7 +16,7 @@
 .hero .hero-name{font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:clamp(34px,3.8vw,48px);line-height:1.12;font-weight:600;letter-spacing:-1.6px;margin:0 0 13px;text-shadow:0 3px 25px rgba(4,22,20,.25)}
 .hero-name-dot{color:#bfe6d9}
 .hero-intro-copy>p{margin:0;font-size:15px;line-height:1.8;letter-spacing:1px;color:#e2efea;text-shadow:0 2px 12px #071c18}
-.wallpaper-scroll{position:absolute;bottom:25px;left:50%;transform:translateX(-50%);min-height:42px;padding:0 17px;border-radius:40px;display:inline-flex;align-items:center;gap:12px;color:#f5faf6;font-size:11px;letter-spacing:1px;background:rgba(18,44,39,.26);border-color:rgba(255,255,255,.3);transition:background .25s,box-shadow .25s}
+.wallpaper-scroll{position:absolute;bottom:5px;left:50%;transform:translateX(-50%);min-height:42px;padding:0 17px;border-radius:40px;display:inline-flex;align-items:center;gap:12px;color:#f5faf6;font-size:11px;letter-spacing:1px;background:rgba(18,44,39,.26);border-color:rgba(255,255,255,.3);transition:background .25s,box-shadow .25s}
 .wallpaper-scroll:hover{background:rgba(34,63,55,.5)}
 .wallpaper-scroll svg{animation:nudge 3s ease-in-out infinite}
 @keyframes avatar-arrive{from{opacity:0;transform:translate3d(0,14px,0) scale(.96);filter:blur(4px)}to{opacity:1;transform:none;filter:none}}
@@ -124,7 +124,7 @@
   .hero-avatar-image{width:140px}
   .hero .hero-name{font-size:37px}
   .hero-intro-copy>p{font-size:13px;letter-spacing:.6px}
-  .wallpaper-scroll{bottom:20px;min-height:38px;font-size:10px}
+  .wallpaper-scroll{bottom:0;min-height:38px;font-size:10px}
   .content-surface{padding-top:25px}
   .content-surface .wrap{width:calc(100% - 40px)}
   .content-surface .section-block{margin-bottom:50px;scroll-margin-top:0}
@@ -158,6 +158,6 @@
   .content-surface .footer-links{font-size:10px}
 }
 @media(max-width:380px){.content-surface .wrap{width:calc(100% - 32px)}.content-surface .lab-card{padding:19px}.content-surface .category-tabs{padding-inline:9px}.content-surface .category-tab{padding-inline:9px}.lab-total{display:none}.content-surface .empty-journal{padding-inline:18px}}
-@media(max-height:600px){.hero-avatar-image{width:104px}.hero-intro-copy{top:calc(50% + 52px + var(--avatar-lift,0px) + 17px)}.hero .hero-name{font-size:30px;margin-bottom:8px}.hero-intro-copy>p{font-size:12px}.wallpaper-scroll{bottom:14px;min-height:34px}}
+@media(max-height:600px){.hero-avatar-image{width:104px}.hero-intro-copy{top:calc(50% + 52px + var(--avatar-lift,0px) + 17px)}.hero .hero-name{font-size:30px;margin-bottom:8px}.hero-intro-copy>p{font-size:12px}.wallpaper-scroll{bottom:0;min-height:34px}}
 @media(prefers-reduced-motion:reduce){.hero-avatar-image,.hero-intro-copy{animation:none}.reveal-ready [data-reveal]{opacity:1;transform:none;filter:none;transition:none}}
 @media print{.wallpaper-scene,.site-header,.wallpaper-scroll{display:none}.content-surface{--ink:#203d36;--muted:#566c62;--card-surface:white}.content-surface::before{display:none}.content-surface .lab-card,.content-surface .journal-panel{background:white;color:#203d36;box-shadow:none}.content-surface .section-heading h2,.content-surface .section-heading .eyebrow,.content-surface .about-section,.content-surface .about-right>p,.content-surface .site-footer{color:#203d36}.reveal-ready [data-reveal]{opacity:1;transform:none;filter:none}}
