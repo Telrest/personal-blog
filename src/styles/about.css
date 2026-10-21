@@ -23,7 +23,9 @@ html[data-theme='light'] .letter-page {
   --letter-line: rgba(47, 82, 53, .15);
   --letter-edge: rgba(255, 255, 242, .8);
 }
-.letter-background { position: fixed; z-index: -1; inset: 0; overflow: hidden; pointer-events: none; background: #173c31; }
+/* 同样锁定为大视口高度，避免手机地址栏收起时壁纸突然变大。 */
+/* vh is the large viewport on mobile, so the wallpaper never resizes while scrolling. */
+.letter-background { position: fixed; z-index: -1; top: 0; left: 0; width: 100%; height: 100vh; overflow: hidden; pointer-events: none; background: #173c31; transition: height .35s ease, width .35s ease; }
 .letter-background > img { width: calc(100% + 32px); height: calc(100% + 32px); max-width: none; position: absolute; inset: -16px; object-fit: cover; object-position: 61% 50%; filter: blur(7px); }
 .letter-background::after { content: ''; position: absolute; inset: 0; background: rgba(5, 24, 18, .52); }
 .letter-shell { width: min(860px, 100%); margin: 0 auto; }
