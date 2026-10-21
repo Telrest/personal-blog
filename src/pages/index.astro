@@ -71,7 +71,7 @@ const base = import.meta.env.BASE_URL;
     const themeButton = document.querySelector<HTMLButtonElement>('.theme-toggle');
     const updateThemeButton = () => { const dark = document.documentElement.dataset.theme === 'dark'; themeButton?.setAttribute('aria-pressed', String(dark)); themeButton?.setAttribute('aria-label', dark ? '切换为浅色模式' : '切换为深色模式'); };
     updateThemeButton();
-    themeButton?.addEventListener('click', () => { const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'; document.documentElement.dataset.theme = next; try { localStorage.setItem('telrest-theme', next); } catch {} updateThemeButton(); });
+    themeButton?.addEventListener('click', () => { const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'; document.documentElement.dataset.theme = next; try { localStorage.setItem('telrest-theme-v2', next); } catch {} updateThemeButton(); });
     const menuButton = document.querySelector<HTMLButtonElement>('.menu-toggle');
     const mobileMenu = document.querySelector<HTMLElement>('#mobile-navigation');
     function closeMenu() { if (mobileMenu) mobileMenu.hidden = true; menuButton?.setAttribute('aria-expanded', 'false'); menuButton?.setAttribute('aria-label', '打开导航菜单'); }

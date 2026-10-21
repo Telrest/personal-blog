@@ -598,7 +598,7 @@ const base = import.meta.env.BASE_URL;
     border-color: #23483a;
     color: #f3f6eb;
   }
-  [data-theme=dark] .lab-page .pp-source button.is-on {
+  html:not([data-theme=light]) .lab-page .pp-source button.is-on {
     background: #2f5a48;
     border-color: #2f5a48;
   }
@@ -634,7 +634,7 @@ const base = import.meta.env.BASE_URL;
     accent-color: #23483a;
     cursor: pointer;
   }
-  [data-theme=dark] .pp-controls input[type='range'] { accent-color: #8fae78; }
+  html:not([data-theme=light]) .pp-controls input[type='range'] { accent-color: #8fae78; }
   .lab-page .pp-controls .pp-check {
     flex-direction: row;
     align-items: center;
@@ -651,7 +651,7 @@ const base = import.meta.env.BASE_URL;
     margin: 0;
     cursor: pointer;
   }
-  [data-theme=dark] .pp-check input[type='checkbox'] { accent-color: #8fae78; }
+  html:not([data-theme=light]) .pp-check input[type='checkbox'] { accent-color: #8fae78; }
 
   .pp-stage {
     height: clamp(400px, 72vh, 920px);
@@ -696,7 +696,7 @@ const base = import.meta.env.BASE_URL;
     border-color: #2c5846;
     color: #f3f6eb;
   }
-  [data-theme=dark] .lab-page .pp-hold.is-on {
+  html:not([data-theme=light]) .lab-page .pp-hold.is-on {
     background: #3a6b56;
     border-color: #3a6b56;
   }

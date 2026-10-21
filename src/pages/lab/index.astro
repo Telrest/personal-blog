@@ -69,7 +69,7 @@ const total = String(labs.length).padStart(2, '0');
     border-color: #c6d5b4;
     box-shadow: 0 16px 44px #26463214;
   }
-  [data-theme=dark] .lab-row:hover { border-color: #4e6a45; }
+  html:not([data-theme=light]) .lab-row:hover { border-color: #4e6a45; }
 
   .lab-row-num {
     font-family: Georgia, serif;
@@ -78,7 +78,7 @@ const total = String(labs.length).padStart(2, '0');
     color: #b3c39c;
     letter-spacing: 1px;
   }
-  [data-theme=dark] .lab-row-num { color: #7d936a; }
+  html:not([data-theme=light]) .lab-row-num { color: #7d936a; }
 
   .lab-row-main { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
   .lab-row-title {
@@ -121,7 +121,7 @@ const total = String(labs.length).padStart(2, '0');
     border-color: #b9cba2;
     transform: translateX(2px);
   }
-  [data-theme=dark] .lab-row:hover .lab-row-go { border-color: #4e6a45; }
+  html:not([data-theme=light]) .lab-row:hover .lab-row-go { border-color: #4e6a45; }
 
   @media (max-width: 760px) {
     .lab-row {

@@ -1,0 +1,28 @@
+/* Native SVG cursors keep the click point precise. 原生 SVG 指针保持点击位置准确。 */
+@media (hover: hover) and (pointer: fine) {
+  :root {
+    --cursor-default: url('../assets/cursors/arrow-dark.svg') 4 2, auto;
+    --cursor-link: url('../assets/cursors/hand-dark.svg') 12 2, pointer;
+  }
+
+  :root[data-theme='light'] {
+    --cursor-default: url('../assets/cursors/arrow-light.svg') 4 2, auto;
+    --cursor-link: url('../assets/cursors/hand-light.svg') 12 2, pointer;
+  }
+
+  html, body { cursor: var(--cursor-default); }
+
+  /* Override component pointer styles, preserving disabled/wait and resize cursors. */
+  /* 统一可点击控件，禁用、等待、缩放等状态沿用各自的光标。 */
+  :is(a, button, select, summary, [role='button'], label[for],
+      input[type='button'], input[type='submit'], input[type='reset'],
+      input[type='checkbox'], input[type='radio'], input[type='range'], input[type='file']):not(:disabled):not([aria-disabled='true']) {
+    cursor: var(--cursor-link) !important;
+  }
+
+  input[type='file']::file-selector-button { cursor: var(--cursor-link); }
+
+  :is(input:not([type]), input[type='text'], input[type='search'], input[type='email'],
+      input[type='url'], input[type='tel'], input[type='password'], input[type='number'],
+      textarea, [contenteditable='true'], [role='textbox']) { cursor: text; }
+}

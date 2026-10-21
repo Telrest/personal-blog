@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import '../styles/rainbow.css';
+import '../styles/cursor.css';
 import { site } from '../data/site';
 interface Props { title?: string; description?: string; }
 const { title = site.title, description = site.description } = Astro.props;
@@ -19,9 +20,9 @@ const base = import.meta.env.BASE_URL;
     <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
     <title>{title}</title>
     <script is:inline>
-      // 默认深色模式；只有访客主动选过浅色时才切回浅色。
-      // Dark by default; switch to light only when the visitor explicitly chose it.
-      try { if (localStorage.getItem('telrest-theme') === 'light') document.documentElement.dataset.theme = 'light'; }
+      // 深色是 CSS 兜底默认值；只有访客主动选过浅色时才切浅色。
+      // Dark is the CSS fallback default; switch to light only on an explicit choice.
+      try { if (localStorage.getItem('telrest-theme-v2') === 'light') document.documentElement.dataset.theme = 'light'; }
       catch {}
     </script>
   </head>

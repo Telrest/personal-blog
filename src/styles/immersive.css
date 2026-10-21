@@ -36,9 +36,9 @@
 
 /* One layer per card; wallpaper breathes between sections. 每张卡片只有一层底色，分区之间留给壁纸。 */
 .content-surface{--ink:#203d36;--muted:#566c62;--accent:#3d7868;--card-surface:rgba(245,249,241,.95);--card-edge:rgba(255,255,255,.7);--subtle-line:rgba(39,81,65,.13);position:relative;padding:30px 0 24px;background:transparent;isolation:isolate}
-[data-theme=dark] .content-surface{--ink:#edf4ee;--muted:#b0c4bc;--accent:#a8d8c6;--card-surface:rgba(17,36,31,.94);--card-edge:rgba(222,251,237,.15);--subtle-line:rgba(203,236,218,.12)}
+html:not([data-theme=light]) .content-surface{--ink:#edf4ee;--muted:#b0c4bc;--accent:#a8d8c6;--card-surface:rgba(17,36,31,.94);--card-edge:rgba(222,251,237,.15);--subtle-line:rgba(203,236,218,.12)}
 .content-surface::before{content:'';position:absolute;z-index:-1;inset:0;background:linear-gradient(180deg,transparent,rgba(7,22,18,.34) 220px,rgba(7,22,18,.68));pointer-events:none}
-[data-theme=dark] .content-surface::before{background:linear-gradient(180deg,transparent,rgba(7,22,18,.34) 220px,rgba(7,22,18,.68))}
+html:not([data-theme=light]) .content-surface::before{background:linear-gradient(180deg,transparent,rgba(7,22,18,.34) 220px,rgba(7,22,18,.68))}
 .content-surface .wrap{width:min(1080px,calc(100% - 96px))}
 .content-surface .section-block{padding:0;margin-block:0 76px;border:0;border-radius:0;background:transparent;box-shadow:none;color:var(--ink);scroll-margin-top:0}
 .content-surface .section-heading{align-items:center;margin-bottom:25px;min-height:58px}
@@ -76,7 +76,7 @@
 .content-surface .category-tabs{gap:5px;padding:16px 24px;border-color:var(--subtle-line)}
 .content-surface .category-tab{font-size:13px;padding:10px 16px;color:var(--muted)}
 .content-surface .category-tab.selected{color:#245448;background:#e1ece2}
-[data-theme=dark] .content-surface .category-tab.selected{color:#d2eee0;background:#2b473c}
+html:not([data-theme=light]) .content-surface .category-tab.selected{color:#d2eee0;background:#2b473c}
 .content-surface .category-tab:hover{background:rgba(127,183,154,.12)}
 .content-surface .empty-journal{min-height:0;padding:34px 32px;display:flex;align-items:center;text-align:left;gap:22px}
 .empty-journal-icon{display:grid;place-items:center;width:58px;height:64px;flex-shrink:0;border:1px solid var(--subtle-line);border-radius:15px;background:rgba(121,167,141,.07);color:var(--accent);transform:rotate(-5deg)}
