@@ -62,16 +62,16 @@ const base = import.meta.env.BASE_URL;
             <div class="empty-journal" aria-live="polite">
               <div class="journal-illustration" aria-hidden="true"><span class="paper-line"></span><Icon name="pen" size={31} /><span class="paper-line short"></span><span class="paper-line"></span><span class="paper-line short"></span><span class="paper-spark">✳</span></div>
               <p class="empty-kicker">A BLANK PAGE, A NEW BEGINNING</p>
-              <h3 id="empty-title">第一篇，还在酝酿中。</h3>
-              <p id="empty-description">想说的话，正在慢慢变成文字。<br />下一次来，也许就有新的故事了。</p>
+              <h3 id="empty-title">第一篇？？？ 未知发布时间。。。</h3>
+              <p id="empty-description">暂时还没有写什么，可能需要我再经历更多</p>
               <span class="empty-footnote"><Icon name="clock" size={14} /> 未来的文章将在这里按发布时间呈现</span>
             </div>
           </div>
           <aside class="intro-card" aria-label="关于这个空间" data-reveal data-reveal-delay="100">
             <span class="intro-icon"><Icon name="leaf" size={29} /></span>
             <p class="eyebrow">A PLACE TO GROW</p>
-            <h3>不必每个想法，<br />都有标准答案。</h3>
-            <p>这里会收藏我的见解、学习笔记和生活碎片。认真思考，也允许自己偶尔天马行空。</p>
+            <h3>可能有想法，<br />可能又想玩。</h3>
+            <p>这里会收藏我的见解、学习笔记和生活碎片。（真的吗？？？？）</p>
             <div class="intro-divider"></div>
             <a href="#about">认识一下我 <Icon name="arrow" size={18} /></a>
           </aside>
@@ -88,7 +88,7 @@ const base = import.meta.env.BASE_URL;
 
       <section id="about" class="about-section wrap section-block" aria-labelledby="about-title">
         <div class="about-left" data-reveal><p class="eyebrow"><span>03</span> THE PERSON BEHIND THE PAGE</p><h2 id="about-title">我是 Telrest<span>。</span><br /><span class="about-subtitle">很高兴在这里遇见你。</span></h2></div>
-        <div class="about-right" data-reveal data-reveal-delay="100"><p>我想给自己的文字和小作品，找一个可以长久安放的地方。于是，就有了这个小小的网站。</p><p>这里还在生长中。未来会有新的文章、新的尝试，也会有一些暂时没有答案的思考。</p><a class="text-link" href={site.github} target="_blank" rel="noopener noreferrer"><Icon name="github" size={19} /> 在 GitHub 找到我 <Icon name="arrow" size={17} /></a></div>
+        <div class="about-right" data-reveal data-reveal-delay="100"><p>分享一些思考或者感想，也可以说是想玩一玩</p><p>感觉，分享一下，也许会挺好</p><a class="text-link" href={site.github} target="_blank" rel="noopener noreferrer"><Icon name="github" size={19} /> 在 GitHub 找到我 <Icon name="arrow" size={17} /></a></div>
       </section>
       <footer class="site-footer wrap"><a href="#home" class="footer-brand"><Icon name="leaf" size={20} /> Telrest<span> / personal blog</span></a><p>© 2026 Telrest · 保持好奇，慢慢生长。</p><div class="footer-links"><a href={`${base}admin/`}>写作空间 <Icon name="arrow" size={13} /></a><a href="#home" aria-label="回到顶部">回到顶部 ↑</a></div></footer>
     </div>
@@ -129,8 +129,8 @@ const base = import.meta.env.BASE_URL;
       button.classList.add('selected'); button.setAttribute('aria-pressed', 'true');
       const title = document.querySelector('#empty-title');
       const description = document.querySelector('#empty-description');
-      if (title) title.textContent = button.dataset.category === '全部' ? '第一篇，还在酝酿中。' : `「${button.dataset.category}」的第一篇，正在路上。`;
-      if (description) description.textContent = '想说的话，正在慢慢变成文字。下一次来，也许就有新的故事了。';
+      if (title) title.textContent = button.dataset.category === '全部' ? '第一篇？？？ 未知发布时间。。。' : `「${button.dataset.category}」的第一篇？？？？？？xxxx xx xx会发布的（`;
+      if (description) description.textContent = '暂时还没有写什么，可能需要我再经历更多';
     }));
 
     const header = document.querySelector('.site-header');
