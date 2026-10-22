@@ -8,6 +8,8 @@ import '../../styles/prose.css';
 const base = import.meta.env.BASE_URL;
 ---
 <Layout title="写作空间 · Telrest" description="导入文章，慢慢整理想法。Telrest 的写作空间。">
+  <section class="admin-gate" id="admin-gate" role="status"><p>正在确认访问权限……</p><a href={base}>回到首页</a></section>
+  <div class="author-workspace" id="author-workspace" hidden>
   <main id="main" class="writing-room">
     <header class="writing-header"><a class="writing-back" href={base}><Icon name="arrow" size={17} class="flip-arrow" />回到首页</a><div class="writing-header-actions"><span id="writing-session-label" class="session-badge">本次试写</span><button id="writing-theme" class="icon-button glass" aria-label="切换为浅色模式"><Icon name="sun" size={18} /></button></div></header>
     <div class="writing-heading"><div><p>留一点时间，给自己的文字。</p><h1>写作空间<span>。</span></h1></div><div class="writing-actions"><button id="import-file" class="writing-button"><Icon name="book" size={16} />导入文件</button><button id="paste-open" class="writing-button">粘贴导入</button><button id="export-file" class="writing-button primary"><Icon name="down" size={16} />导出 Markdown</button></div></div>
@@ -38,5 +40,6 @@ const base = import.meta.env.BASE_URL;
   <dialog id="paste-dialog"><form method="dialog"><div class="paste-heading"><h2>把文章放进来</h2><button value="cancel" class="writing-text-button" aria-label="关闭粘贴导入">关闭</button></div><p>粘贴 Markdown 或纯文本，导入后再调整排版。</p><label class="screen-reader-only" for="paste-content">待导入的文章</label><textarea id="paste-content" rows="10" placeholder="# 文章标题&#10;&#10;在这里粘贴正文……"></textarea><div class="paste-actions"><button value="cancel" class="writing-button">取消</button><button type="button" id="paste-confirm" class="writing-button primary">导入为本次试写</button></div></form></dialog>
   <dialog id="history-dialog"><form method="dialog" class="paste-heading"><h2>草稿的历史版本</h2><button class="writing-text-button" aria-label="关闭历史版本">关闭</button></form><p>手动保存或间隔约五分钟的自动保存会保留修改前的内容，最多保留 30 个版本。载入后保存，会形成新的版本。</p><div id="history-list"></div></dialog>
   <dialog id="local-history-dialog"><form method="dialog" class="paste-heading"><h2>本地备份中的历史</h2><button class="writing-text-button">关闭</button></form><p>选择一个版本载入编辑器，不会直接改变已经发布的文章。</p><div id="local-history-list"></div></dialog>
-  <script>import '../../scripts/writing';</script>
+  </div>
+  <script>import '../../scripts/admin-entry';</script>
 </Layout>

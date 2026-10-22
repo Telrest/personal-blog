@@ -1,0 +1,14 @@
+---
+import Icon from './Icon.astro';
+import '../styles/comments.css';
+interface Props{articleId:string;slug:string;}
+const {articleId,slug}=Astro.props;
+---
+<section id="comments" class="comments-panel" data-comments data-article-id={articleId} data-article-slug={slug} aria-labelledby="comments-title">
+  <header class="comments-heading"><div><span class="comments-kicker">LEAVE A LITTLE THOUGHT</span><h2 id="comments-title">评论<span>。</span></h2></div><div class="site-auth" data-site-auth><button type="button" class="site-auth-button" data-login-button disabled><Icon name="github" size={15}/>用 GitHub 登录</button><span data-login-feedback class="site-auth-feedback" role="status" aria-live="polite"></span></div></header>
+  <p class="comments-invitation" data-comment-invitation aria-live="polite">登录后，留下一点想法。</p>
+  <form class="comment-form" data-comment-form hidden><label for="comment-body">你的留言</label><textarea id="comment-body" name="comment" maxlength="3000" rows="4" required placeholder="写一点想分享的想法吧……"></textarea><div class="comment-form-footer"><small>留言会公开显示 · 最多 3000 字</small><button class="site-auth-button" type="submit">发布评论</button></div></form>
+  <p class="comments-status" data-comment-status role="status" aria-live="polite">正在读取留言……</p>
+  <ol class="comment-list" data-comment-list></ol><button type="button" class="site-auth-button" data-comment-more hidden>更多留言</button>
+</section>
+<script>import '../scripts/site-auth';import '../scripts/comments';</script>

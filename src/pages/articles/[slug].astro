@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import Icon from '../../components/Icon.astro';
+import Comments from '../../components/Comments.astro';
 import { getPublishedPosts, renderMarkdown } from '../../lib/posts';
 import type { PublishedArticle } from '../../lib/publication';
 import '../../styles/prose.css';
@@ -138,6 +139,7 @@ const description = (summary || `Telrest 的文章：${post.title}`).replace(/\s
             </div>
           </footer>
         </article>
+        <Comments articleId={post.id} slug={post.slug} />
       </main>
 
       <footer class="reading-footer">

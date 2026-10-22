@@ -94,7 +94,7 @@ export function connectCloudWriting(bridge:Bridge){
       document.dispatchEvent(new Event('blog-author-change'));
       get('account-details').hidden=!account.user;get('account-user-id').textContent=account.user?.id||'';
       if(owner){status.textContent='已登录为作者。草稿只有你能读取，保存后可在其他设备继续编辑。';controls();await refreshList();if(session.dirty)changed();}
-      else{clearTimeout(saveTimer);status.textContent=account.user?'已登录，当前账号尚未开通作者权限。可以继续本次试写，无法访问云端草稿。':'登录后可以保存私密草稿。未登录时，内容只保留在本次页面中。';list.replaceChildren();controls();}
+      else{document.getElementById('author-workspace')?.setAttribute('hidden','');location.replace(import.meta.env.BASE_URL);clearTimeout(saveTimer);status.textContent=account.user?'已登录，当前账号尚未开通作者权限。可以继续本次试写，无法访问云端草稿。':'登录后可以保存私密草稿。未登录时，内容只保留在本次页面中。';list.replaceChildren();controls();}
     }catch(error){if(generation!==accountGeneration)return;owner=false;document.dispatchEvent(new Event('blog-author-change'));clearTimeout(saveTimer);status.textContent=`云端连接未完成：${errorMessage(error)} 当前内容请先导出。`;controls();}
   }
   login.addEventListener('click',async()=>{

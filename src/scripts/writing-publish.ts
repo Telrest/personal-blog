@@ -52,6 +52,8 @@ export function connectPublishing(bridge:Bridge){
         const state=await invoke({action:'status',slug:post.slug,revision:post.revision_id});if(state.superseded)throw new Error('文章有更新的发布版本，未清理云端。');if(state.deployed){deployed=true;break;}await new Promise(resolve=>setTimeout(resolve,5000));
       }
       if(!deployed)throw new Error('还未确认部署完成，云端草稿会保留。稍后点击发布可继续检查，不会重复创建文章。');
+      const {error:commentsError}=await backend().rpc('open_article_comments',{p_article_id:post.id,p_slug:post.slug});
+      if(commentsError)throw new Error('文章已上线，评论区尚未准备完成；云端草稿已保留，请稍后重试。');
       const full=await snapshot();const bundle=await makeBackup(full,post,localHistory());
       await store(bundle,clean,true);if(!pending)status.textContent+=` 文章地址：${result.url}`;
     }catch(error){notify(errorMessage(error),true);status.textContent=errorMessage(error);}finally{running=false;cloud.lock(false);update();}

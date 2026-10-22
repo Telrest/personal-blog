@@ -1,5 +1,6 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { parseBackendConfig } from './backend-config';
+import {safeReturnPath} from './auth-navigation';
 import type { Draft } from './article';
 import type { DraftDocument } from './draft-session';
 const config = parseBackendConfig(import.meta.env.PUBLIC_SUPABASE_URL, import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY);
@@ -13,10 +14,13 @@ export function backend() {
   });
   return client;
 }
-export async function signIn() {
+export async function signIn(returnTo=location.pathname+location.search+location.hash) {
+  const target=safeReturnPath(returnTo,location.origin,import.meta.env.BASE_URL);
+  sessionStorage.setItem('blog-login-return',target);
+  sessionStorage.setItem('blog-login-pending','1');
   const redirectTo = new URL(`${import.meta.env.BASE_URL}admin/`,location.origin).href;
   const {error} = await backend().auth.signInWithOAuth({provider:'github',options:{redirectTo}});
-  if(error)throw error;
+  if(error){sessionStorage.removeItem('blog-login-pending');sessionStorage.removeItem('blog-login-return');throw error;}
 }
 export async function authorAccount() {
   const {data:{user},error} = await backend().auth.getUser();
