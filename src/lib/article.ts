@@ -1,7 +1,7 @@
 export type Draft = {
   id: string; owner_id: string; title: string; summary: string; category: string;
   tags: string[]; slug: string; markdown: string; version: number;
-  created_at: string; updated_at: string;
+  created_at: string; updated_at: string; archived?: boolean;
 };
 export type Article = {
   id: string; slug: string; title: string; summary: string; category: string;

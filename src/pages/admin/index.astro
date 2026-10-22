@@ -2,14 +2,20 @@
 import Layout from '../../layouts/Layout.astro';
 import Icon from '../../components/Icon.astro';
 import '../../styles/writing.css';
+import '../../styles/cloud-writing.css';
 import '../../styles/prose.css';
 const base = import.meta.env.BASE_URL;
 ---
 <Layout title="写作空间 · Telrest" description="导入文章，慢慢整理想法。Telrest 的写作空间。">
   <main id="main" class="writing-room">
-    <header class="writing-header"><a class="writing-back" href={base}><Icon name="arrow" size={17} class="flip-arrow" />回到首页</a><div class="writing-header-actions"><span class="session-badge">本次试写</span><button id="writing-theme" class="icon-button glass" aria-label="切换为浅色模式"><Icon name="sun" size={18} /></button></div></header>
+    <header class="writing-header"><a class="writing-back" href={base}><Icon name="arrow" size={17} class="flip-arrow" />回到首页</a><div class="writing-header-actions"><span id="writing-session-label" class="session-badge">本次试写</span><button id="writing-theme" class="icon-button glass" aria-label="切换为浅色模式"><Icon name="sun" size={18} /></button></div></header>
     <div class="writing-heading"><div><p>留一点时间，给自己的文字。</p><h1>写作空间<span>。</span></h1></div><div class="writing-actions"><button id="import-file" class="writing-button"><Icon name="book" size={16} />导入文件</button><button id="paste-open" class="writing-button">粘贴导入</button><button id="export-file" class="writing-button primary"><Icon name="down" size={16} />导出 Markdown</button></div></div>
-    <p class="session-notice"><Icon name="leaf" size={17} /><span>今天先在这里试写。内容只保留在本次页面中，刷新或关闭前请导出。登录、云端保存和发布稍后接入。</span></p>
+    <section class="cloud-account" aria-label="登录与私密草稿">
+      <div class="cloud-account-row"><p class="session-notice"><Icon name="leaf" size={17} /><span id="account-status" role="status">正在准备写作空间……</span></p><div class="cloud-account-actions"><button id="cloud-signin" class="writing-button" disabled>用 GitHub 登录</button><button id="cloud-signout" class="writing-text-button" hidden>退出登录</button></div></div>
+      <details id="account-details" hidden><summary>账号信息</summary><p>首次配置作者权限时使用的账号编号：<code id="account-user-id"></code></p></details>
+      <div id="cloud-controls" class="cloud-controls" hidden><button id="cloud-save" class="writing-button primary">保存私密草稿</button><label class="cloud-check"><input id="cloud-autosave" type="checkbox" checked />自动保存</label><button id="cloud-reload" class="writing-text-button" hidden>重新载入云端版本</button><button id="cloud-history" class="writing-text-button" disabled>历史版本</button><span class="cloud-private-note">只有你能读取 · 尚未发布</span></div>
+    </section>
+    <details id="cloud-drafts" class="cloud-drafts" hidden><summary>我的私密草稿</summary><div class="cloud-list-tools"><label class="cloud-check"><input id="show-archived" type="checkbox" />查看归档</label><button id="cloud-refresh" class="writing-text-button">刷新列表</button></div><ul id="cloud-draft-list"></ul><p id="cloud-drafts-message" role="status"></p><button id="cloud-load-more" class="writing-button" hidden>加载更多</button></details>
     <input id="article-file" type="file" accept=".md,.markdown,.txt,text/markdown,text/plain" hidden />
     <section class="writing-metadata" aria-label="文章信息">
       <label class="title-label">文章标题<input id="article-title" placeholder="给这个想法起个名字" maxlength="180" autocomplete="off" /></label>
@@ -26,5 +32,6 @@ const base = import.meta.env.BASE_URL;
     <footer class="writing-status"><p id="writing-message" role="status" aria-live="polite">支持 Markdown、纯文本文件，也可以粘贴文章导入。</p><button id="new-article" class="writing-text-button">新建空白文章</button></footer>
   </main>
   <dialog id="paste-dialog"><form method="dialog"><div class="paste-heading"><h2>把文章放进来</h2><button value="cancel" class="writing-text-button" aria-label="关闭粘贴导入">关闭</button></div><p>粘贴 Markdown 或纯文本，导入后再调整排版。</p><label class="screen-reader-only" for="paste-content">待导入的文章</label><textarea id="paste-content" rows="10" placeholder="# 文章标题&#10;&#10;在这里粘贴正文……"></textarea><div class="paste-actions"><button value="cancel" class="writing-button">取消</button><button type="button" id="paste-confirm" class="writing-button primary">导入为本次试写</button></div></form></dialog>
+  <dialog id="history-dialog"><form method="dialog" class="paste-heading"><h2>草稿的历史版本</h2><button class="writing-text-button" aria-label="关闭历史版本">关闭</button></form><p>手动保存或间隔约五分钟的自动保存会保留修改前的内容，最多保留 30 个版本。载入后保存，会形成新的版本。</p><div id="history-list"></div></dialog>
   <script>import '../../scripts/writing';</script>
 </Layout>
