@@ -49,10 +49,11 @@ const base = import.meta.env.BASE_URL;
         </div>
       </section>
       <section id="writing" class="writing-section wrap section-block" aria-labelledby="writing-title">
-        <div class="section-heading" data-reveal><div class="section-heading-name"><h2 id="writing-title">文章与思考<span class="heading-dot">.</span></h2></div><span class="section-count"><strong>{String(posts.length).padStart(2, '0')}</strong> 篇记录</span></div>
+        <div class="section-heading" data-reveal><div class="section-heading-name"><h2 id="writing-title">文章与思考<span class="heading-dot">.</span></h2></div><a class="section-count" href={`${base}articles/`}><strong>{String(posts.length).padStart(2, '0')}</strong> 篇记录 · 全部文章 ↗</a></div>
         <div class="journal-panel" data-reveal>
           <div class="category-tabs" role="group" aria-label="按文章分类筛选">{categories.map((category, index) => <button class:list={['category-tab', { selected: index === 0 }]} data-category={category} aria-pressed={index === 0}>{category}</button>)}</div>
-          <div class="empty-journal" aria-live="polite">
+          <div class="home-post-list">{posts.map(post=><a class="home-post-card" href={`${base}articles/${post.slug}/`} data-post-category={post.category}><div class="home-post-meta"><span>{post.category}</span><time datetime={post.publishedAt}>{new Intl.DateTimeFormat('zh-CN',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(post.publishedAt))}</time></div><h3>{post.title}</h3>{post.description&&<p>{post.description}</p>}<div class="home-post-tags">{post.tags.map(tag=><span>#{tag}</span>)}<span class="home-post-read">读一读 ↗</span></div></a>)}</div>
+          <div class="empty-journal" aria-live="polite" hidden={posts.length>0}>
             <div class="empty-journal-icon" aria-hidden="true"><Icon name="pen" size={25} /></div>
             <div class="empty-journal-copy"><h3 id="empty-title">第一篇，还没想好写什么。</h3><p id="empty-description">暂时还没有写什么，可能需要我再经历更多。</p></div>
             <span class="empty-footnote"><Icon name="clock" size={15} /> 等一个想写下来的瞬间</span>
@@ -82,6 +83,8 @@ const base = import.meta.env.BASE_URL;
     document.querySelectorAll<HTMLButtonElement>('.category-tab').forEach(button => button.addEventListener('click', () => {
       document.querySelectorAll('.category-tab').forEach(tab => { tab.classList.remove('selected'); tab.setAttribute('aria-pressed', 'false'); });
       button.classList.add('selected'); button.setAttribute('aria-pressed', 'true');
+      let visible=0;document.querySelectorAll<HTMLElement>('[data-post-category]').forEach(card=>{card.hidden=button.dataset.category!=='全部'&&card.dataset.postCategory!==button.dataset.category;if(!card.hidden)visible++;});
+      const empty=document.querySelector<HTMLElement>('.empty-journal');if(empty)empty.hidden=visible>0;
       const title = document.querySelector('#empty-title');
       const description = document.querySelector('#empty-description');
       if (title) title.textContent = button.dataset.category === '全部' ? '第一篇，还没想好写什么。' : `「${button.dataset.category}」还没有文章。`;
@@ -95,3 +98,4 @@ const base = import.meta.env.BASE_URL;
     document.querySelectorAll('main section[id]').forEach(section => observer.observe(section));
   </script>
 </Layout>
+<style>.journal-panel [hidden]{display:none!important}.home-post-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;padding:28px}.home-post-list:empty{display:none}.home-post-card{display:flex;flex-direction:column;gap:17px;padding:27px;border:1px solid var(--line,#ffffff20);border-radius:18px;background:#ffffff05;transition:background .2s}.home-post-card:hover{background:#a8c99112}.home-post-meta{display:flex;justify-content:space-between;gap:12px;font-size:11px;color:var(--muted)}.home-post-card h3{font:500 25px/1.6 var(--serif);margin:0;overflow-wrap:anywhere}.home-post-card p{font-size:13px;line-height:1.9;color:var(--muted);margin:0}.home-post-tags{display:flex;flex-wrap:wrap;gap:12px;font-size:11px;color:var(--muted);margin-top:auto}.home-post-read{margin-left:auto}@media(max-width:760px){.home-post-list{grid-template-columns:1fr;padding:18px;gap:15px}.home-post-card{padding:23px}.home-post-card h3{font-size:23px}}</style>

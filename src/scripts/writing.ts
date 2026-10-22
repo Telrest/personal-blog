@@ -4,6 +4,7 @@ import { parseImportedArticle } from '../lib/import-article';
 import { exportMarkdown, validateDraft } from '../lib/article';
 import { DraftSession, type DraftDocument } from '../lib/draft-session';
 import { connectCloudWriting } from './writing-cloud';
+import { connectPublishing } from './writing-publish';
 const get = <T extends HTMLElement>(id:string) => document.getElementById(id) as T;
 const title = get<HTMLInputElement>('article-title');
 const body = get<HTMLTextAreaElement>('article-body');
@@ -34,12 +35,13 @@ function render() {
 function changed(){session.edit(read());cloud.changed();}
 fields.forEach(field=>field.addEventListener('input',()=>{changed();clearTimeout(timer);timer=setTimeout(render,180);notify(cloud.isOwner()?'有新的修改，等待保存。':'本次修改仅在当前页面中，离开前请导出。');}));
 window.addEventListener('beforeunload',event=>{if(session.unprotected){event.preventDefault();event.returnValue='';}});
-function canReplace(){if(session.saving){notify('正在保存，请稍等。');return false;}return !session.unprotected||window.confirm('当前修改尚未保存或导出。要替换它吗？建议先取消并导出备份。');}
+function canReplace(){if(session.saving||cloud.isBusy()){notify('正在处理草稿，请稍等。');return false;}return !session.unprotected||window.confirm('当前修改尚未保存或导出。要替换它吗？建议先取消并导出备份。');}
 function importText(text:string,filename:string) {
   const article=parseImportedArticle(text,filename);
   validateDraft(article);
   if(!canReplace())return false;
   apply(article);session.load(null,read());session.edit(read());cloud.reset();cloud.changed();
+  document.dispatchEvent(new Event('writing-reset'));
   notify(article.warnings.length?article.warnings.join(' '):cloud.isOwner()?'文章已导入为新草稿。':'文章已导入本次试写；编辑完成后请导出。');return true;
 }
 get('import-file').addEventListener('click',()=>get<HTMLInputElement>('article-file').click());
@@ -60,7 +62,7 @@ get('export-file').addEventListener('click',()=>{
     download(read());session.markExported();notify('已生成 Markdown 下载文件，请确认下载完成；云端保存状态保持不变。');
   }catch(error){notify(error instanceof Error?error.message:'导出未完成。',true);}
 });
-get('new-article').addEventListener('click',()=>{if(!canReplace())return;session.load(null,empty());apply(session.document);cloud.reset();notify('已新建空白文章。');body.focus();});
+get('new-article').addEventListener('click',()=>{if(!canReplace())return;session.load(null,empty());apply(session.document);cloud.reset();document.dispatchEvent(new Event('writing-reset'));notify('已新建空白文章。');body.focus();});
 document.querySelectorAll<HTMLButtonElement>('[data-format]').forEach(button=>button.addEventListener('click',()=>{
   const start=body.selectionStart,end=body.selectionEnd,selected=body.value.slice(start,end);let text='';
   switch(button.dataset.format){
@@ -84,6 +86,7 @@ document.querySelectorAll<HTMLButtonElement>('[data-view][aria-pressed]').forEac
 if(matchMedia('(max-width:760px)').matches)setView('edit');
 const themeButton=get<HTMLButtonElement>('writing-theme');
 const cloud=connectCloudWriting({session,read,apply,empty,notify,canReplace,download,readonly:(value)=>{fields.forEach(field=>field.readOnly=value);document.querySelectorAll<HTMLButtonElement>('[data-format]').forEach(button=>button.disabled=value);}});
+connectPublishing({session,cloud,apply,notify,canReplace});
 document.addEventListener('keydown',event=>{if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==='s'){event.preventDefault();if(cloud.isOwner())void cloud.save();else get('export-file').click();}});
 const updateTheme=()=>{const dark=document.documentElement.dataset.theme!=='light';themeButton.setAttribute('aria-label',dark?'切换为浅色模式':'切换为深色模式');};
 themeButton.addEventListener('click',()=>{const next=document.documentElement.dataset.theme==='light'?'dark':'light';document.documentElement.dataset.theme=next;try{localStorage.setItem('telrest-theme-v2',next);}catch{}updateTheme();});updateTheme();render();

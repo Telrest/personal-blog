@@ -3,6 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import Icon from '../../components/Icon.astro';
 import '../../styles/writing.css';
 import '../../styles/cloud-writing.css';
+import '../../styles/publishing.css';
 import '../../styles/prose.css';
 const base = import.meta.env.BASE_URL;
 ---
@@ -16,6 +17,9 @@ const base = import.meta.env.BASE_URL;
       <div id="cloud-controls" class="cloud-controls" hidden><button id="cloud-save" class="writing-button primary">保存私密草稿</button><label class="cloud-check"><input id="cloud-autosave" type="checkbox" checked />自动保存</label><button id="cloud-reload" class="writing-text-button" hidden>重新载入云端版本</button><button id="cloud-history" class="writing-text-button" disabled>历史版本</button><span class="cloud-private-note">只有你能读取 · 尚未发布</span></div>
     </section>
     <details id="cloud-drafts" class="cloud-drafts" hidden><summary>我的私密草稿</summary><div class="cloud-list-tools"><label class="cloud-check"><input id="show-archived" type="checkbox" />查看归档</label><button id="cloud-refresh" class="writing-text-button">刷新列表</button></div><ul id="cloud-draft-list"></ul><p id="cloud-drafts-message" role="status"></p><button id="cloud-load-more" class="writing-button" hidden>加载更多</button></details>
+    <section id="publication-tools" class="cloud-account publication-tools" aria-label="发布与完整备份" hidden><div class="publication-heading"><h2>让文字，走出草稿。</h2><span>定稿公开 · 历史私密</span></div><div class="publication-actions"><button id="publish-article" class="writing-button primary" disabled>发布、备份并清理</button><button id="backup-article" class="writing-button">仅备份完整草稿</button><button id="choose-backup-folder" class="writing-text-button">选择本地备份文件夹</button><button id="verify-downloaded-backup" class="writing-button" hidden>校验下载的备份</button><button id="cancel-publication" class="writing-text-button" hidden>停止等待</button></div><label class="cloud-check publication-cleanup"><input id="cleanup-after-publish" type="checkbox" checked />文章上线且本地完整备份校验成功后，删除这份云端草稿及历史</label><p id="publication-status" role="status" aria-live="polite">正在检查发布服务……</p><p class="publication-note">完整备份包含正文、文章信息和历史版本。外链图片保留地址；图片文件不会自动打包。请将备份放在公开网站仓库之外。</p></section>
+    <div class="backup-import-actions"><button id="restore-backup" class="writing-text-button">载入本地完整备份</button><button id="local-history" class="writing-text-button" disabled>查看已载入的本地历史</button></div>
+    <input id="restore-backup-file" type="file" accept=".json,application/json" hidden /><input id="verify-backup-file" type="file" accept=".json,application/json" hidden />
     <input id="article-file" type="file" accept=".md,.markdown,.txt,text/markdown,text/plain" hidden />
     <section class="writing-metadata" aria-label="文章信息">
       <label class="title-label">文章标题<input id="article-title" placeholder="给这个想法起个名字" maxlength="180" autocomplete="off" /></label>
@@ -33,5 +37,6 @@ const base = import.meta.env.BASE_URL;
   </main>
   <dialog id="paste-dialog"><form method="dialog"><div class="paste-heading"><h2>把文章放进来</h2><button value="cancel" class="writing-text-button" aria-label="关闭粘贴导入">关闭</button></div><p>粘贴 Markdown 或纯文本，导入后再调整排版。</p><label class="screen-reader-only" for="paste-content">待导入的文章</label><textarea id="paste-content" rows="10" placeholder="# 文章标题&#10;&#10;在这里粘贴正文……"></textarea><div class="paste-actions"><button value="cancel" class="writing-button">取消</button><button type="button" id="paste-confirm" class="writing-button primary">导入为本次试写</button></div></form></dialog>
   <dialog id="history-dialog"><form method="dialog" class="paste-heading"><h2>草稿的历史版本</h2><button class="writing-text-button" aria-label="关闭历史版本">关闭</button></form><p>手动保存或间隔约五分钟的自动保存会保留修改前的内容，最多保留 30 个版本。载入后保存，会形成新的版本。</p><div id="history-list"></div></dialog>
+  <dialog id="local-history-dialog"><form method="dialog" class="paste-heading"><h2>本地备份中的历史</h2><button class="writing-text-button">关闭</button></form><p>选择一个版本载入编辑器，不会直接改变已经发布的文章。</p><div id="local-history-list"></div></dialog>
   <script>import '../../scripts/writing';</script>
 </Layout>

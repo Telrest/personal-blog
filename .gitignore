@@ -7,3 +7,4 @@ dist/
 .local/
 private-drafts/
 *.log
+*.blog-backup.json

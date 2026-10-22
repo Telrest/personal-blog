@@ -18,5 +18,7 @@ export type PublishedPost = {
   cover?: string;
 };
 
-export const posts: PublishedPost[] = [];
-export const categories = ['全部', '见解与思考', '学习笔记', '生活随记'];
+// Published files alone feed the public listing. 公开列表只读取明确发布的文件。
+import { getPublishedPosts } from '../lib/posts';
+export const posts: PublishedPost[] = (await getPublishedPosts()).map(p=>({slug:p.slug,title:p.title,description:p.summary,publishedAt:p.published_at,updatedAt:p.updated_at,category:p.category,tags:p.tags}));
+export const categories = [...new Set(['全部', '见解与思考', '学习笔记', '生活随记',...posts.map(p=>p.category)])];

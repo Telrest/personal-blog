@@ -1,0 +1,156 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Icon from '../../components/Icon.astro';
+import { getPublishedPosts, renderMarkdown } from '../../lib/posts';
+import type { PublishedArticle } from '../../lib/publication';
+import '../../styles/prose.css';
+import '../../styles/articles.css';
+
+export async function getStaticPaths() {
+  const posts = await getPublishedPosts();
+  return posts.map(post => ({ params: { slug: post.slug }, props: { post } }));
+}
+
+interface Props {
+  post: PublishedArticle;
+}
+
+const { post } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const category = post.category?.trim() || '未分类';
+const tags = (post.tags ?? []).map(tag => tag.trim()).filter(tag => tag.length > 0);
+const categoryHref = `${base}articles/?category=${encodeURIComponent(category)}`;
+const renderedContent = renderMarkdown(post.markdown ?? '');
+
+const longDate = new Intl.DateTimeFormat('zh-CN', {
+  timeZone: 'Asia/Shanghai',
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+function formatDate(value: string | undefined) {
+  if (!value) return '日期未知';
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? '日期未知' : longDate.format(date);
+}
+
+const publishedLabel = formatDate(post.published_at);
+const updatedTime = post.updated_at ? new Date(post.updated_at).getTime() : Number.NaN;
+const publishedTime = new Date(post.published_at).getTime();
+const updatedLabel =
+  Number.isFinite(updatedTime) && updatedTime !== publishedTime ? formatDate(post.updated_at) : null;
+
+const markdownForReading = (post.markdown ?? '')
+  .replace(/```[\s\S]*?```/g, ' ')
+  .replace(/`[^`]*`/g, ' ')
+  .replace(/!\[[^\]]*\]\([^)]*\)/g, ' ')
+  .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+  .replace(/<[^>]+>/g, ' ')
+  .replace(/[#>*_~|=-]/g, ' ');
+const cjkCharacters = markdownForReading.match(/[\u3400-\u9fff]/g)?.length ?? 0;
+const latinWords = markdownForReading.replace(/[\u3400-\u9fff]/g, ' ').match(/[A-Za-z0-9]+/g)?.length ?? 0;
+const readingMinutes = Math.max(1, Math.ceil(cjkCharacters / 350 + latinWords / 200));
+
+const summary = (post.summary ?? '').trim();
+const description = (summary || `Telrest 的文章：${post.title}`).replace(/\s+/g, ' ').slice(0, 160);
+---
+
+<Layout title={`${post.title} · Telrest`} description={description}>
+  <div class="reading-room article-detail">
+    <div class="reading-room-background" aria-hidden="true">
+      <img src={`${base}images/forest-wallpaper.jpg`} alt="" width="4800" height="2700" />
+    </div>
+    <div class="reading-progress" aria-hidden="true"><span data-reading-progress></span></div>
+
+    <div class="reading-room-shell article-shell">
+      <header class="reading-topbar">
+        <a class="reading-brand" href={`${base}`} aria-label="Telrest 首页">
+          <span class="reading-brand-mark" aria-hidden="true">T<span class="reading-brand-leaf"></span></span>
+          <span class="reading-brand-copy">Telrest<small>personal journal</small></span>
+        </a>
+        <div class="article-topbar-actions">
+          <a class="article-back glass" href={`${base}articles/`} aria-label="返回全部文章">
+            <Icon name="arrow" size={15} class="flip-arrow" />
+            <span>全部文章</span>
+          </a>
+          <a class="article-home" href={`${base}`}>首页</a>
+          <button
+            class="icon-button glass reading-theme"
+            type="button"
+            data-theme-toggle
+            aria-label="切换为浅色模式"
+            aria-pressed="true"
+          >
+            <span class="theme-icon theme-icon-sun"><Icon name="sun" size={18} /></span>
+            <span class="theme-icon theme-icon-moon"><Icon name="moon" size={18} /></span>
+          </button>
+        </div>
+      </header>
+
+      <main id="main">
+        <article class="article-paper" aria-labelledby="article-title">
+          <header class="article-heading">
+            <div class="article-kicker">
+              <a class="article-category" href={categoryHref}>{category}</a>
+              <span class="article-kicker-note">TELREST / WRITING</span>
+            </div>
+
+            <h1 id="article-title">{post.title}</h1>
+            {summary && <p class="article-summary">{summary}</p>}
+
+            <div class="article-meta">
+              <span>
+                <Icon name="clock" size={14} />
+                <time datetime={post.published_at}>{publishedLabel}</time>
+              </span>
+              {updatedLabel && (
+                <span>
+                  更新于 <time datetime={post.updated_at}>{updatedLabel}</time>
+                </span>
+              )}
+              <span><Icon name="book" size={14} />约 {readingMinutes} 分钟阅读</span>
+            </div>
+
+            {tags.length > 0 && (
+              <ul class="article-tags" aria-label="文章标签">
+                {tags.map(tag => <li><span aria-hidden="true">#</span>{tag}</li>)}
+              </ul>
+            )}
+          </header>
+
+          <div class="article-content prose" set:html={renderedContent}></div>
+
+          <footer class="article-ending">
+            <p class="article-ending-mark" aria-hidden="true">
+              <span class="article-ending-line"></span>
+              <Icon name="leaf" size={18} />
+              <span class="article-ending-line"></span>
+            </p>
+            <p class="article-ending-copy">读到这里，谢谢你。</p>
+            <div class="article-actions">
+              <a class="article-action" href={`${base}articles/`}>
+                <Icon name="arrow" size={14} class="flip-arrow" /> 浏览全部文章
+              </a>
+              <a class="article-action article-action-quiet" href={`${base}`}>
+                回到首页 <Icon name="arrow" size={14} />
+              </a>
+            </div>
+          </footer>
+        </article>
+      </main>
+
+      <footer class="reading-footer">
+        <a class="reading-footer-brand" href={`${base}`}>Telrest<span>/ personal blog</span></a>
+        <p>© 2026 Telrest · 保持好奇，慢慢生长。</p>
+        <nav aria-label="页脚导航">
+          <a href={`${base}`}>首页</a>
+          <a href={`${base}articles/`}>文章</a>
+          <a href={`${base}about/`}>关于</a>
+        </nav>
+      </footer>
+    </div>
+  </div>
+
+  <script>import '../../scripts/article-reading';</script>
+</Layout>

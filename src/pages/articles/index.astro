@@ -1,0 +1,196 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Icon from '../../components/Icon.astro';
+import { getPublishedPosts } from '../../lib/posts';
+import '../../styles/articles.css';
+
+const base = import.meta.env.BASE_URL;
+const posts = await getPublishedPosts();
+
+const shortDate = new Intl.DateTimeFormat('zh-CN', {
+  timeZone: 'Asia/Shanghai',
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+});
+
+function formatDate(value: string) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '日期未知';
+  const parts = new Map<string, string>();
+  for (const part of shortDate.formatToParts(date)) parts.set(part.type, part.value);
+  return `${parts.get('year')}.${parts.get('month')}.${parts.get('day')}`;
+}
+
+const articles = posts.map((post, index) => {
+  const category = post.category?.trim() || '未分类';
+  const tags = (post.tags ?? []).map(tag => tag.trim()).filter(tag => tag.length > 0);
+  return {
+    ...post,
+    categoryLabel: category,
+    displayDate: formatDate(post.published_at),
+    displayTags: tags,
+    orderLabel: String(index + 1).padStart(2, '0'),
+  };
+});
+
+const categories = [...new Set(articles.map(article => article.categoryLabel))];
+const categoryCounts = new Map<string, number>();
+for (const article of articles) {
+  categoryCounts.set(article.categoryLabel, (categoryCounts.get(article.categoryLabel) ?? 0) + 1);
+}
+const totalLabel = String(articles.length).padStart(2, '0');
+---
+
+<Layout
+  title="文章与思考 · Telrest"
+  description="Telrest 的文章与思考：一些学习笔记、生活随记，和慢慢写下来的想法。"
+>
+  <div class="reading-room articles-index">
+    <div class="reading-room-background" aria-hidden="true">
+      <img src={`${base}images/forest-wallpaper.jpg`} alt="" width="4800" height="2700" />
+    </div>
+
+    <div class="reading-room-shell">
+      <header class="reading-topbar">
+        <a class="reading-brand" href={`${base}`} aria-label="Telrest 首页">
+          <span class="reading-brand-mark" aria-hidden="true">T<span class="reading-brand-leaf"></span></span>
+          <span class="reading-brand-copy">Telrest<small>personal journal</small></span>
+        </a>
+        <nav class="reading-nav glass" aria-label="文章页导航">
+          <a href={`${base}`}>首页</a>
+          <a href={`${base}articles/`} aria-current="page">文章</a>
+          <a href={`${base}about/`}>关于</a>
+        </nav>
+        <button
+          class="icon-button glass reading-theme"
+          type="button"
+          data-theme-toggle
+          aria-label="切换为浅色模式"
+          aria-pressed="true"
+        >
+          <span class="theme-icon theme-icon-sun"><Icon name="sun" size={18} /></span>
+          <span class="theme-icon theme-icon-moon"><Icon name="moon" size={18} /></span>
+        </button>
+      </header>
+
+      <main id="main">
+        <section class="reading-hero" aria-labelledby="articles-title">
+          <p class="reading-eyebrow"><span>JOURNAL</span> 写下来的地方</p>
+          <div class="reading-hero-row">
+            <div>
+              <h1 id="articles-title">文章与思考<span class="reading-title-dot">.</span></h1>
+              <p class="reading-lead">
+                一些学习笔记、生活随记，和还没有想清楚就先写下的想法。<br />
+                不急着写完，先认真地记下来。
+              </p>
+            </div>
+            <div class="reading-hero-marker" aria-hidden="true">
+              <span>{totalLabel}</span>
+              <small>篇文章</small>
+            </div>
+          </div>
+        </section>
+
+        <section class="articles-board" aria-labelledby="articles-list-title">
+          <header class="articles-board-head">
+            <div>
+              <p class="reading-eyebrow reading-eyebrow-dark">THE NOTEBOOK</p>
+              <h2 id="articles-list-title">全部文章</h2>
+            </div>
+            <p class="articles-board-count">{articles.length > 0 ? `共 ${articles.length} 篇` : '空白页'}</p>
+          </header>
+
+          {articles.length > 0 ? (
+            <>
+              <div class="articles-filter-bar">
+                <div class="articles-filters" role="group" aria-label="按分类筛选文章">
+                  <button
+                    class="articles-filter selected"
+                    type="button"
+                    data-article-filter=""
+                    aria-pressed="true"
+                    aria-controls="articles-grid"
+                  >
+                    全部 <span aria-hidden="true">{articles.length}</span>
+                  </button>
+                  {categories.map(category => (
+                    <button
+                      class="articles-filter"
+                      type="button"
+                      data-article-filter={category}
+                      aria-pressed="false"
+                      aria-controls="articles-grid"
+                    >
+                      {category} <span aria-hidden="true">{categoryCounts.get(category) ?? 0}</span>
+                    </button>
+                  ))}
+                </div>
+                <p class="articles-result" data-article-result role="status" aria-live="polite" aria-atomic="true">
+                  共 {articles.length} 篇
+                </p>
+              </div>
+
+              <div id="articles-grid" class="articles-grid">
+                {articles.map((article, index) => (
+                  <article
+                    class="articles-card"
+                    data-article-card
+                    data-category={article.categoryLabel}
+                    style={`--card-delay: ${Math.min(index, 7) * 45}ms`}
+                  >
+                    <a class="articles-card-link" href={`${base}articles/${article.slug}/`}>
+                      <div class="articles-card-top">
+                        <span class="articles-card-index" aria-hidden="true">{article.orderLabel}</span>
+                        <span class="articles-card-category">{article.categoryLabel}</span>
+                        <time datetime={article.published_at}>{article.displayDate}</time>
+                      </div>
+                      <h3 class="articles-card-title">{article.title}</h3>
+                      {article.summary && <p class="articles-card-summary">{article.summary}</p>}
+                      <div class="articles-card-foot">
+                        {article.displayTags.length > 0 && (
+                          <ul class="articles-card-tags" aria-label="文章标签">
+                            {article.displayTags.slice(0, 3).map(tag => <li><span aria-hidden="true">#</span>{tag}</li>)}
+                            {article.displayTags.length > 3 && <li>+{article.displayTags.length - 3}</li>}
+                          </ul>
+                        )}
+                        <span class="articles-card-more">阅读文章 <Icon name="right" size={15} /></span>
+                      </div>
+                    </a>
+                  </article>
+                ))}
+              </div>
+
+              <div class="articles-empty articles-empty-filter" data-article-filter-empty hidden>
+                <div class="articles-empty-icon" aria-hidden="true"><Icon name="book" size={24} /></div>
+                <h3 data-filter-empty-title>这个分类下还没有文章。</h3>
+                <p data-filter-empty-description>换一个分类看看，或者回到全部文章。</p>
+                <button class="articles-action" type="button" data-clear-filter>查看全部文章</button>
+              </div>
+            </>
+          ) : (
+            <div class="articles-empty articles-empty-all">
+              <div class="articles-empty-icon" aria-hidden="true"><Icon name="pen" size={24} /></div>
+              <p class="articles-empty-kicker">THE FIRST PAGE</p>
+              <h3>还没有文章。</h3>
+              <p>等一段想法慢慢长成文字，这里就会出现第一篇文章。</p>
+              <a class="articles-action" href={`${base}`}>先回首页 <Icon name="arrow" size={15} /></a>
+            </div>
+          )}
+        </section>
+      </main>
+
+      <footer class="reading-footer">
+        <a class="reading-footer-brand" href={`${base}`}>Telrest<span>/ personal blog</span></a>
+        <p>© 2026 Telrest · 慢慢写，慢慢读。</p>
+        <nav aria-label="页脚导航">
+          <a href={`${base}`}>首页</a>
+          <a href={`${base}articles/`}>文章</a>
+          <a href={`${base}about/`}>关于</a>
+        </nav>
+      </footer>
+    </div>
+  </div>
+
+  <script>import '../../scripts/article-reading';</script>
+</Layout>

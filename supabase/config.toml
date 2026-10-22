@@ -1,0 +1,4 @@
+[functions.blog-publish]
+# JWT verification is performed explicitly with Auth.getUser inside the function.
+# 在函数内显式校验用户 JWT；绝不能移除该校验。
+verify_jwt = false

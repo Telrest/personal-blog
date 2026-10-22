@@ -11,23 +11,23 @@ export function connectCloudWriting(bridge:Bridge){
   const save=get<HTMLButtonElement>('cloud-save'),reload=get<HTMLButtonElement>('cloud-reload'),history=get<HTMLButtonElement>('cloud-history');
   const autosave=get<HTMLInputElement>('cloud-autosave'),archived=get<HTMLInputElement>('show-archived');
   const list=get<HTMLUListElement>('cloud-draft-list'),more=get<HTMLButtonElement>('cloud-load-more');
-  let owner=false,managing=false,accountGeneration=0,listGeneration=0,openGeneration=0,offset=0;
+  let owner=false,managing=false,locked=false,accountGeneration=0,listGeneration=0,openGeneration=0,offset=0;
   let saveTimer:ReturnType<typeof setTimeout>|undefined;
   function controls(){
-    save.disabled=!owner||managing||session.saving||session.conflict||Boolean(session.current?.archived);
+    save.disabled=!owner||locked||managing||session.saving||session.conflict||Boolean(session.current?.archived);
     history.disabled=!owner||!session.current;
     reload.hidden=!owner||!session.current;
     get('cloud-controls').hidden=!owner;get('cloud-drafts').hidden=!owner;
-    bridge.readonly(Boolean(owner&&session.current?.archived));
+    bridge.readonly(locked||Boolean(owner&&session.current?.archived));
     badge.textContent=owner?(session.current?.archived?'已归档':session.saving?'正在保存':session.dirty?'未保存修改':session.current?'私密云端草稿':'新草稿'):'本次试写';
   }
   function changed(){
     controls();clearTimeout(saveTimer);
-    if(owner&&!managing&&autosave.checked&&!session.conflict&&!session.current?.archived)saveTimer=setTimeout(()=>void persist(false),2000);
+    if(owner&&!locked&&!managing&&autosave.checked&&!session.conflict&&!session.current?.archived)saveTimer=setTimeout(()=>void persist(false),2000);
   }
   async function persist(manual:boolean){
     if(!owner){notify('请先登录为作者；当前内容可以导出备份。',true);return;}
-    if(managing){notify('正在管理草稿，请稍等。');return;}
+    if(managing||locked){notify('正在处理草稿，请稍等。');return;}
     clearTimeout(saveTimer);
     try{
       validateDraft(session.document);notify('正在保存私密草稿……');
@@ -46,7 +46,7 @@ export function connectCloudWriting(bridge:Bridge){
       // Do not replace text typed while the read request was in flight.
       // 读取期间若又开始输入，先保留编辑器中的新内容。
       if(JSON.stringify(session.document)!==previous&&!bridge.canReplace())return;
-      session.load(draft,draft);bridge.apply(draft);controls();
+      session.load(draft,draft);bridge.apply(draft);document.dispatchEvent(new Event('writing-cloud-open'));controls();
       notify(draft.archived?'这是归档草稿，可以导出；恢复后可以继续编辑。':`已载入私密草稿 · ${time(draft.updated_at)}`);
     }catch(error){notify(errorMessage(error),true);}finally{get('cloud-drafts-message').textContent='';}
   }
@@ -63,7 +63,7 @@ export function connectCloudWriting(bridge:Bridge){
         open.addEventListener('click',()=>void openDraft(draft.id));
         action.className='writing-text-button';action.type='button';action.textContent=draft.archived?'恢复':'归档';action.setAttribute('aria-label',`${action.textContent}「${draft.title||'未命名草稿'}」`);
         action.addEventListener('click',async()=>{
-          if(session.saving||managing){notify('正在处理草稿，请稍等。');return;}
+          if(session.saving||managing||locked){notify('正在处理草稿，请稍等。');return;}
           try{
             action.disabled=true;
             if(session.current?.id===draft.id && session.dirty){await persist(true);if(session.dirty)return;}
@@ -91,10 +91,11 @@ export function connectCloudWriting(bridge:Bridge){
     try{
       const account=await authorAccount();if(generation!==accountGeneration)return;
       owner=account.owner;login.hidden=Boolean(account.user);logout.hidden=!account.user;
+      document.dispatchEvent(new Event('blog-author-change'));
       get('account-details').hidden=!account.user;get('account-user-id').textContent=account.user?.id||'';
       if(owner){status.textContent='已登录为作者。草稿只有你能读取，保存后可在其他设备继续编辑。';controls();await refreshList();if(session.dirty)changed();}
       else{clearTimeout(saveTimer);status.textContent=account.user?'已登录，当前账号尚未开通作者权限。可以继续本次试写，无法访问云端草稿。':'登录后可以保存私密草稿。未登录时，内容只保留在本次页面中。';list.replaceChildren();controls();}
-    }catch(error){if(generation!==accountGeneration)return;owner=false;clearTimeout(saveTimer);status.textContent=`云端连接未完成：${errorMessage(error)} 当前内容请先导出。`;controls();}
+    }catch(error){if(generation!==accountGeneration)return;owner=false;document.dispatchEvent(new Event('blog-author-change'));clearTimeout(saveTimer);status.textContent=`云端连接未完成：${errorMessage(error)} 当前内容请先导出。`;controls();}
   }
   login.addEventListener('click',async()=>{
     if(session.saving){notify('正在保存，请稍等。');return;}
@@ -129,8 +130,8 @@ export function connectCloudWriting(bridge:Bridge){
   window.addEventListener('online',()=>{if(owner&&session.dirty)changed();});
   if(backendConfigured){
     login.disabled=false;status.textContent='正在检查登录状态……';
-    backend().auth.onAuthStateChange(event=>{if(event==='SIGNED_OUT'){owner=false;clearTimeout(saveTimer);controls();}if(event==='SIGNED_IN'||event==='SIGNED_OUT'||event==='USER_UPDATED')setTimeout(()=>void refreshAccount(),0);});
+    backend().auth.onAuthStateChange(event=>{if(event==='SIGNED_OUT'){owner=false;clearTimeout(saveTimer);controls();document.dispatchEvent(new Event('blog-author-change'));}if(event==='SIGNED_IN'||event==='SIGNED_OUT'||event==='USER_UPDATED')setTimeout(()=>void refreshAccount(),0);});
     void refreshAccount();
   }else{login.disabled=true;status.textContent='私密草稿服务尚未连接。现在仍可导入、排版和导出，刷新或关闭前请导出备份。';controls();}
-  return {changed,reset:()=>{openGeneration++;clearTimeout(saveTimer);controls();},isOwner:()=>owner,save:()=>persist(true)};
+  return {changed,reset:()=>{openGeneration++;clearTimeout(saveTimer);controls();},isOwner:()=>owner,save:()=>persist(true),lock:(value:boolean)=>{locked=value;clearTimeout(saveTimer);controls();},isBusy:()=>locked||managing,refresh:()=>refreshList()};
 }
