@@ -1,12 +1,12 @@
 import { NavLink } from 'react-router-dom'
 
-/** 站名标记：与主站同一套线性图标语言（24 视框 / 1.6 描边 / 圆角） */
+/** 站名标记：直接使用主站的图标（森林绿圆角 + 米白 T + 叶片） */
 function BrandMark() {
   return (
-    <svg className="brand__mark" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
-      <rect x="3" y="3" width="18" height="18" rx="4" stroke="currentColor" strokeWidth="1.6" />
-      <path d="M8 3v18M16 3v18M3 8h18M3 16h18" stroke="currentColor" strokeWidth="0.9" opacity="0.45" />
-      <circle cx="12" cy="12" r="3.2" stroke="currentColor" strokeWidth="1.6" />
+    <svg className="brand__mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+      <rect width="64" height="64" rx="20" fill="#163e35" />
+      <path d="M17 20h30v7H36v22h-8V27H17z" fill="#eff7dc" />
+      <path d="M42 12c10 1 11 7 5 12-7-1-8-6-5-12" fill="#c5dc8b" />
     </svg>
   )
 }
