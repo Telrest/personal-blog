@@ -21,7 +21,7 @@ export const CAMERAS: Record<CameraId, { label: string; pose: { position: [numbe
   combustor: { label: '燃烧室', pose: { position: [-0.55, 0.94, 1.65], target: [0.49, 0, 0] } },
   shafts: { label: '双轴特写', pose: { position: [-1.1, 1.05, 3.1], target: [0.04, 0, 0] } },
   rear: { label: '涡轮与喷口', pose: { position: [2.75, 1.25, 2.2], target: [1.0, 0, 0] } },
-  exploded: { label: '拆解全景', pose: { position: [-2.4, 3.35, 10.1], target: [0.25, 0.65, 0] } },
+  exploded: { label: '拆解全景', pose: { position: [-2.5, 3.2, 10.9], target: [0.45, 0.55, 0] } },
 }
 
 export const GUIDE: Array<{ id: string; title: string; body: string; view: EngineView; isolate: Isolation; flow: FlowMode; camera: CameraId; selected: EnginePart | null }> = [

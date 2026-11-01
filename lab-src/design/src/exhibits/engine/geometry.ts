@@ -61,10 +61,12 @@ export async function createEngineGeometry(): Promise<EngineGeometry> {
   const materialSets = new Map<EnginePart, Set<THREE.MeshStandardMaterial>>()
   const neutral = new Map<THREE.MeshStandardMaterial, THREE.Color>()
   const neutralMaps = new Map<THREE.MeshStandardMaterial, THREE.Texture | null>()
+  // 拆解位移：沿轴向依次拉开，保证每个部件之间有肉眼可见的间隙。
+  // Explosion offsets: spread parts along the axis so neighbours never intersect.
   const explosion: Record<EnginePart, [number, number, number]> = {
-    nacelle: [0, 2.2, 0], fan: [-0.75, 0, 0], lpc: [-0.36, 0, 0], hpc: [0, 0, 0],
-    combustor: [0.4, 0.65, 0], hpt: [0.8, 0, 0], lpt: [1.1, 0, 0],
-    'lp-shaft': [0, -0.35, 0], 'hp-shaft': [0, 0.35, 0], nozzle: [1.65, 0, 0],
+    nacelle: [0, 2.0, 0], fan: [-1.3, 0, 0], lpc: [-0.75, 0, 0], hpc: [-0.28, 0, 0],
+    combustor: [0.52, 0, 0], hpt: [1.02, 0, 0], lpt: [1.52, 0, 0],
+    'lp-shaft': [0, -0.8, 0], 'hp-shaft': [0, 0.8, 0], nozzle: [1.9, 0, 0],
   }
   function trackMaterial<T extends THREE.Material>(m: T): T {
     materials.add(m)
