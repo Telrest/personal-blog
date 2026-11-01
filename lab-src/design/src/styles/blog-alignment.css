@@ -115,3 +115,21 @@ html:not(.is-game) :is(
 ) {
   border-radius: 16px;
 }
+
+/* ---------- 去掉铜色侧边线 ---------- */
+/* 这些面板原本用 3px 的 --signal 竖线当强调条；换成深色主题后铜色边太跳，统一去掉。 */
+html:not(.is-game) :is(
+  .bone-caption,
+  .bone-phase-card,
+  .bone-scene-brief,
+  .guide,
+  .model-stage__notice,
+  .phase-strip--work,
+  .drv-strip--shift,
+  .gpa-row.is-active,
+  .question-card:hover,
+  .mowan-gpa
+) {
+  border-left: 0;
+  border-inline-start: 0;
+}
