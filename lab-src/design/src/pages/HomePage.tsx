@@ -1,4 +1,4 @@
-﻿import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { DimLine, DrawingFrame } from '../components/DrawingFrame'
 import { SectionHead } from '../components/SectionHead'
 import { SourceLegend } from '../components/SourceTag'
@@ -45,12 +45,6 @@ export default function HomePage() {
             <DrawingFrame
               label="展馆索引"
               ariaLabel="展馆索引：五件展品及当前进度"
-              titleBlock={[
-                { label: '图号', value: 'SD-000' },
-                { label: '展品', value: '05' },
-                { label: '开放', value: '00' },
-                { label: '版次', value: '草案' },
-              ]}
             >
               <ol className="index-list">
                 {EXHIBITS.map((exhibit) => (
