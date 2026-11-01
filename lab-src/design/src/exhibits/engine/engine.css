@@ -1,0 +1,57 @@
+.engine-stage-wrap { border: 1px solid var(--rule-strong); background: var(--paper-card); }
+.engine-quick { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-bottom: 1px solid var(--rule); }
+.engine-quick button { display: flex; justify-content: space-between; gap: 8px; padding: 13px 14px; font-size: 0.76rem; color: var(--ink-2); background: var(--paper-card); border: 0; text-align: left; }
+.engine-quick button + button { border-left: 1px solid var(--rule); }
+.engine-quick button:hover { background: var(--blueprint-wash); color: var(--blueprint); }
+.engine-quick span { color: var(--blueprint); }
+.engine-viewport { position: relative; }
+.model-stage.engine-stage { border: 0; min-height: 390px; aspect-ratio: 16 / 11; max-height: 76vh; }
+.engine-stage .model-stage__hint { max-width: calc(100% - 32px); bottom: 18px; left: 16px; right: 16px; width: fit-content; white-space: normal; line-height: 1.6; }
+.engine-stage-caption { display: flex; position: absolute; top: 18px; left: 18px; right: 18px; justify-content: space-between; gap: 16px; pointer-events: none; font-family: var(--font-mono); font-size: 0.57rem; letter-spacing: 0.10em; color: #73736d; }
+.engine-stage-caption span:last-child { font-family: var(--font-sans); letter-spacing: 0.02em; }
+.engine-live-strip { display: grid; grid-template-columns: 1fr 1fr 1.15fr; gap: 16px; align-items: center; padding: 16px 18px; border-top: 1px solid var(--rule); }
+.engine-live-strip > div { display: grid; gap: 7px; }
+.engine-live-strip > div > span { display: flex; gap: 7px; align-items: center; color: var(--ink-2); font-size: 0.72rem; }
+.engine-live-strip strong { font-family: var(--font-mono); font-size: 1.13rem; font-weight: 500; }
+.engine-live-strip small { font-family: var(--font-sans); font-weight: 400; font-size: 0.60rem; color: var(--ink-3); }
+.engine-live-strip > p { color: var(--ink-3); font-size: 0.67rem; line-height: 1.85; border-left: 1px solid var(--rule); padding-left: 16px; }
+.engine-dot, .engine-legend i { display: inline-block; width: 7px; height: 7px; flex-shrink: 0; border-radius: 50%; }
+.engine-dot--lp { background: #3a7eab; }
+.engine-dot--hp { background: #c6803e; }
+.engine-legend { display: flex; flex-wrap: wrap; gap: 9px 20px; color: var(--ink-2); font-size: 0.71rem; }
+.engine-legend > span { display: inline-flex; gap: 7px; align-items: center; }
+.engine-small { font-size: 0.72rem; color: var(--ink-3); line-height: 1.8; }
+.engine-tag { display: inline-block; color: var(--blueprint); background: var(--blueprint-wash); padding: 4px 7px; font-size: 0.64rem; white-space: nowrap; align-self: start; }
+.engine-overline { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.1em; color: var(--ink-3); }
+.engine-discovery { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 20px; padding: 14px 18px; border: 1px solid var(--rule-strong); background: var(--paper-card); }
+.engine-discovery p { font-size: 0.8rem; line-height: 1.65; }
+.engine-part-card, .engine-trend { padding: 20px 22px; border: 1px solid var(--rule-strong); background: var(--paper-card); }
+.engine-part-card h2, .engine-note-head h2 { font-size: 1.08rem; font-weight: 600; margin: 7px 0 11px; }
+.engine-part-card > p:not(.engine-overline) { font-size: 0.82rem; line-height: 1.85; color: var(--ink-2); }
+.engine-connection { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--rule); }
+.engine-note-head { display: flex; gap: 12px; align-items: start; justify-content: space-between; }
+.engine-trend svg { display: block; width: 100%; height: auto; margin: 12px 0 8px; }
+.engine-chart-grid { stroke: var(--rule); stroke-dasharray: 3 5; stroke-width: 0.7; }
+.engine-chart-text { fill: #77756f; font-size: 9px; font-family: var(--font-sans); }
+.engine-part-list, .engine-station-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.engine-part-list button, .engine-station-list button { padding: 6px 9px; color: var(--ink-2); border: 1px solid var(--rule); background: var(--paper-card); font-size: 0.72rem; }
+.engine-part-list button:hover, .engine-station-list button:hover { border-color: var(--blueprint); color: var(--blueprint); }
+.engine-part-list button[aria-pressed=true], .engine-station-list button[aria-pressed=true] { border-color: var(--signal); background: var(--signal-wash); color: var(--signal-ink); }
+.engine-station-list { margin: 16px 0 12px; }
+.engine-sources { font-size: 0.76rem; color: var(--ink-2); line-height: 1.85; border-top: 1px solid var(--rule); padding-top: 12px; }
+.engine-sources summary { cursor: pointer; font-family: var(--font-mono); font-size: 0.71rem; }
+.engine-sources p, .engine-sources ul { margin-top: 12px; }
+.engine-sources ul { list-style: disc; padding-left: 20px; }
+.engine-sources a { color: var(--blueprint); text-decoration: underline; text-underline-offset: 3px; }
+.engine-fallback p { margin-top: 10px; font-size: 0.82rem; line-height: 1.8; }
+@media (max-width: 760px) {
+  .model-stage.engine-stage { min-height: 320px; aspect-ratio: 1 / 1; }
+  .engine-quick button { font-size: 0.66rem; padding: 11px 8px; }
+  .engine-stage-caption { font-size: 0.5rem; left: 12px; right: 12px; }
+  .engine-stage-caption span:last-child { max-width: 155px; text-align: right; line-height: 1.6; }
+  .engine-live-strip { grid-template-columns: 1fr 1fr; gap: 14px 12px; padding: 14px; }
+  .engine-live-strip > p { grid-column: 1 / -1; padding: 9px 0 0; border-left: 0; border-top: 1px solid var(--rule); }
+  .engine-live-strip > p br { display: none; }
+  .engine-part-card, .engine-trend { padding: 16px 14px; }
+  .engine-chart-text { font-size: 16px; }
+}

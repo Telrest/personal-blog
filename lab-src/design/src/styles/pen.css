@@ -1,0 +1,246 @@
+/* ===========================================================================
+   按动笔（模块 A）专用样式
+   =========================================================================== */
+
+.pen-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pen-stage .model-stage__hint {
+  right: 10px;
+  width: fit-content;
+  max-width: calc(100% - 20px);
+  white-space: normal;
+  line-height: 1.6;
+}
+
+.pen-stage .model-stage__renderer {
+  top: 10px;
+  bottom: auto;
+}
+
+.pen-hint {
+  font-size: 0.74rem;
+  line-height: 1.65;
+  color: var(--ink-3);
+}
+
+.pen-hint strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* ---------- 阶段条 ---------- */
+.phase-strip {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 6px 14px;
+  padding: 11px 16px;
+  border: 1px solid var(--rule-strong);
+  border-left: 3px solid var(--rule-strong);
+  background: var(--paper-card);
+}
+
+.phase-strip--work {
+  border-left-color: var(--signal);
+}
+
+.phase-strip--lock {
+  border-left-color: var(--blueprint);
+}
+
+.phase-strip__phase {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.phase-strip__dot {
+  width: 6px;
+  height: 6px;
+  background: currentColor;
+  border-radius: 50%;
+}
+
+.phase-strip--work .phase-strip__dot {
+  background: var(--signal);
+}
+
+.phase-strip--lock .phase-strip__dot {
+  background: var(--blueprint);
+}
+
+.phase-strip__caption {
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+.phase-strip__stable {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+
+/* ---------- 零件选择 ---------- */
+.part-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.part-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border: 1px solid var(--rule-strong);
+  background: var(--paper-card);
+  font-size: 0.78rem;
+  color: var(--ink-2);
+  transition: border-color 0.16s var(--ease-change), color 0.16s var(--ease-change),
+    background-color 0.16s var(--ease-change);
+}
+
+.part-chip:hover {
+  border-color: var(--ink-2);
+  color: var(--ink);
+}
+
+.part-chip.is-active {
+  border-color: var(--signal);
+  background: var(--signal-wash);
+  color: var(--signal-ink);
+  font-weight: 600;
+}
+
+.part-chip__dot {
+  font-size: 0.7em;
+  line-height: 1;
+}
+
+/* ---------- 凸轮展开图 ---------- */
+.cam-diagram {
+  border: 1px solid var(--rule-strong);
+  background: var(--paper-card);
+  padding: 14px 16px 16px;
+}
+
+.cam-diagram svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.cam-diagram__axis {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  fill: var(--ink-3);
+}
+
+.cam-diagram__tick {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  fill: var(--ink-3);
+}
+
+.cam-diagram__kind {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  fill: var(--ink-3);
+}
+
+.cam-diagram__legend {
+  display: grid;
+  gap: 6px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule);
+}
+
+.cam-diagram__legend > div {
+  display: grid;
+  grid-template-columns: 62px minmax(0, 1fr);
+  gap: 10px;
+  align-items: baseline;
+}
+
+.cam-diagram__legend dt {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  color: var(--ink-3);
+}
+
+.cam-diagram__legend dd {
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.65;
+  color: var(--ink-2);
+}
+
+/* ---------- 说明与出处 ---------- */
+.pen-source {
+  font-size: 0.76rem;
+  line-height: 1.75;
+  color: var(--ink-3);
+  padding-left: 12px;
+  border-left: 2px solid var(--rule);
+}
+
+.pen-references {
+  border-top: 1px solid var(--rule);
+  padding-top: 10px;
+  font-size: 0.78rem;
+  color: var(--ink-2);
+}
+
+.pen-references summary {
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: var(--ink-3);
+}
+
+.pen-references summary:hover {
+  color: var(--ink);
+}
+
+.pen-references ol {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+  padding-left: 0;
+}
+
+.pen-references li {
+  font-size: 0.78rem;
+  line-height: 1.7;
+  color: var(--ink-2);
+}
+
+.pen-references a {
+  color: var(--blueprint);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+@media (max-width: 720px) {
+  .phase-strip {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .phase-strip__stable {
+    white-space: normal;
+  }
+}

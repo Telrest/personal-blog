@@ -1,0 +1,1343 @@
+/* ===========================================================================
+   魔丸模式（独立游戏入口）专用样式
+   游戏画面上是深色半透明仪表，页面其余部分仍然是展馆的浅色纸面。
+   =========================================================================== */
+
+.mowan,
+.mowan-teaser {
+  --game-panel: rgba(17, 22, 28, 0.82);
+  --game-panel-solid: rgba(15, 20, 26, 0.95);
+  --game-ink: #f2efe6;
+  --game-ink-2: #b8c2c9;
+  --game-ink-3: #8d9aa3;
+  --game-rule: rgba(242, 239, 230, 0.18);
+  --game-signal: #ff7a4d;
+  --game-gold: #e9c46a;
+  position: relative;
+}
+
+/* 页头里的游戏入口：和普通导航区分开，但仍然是同一个链接 */
+.site-nav__link--play {
+  color: var(--signal-ink);
+  border-color: var(--signal-wash);
+  background: var(--signal-wash);
+}
+
+.site-nav__link--play:hover {
+  color: var(--signal-ink);
+  border-color: var(--signal);
+  background: var(--signal-wash);
+}
+
+.site-nav__link--play.is-active {
+  color: #1f3429;
+  border-color: var(--signal);
+  background: var(--signal);
+}
+
+/* 游戏页自己的加载占位（页头下面） */
+.page-game {
+  min-height: calc(100svh - 68px);
+}
+
+.page-game__loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+}
+
+.mowan-viewport {
+  position: relative;
+  height: calc(100svh - 68px);
+  min-height: 520px;
+  background: linear-gradient(180deg, #c9dcec 0%, #e6e9e3 55%, #182a21 100%);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.mowan:fullscreen .mowan-viewport,
+.mowan:fullscreen .mowan {
+  height: 100vh;
+  min-height: 0;
+}
+
+.mowan-stage {
+  position: absolute;
+  inset: 0;
+  color: var(--game-ink);
+}
+
+.mowan-stage__canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  outline: none;
+}
+
+/* ---------- 加载 / 兜底 ---------- */
+
+.mowan-stage__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 24px;
+  background: radial-gradient(circle at 50% 40%, rgba(28, 39, 51, 0.82), rgba(17, 22, 28, 0.94));
+  text-align: center;
+}
+
+.mowan-stage__loading {
+  font-family: var(--font-mono);
+  font-size: 0.92rem;
+  letter-spacing: 0.14em;
+  color: var(--game-ink);
+}
+
+.mowan-stage__sub {
+  font-size: 0.78rem;
+  color: var(--game-ink-3);
+}
+
+.mowan-stage__overlay--fallback {
+  justify-content: flex-start;
+  padding: 40px clamp(20px, 6vw, 80px);
+  overflow: auto;
+  text-align: left;
+  align-items: flex-start;
+  background: var(--paper-card);
+  color: var(--ink);
+}
+
+.mowan-stage__title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.mowan-stage__reason {
+  margin-top: 4px;
+  font-size: 0.84rem;
+  color: var(--ink-3);
+}
+
+.mowan-stage__body {
+  margin: 14px 0 18px;
+  max-width: 62ch;
+  display: grid;
+  gap: 10px;
+  font-size: 0.86rem;
+  line-height: 1.8;
+  color: var(--ink-2);
+}
+
+.mowan-stage__hint {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  margin: 0;
+  padding: 5px 10px;
+  background: var(--game-panel);
+  border: 1px solid var(--game-rule);
+  font-size: 0.72rem;
+  color: var(--game-ink-2);
+}
+
+/* ---------- HUD ---------- */
+
+.mowan-hud {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: clamp(10px, 1.6vw, 18px);
+  pointer-events: none;
+  transition: opacity 0.25s var(--ease-change);
+}
+
+.mowan-hud.is-dimmed {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.mowan-hud__top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: start;
+  gap: 12px;
+}
+
+.mowan-hud__bottom {
+  display: grid;
+  gap: 8px;
+  justify-items: center;
+  padding-bottom: 2px;
+}
+
+.mowan-gpa {
+  justify-self: start;
+  padding: 10px 16px 11px;
+  min-width: 190px;
+  background: var(--game-panel);
+  border: 1px solid var(--game-rule);
+  border-left: 3px solid var(--game-signal);
+  backdrop-filter: blur(6px);
+}
+
+.mowan-gpa__label {
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  color: var(--game-ink-2);
+}
+
+.mowan-gpa__value {
+  display: flex;
+  align-items: baseline;
+  margin-top: 2px;
+  font-family: var(--font-mono);
+  font-size: clamp(1.9rem, 4.4vw, 2.9rem);
+  font-weight: 700;
+  line-height: 1.05;
+  color: var(--game-ink);
+  letter-spacing: 0.02em;
+}
+
+.mowan-gpa__value[data-reached='yes'] .mowan-gpa__digits {
+  color: var(--game-gold);
+  text-shadow: 0 0 18px rgba(233, 196, 106, 0.35);
+}
+
+.mowan-gpa__digits {
+  display: inline-block;
+  animation: mowan-pop 0.42s var(--ease-in);
+}
+
+@keyframes mowan-pop {
+  0% {
+    transform: translateY(8px) scale(0.92);
+    opacity: 0.2;
+    filter: brightness(1.8);
+  }
+  60% {
+    transform: translateY(-2px) scale(1.04);
+    opacity: 1;
+  }
+  100% {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+.mowan-gpa__note {
+  margin-top: 4px;
+  font-size: 0.71rem;
+  color: var(--game-ink-3);
+}
+
+.mowan-metrics {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+  justify-self: center;
+}
+
+.mowan-metric {
+  min-width: 92px;
+  padding: 8px 12px 9px;
+  background: var(--game-panel);
+  border: 1px solid var(--game-rule);
+  backdrop-filter: blur(6px);
+}
+
+.mowan-metric__label {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  color: var(--game-ink-2);
+}
+
+.mowan-metric__extra {
+  font-size: 0.66rem;
+  color: var(--game-ink-3);
+}
+
+.mowan-metric__value {
+  margin-top: 2px;
+  font-family: var(--font-mono);
+  font-size: 1.28rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--game-ink);
+}
+
+.mowan-metric__unit {
+  margin-left: 4px;
+  font-size: 0.66rem;
+  color: var(--game-ink-3);
+}
+
+.mowan-metric--boost {
+  min-width: 132px;
+}
+
+.mowan-boost {
+  margin-top: 6px;
+  height: 7px;
+  background: rgba(242, 239, 230, 0.16);
+  overflow: hidden;
+}
+
+.mowan-boost__fill {
+  display: block;
+  height: 100%;
+  background: #6fb39a;
+  transition: width 0.12s linear, background-color 0.2s var(--ease-change);
+}
+
+.mowan-boost[data-state='boosting'] .mowan-boost__fill {
+  background: var(--game-signal);
+}
+
+.mowan-boost[data-state='empty'] .mowan-boost__fill {
+  background: #d9a33c;
+}
+
+.mowan-tools {
+  justify-self: end;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+  pointer-events: auto;
+}
+
+.mowan-tool {
+  padding: 6px 11px;
+  background: var(--game-panel);
+  border: 1px solid var(--game-rule);
+  color: var(--game-ink);
+  font-size: 0.74rem;
+  line-height: 1.2;
+  backdrop-filter: blur(6px);
+  transition: background-color 0.15s var(--ease-change), border-color 0.15s var(--ease-change);
+}
+
+.mowan-tool:hover:not(:disabled) {
+  border-color: rgba(242, 239, 230, 0.5);
+}
+
+.mowan-tool:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.mowan-hint {
+  padding: 5px 14px;
+  background: rgba(184, 67, 45, 0.9);
+  color: #fff6ee;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.mowan-progress {
+  width: min(520px, 72vw);
+  height: 3px;
+  background: rgba(242, 239, 230, 0.18);
+}
+
+.mowan-progress__fill {
+  display: block;
+  height: 100%;
+  background: var(--game-gold);
+  transition: width 0.2s linear;
+}
+
+.mowan-hud__keys {
+  font-size: 0.69rem;
+  letter-spacing: 0.04em;
+  color: rgba(242, 239, 230, 0.72);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+/* ---------- 遮罩层通用 ---------- */
+
+.mowan-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+}
+
+/* ---------- 标题（待机） ---------- */
+
+.mowan-title {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  padding-inline: clamp(18px, 6vw, 72px);
+}
+
+.mowan-title__photo {
+  position: absolute;
+  inset: 0;
+  background: transparent;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.92;
+  filter: saturate(0.9) contrast(1.02);
+}
+
+.mowan-title__scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+      100deg,
+      rgba(10, 15, 20, 0.95) 0%,
+      rgba(10, 15, 20, 0.88) 34%,
+      rgba(10, 15, 20, 0.55) 60%,
+      rgba(10, 15, 20, 0.2) 100%
+    ),
+    linear-gradient(0deg, rgba(10, 15, 20, 0.86) 0%, rgba(10, 15, 20, 0.1) 42%, transparent 70%);
+}
+
+.mowan-title__content {
+  position: relative;
+  z-index: 1;
+  width: min(760px, 100%);
+  max-height: 100%;
+  overflow: auto;
+  padding: clamp(18px, 4vh, 44px) 0;
+  color: var(--game-ink);
+  scrollbar-width: thin;
+}
+
+.mowan-title__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.28em;
+  color: var(--game-gold);
+  text-transform: uppercase;
+}
+
+.mowan-title__headline {
+  margin-top: 12px;
+  font-size: clamp(1.8rem, 3.9vw, 2.85rem);
+  line-height: 1.16;
+  letter-spacing: 0.01em;
+  color: #1f3429;
+  text-wrap: balance;
+}
+
+.mowan-title__lede {
+  margin-top: 14px;
+  max-width: 46ch;
+  font-size: clamp(0.86rem, 1.2vw, 0.98rem);
+  line-height: 1.75;
+  color: rgba(242, 239, 230, 0.82);
+}
+
+.mowan-title__controls {
+  margin: 22px 0 0;
+  display: grid;
+  gap: 7px;
+  max-width: 52ch;
+  font-size: 0.8rem;
+  color: rgba(242, 239, 230, 0.72);
+}
+
+.mowan-title__controls > div {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  gap: 10px;
+}
+
+.mowan-title__controls dt {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--game-gold);
+}
+
+.mowan-title__controls dd {
+  margin: 0;
+}
+
+.mowan-title__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.mowan .btn {
+  border: 1px solid rgba(242, 239, 230, 0.32);
+  background: transparent;
+  color: var(--game-ink);
+  padding: 9px 16px;
+  font-size: 0.86rem;
+  transition: border-color 0.15s var(--ease-change), background-color 0.15s var(--ease-change),
+    transform 0.15s var(--ease-change);
+}
+
+.mowan .btn:hover {
+  border-color: rgba(242, 239, 230, 0.7);
+}
+
+.mowan .btn--primary {
+  background: var(--signal);
+  border-color: var(--signal);
+  color: #1f3429;
+  font-weight: 600;
+}
+
+.mowan .btn--primary:hover {
+  background: #c8503a;
+  border-color: #c8503a;
+}
+
+.mowan-start {
+  min-width: 210px;
+  padding: 12px 22px !important;
+  font-size: 0.95rem !important;
+}
+
+.mowan-ghost {
+  font-size: 0.78rem !important;
+}
+
+.mowan-title__best {
+  margin-top: 20px;
+  font-size: 0.8rem;
+  color: rgba(242, 239, 230, 0.72);
+}
+
+.mowan-title__best .mono {
+  color: var(--game-gold);
+  font-size: 0.92rem;
+}
+
+.mowan-title__fine {
+  margin-top: 6px;
+  max-width: 54ch;
+  font-size: 0.72rem;
+  line-height: 1.7;
+  color: rgba(242, 239, 230, 0.46);
+}
+
+.mowan-title__credit {
+  position: absolute;
+  right: clamp(14px, 3vw, 28px);
+  bottom: clamp(10px, 2vh, 18px);
+  z-index: 1;
+  max-width: 34ch;
+  font-size: 0.66rem;
+  line-height: 1.6;
+  text-align: right;
+  color: rgba(242, 239, 230, 0.4);
+}
+
+/* ---------- 倒计时 ---------- */
+
+.mowan-countdown {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 50%, rgba(12, 18, 23, 0.28), transparent 62%);
+}
+
+.mowan-countdown__value {
+  font-family: var(--font-mono);
+  font-size: clamp(5rem, 17vw, 12rem);
+  font-weight: 700;
+  line-height: 1;
+  color: #1f3429;
+  text-shadow: 0 8px 40px rgba(0, 0, 0, 0.45);
+  animation: mowan-count 0.5s var(--ease-in);
+}
+
+.mowan-countdown__value.is-go {
+  color: var(--game-signal);
+  font-size: clamp(4rem, 13vw, 9rem);
+}
+
+@keyframes mowan-count {
+  0% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.92;
+  }
+}
+
+.mowan-countdown__hint {
+  padding: 4px 12px;
+  background: rgba(12, 18, 23, 0.6);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  color: rgba(242, 239, 230, 0.8);
+}
+
+/* ---------- 面板（暂停 / 结算） ---------- */
+
+.mowan-panel-layer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(12px, 3vw, 28px);
+  background: rgba(9, 13, 17, 0.55);
+  backdrop-filter: blur(3px);
+  overflow: auto;
+}
+
+.mowan-panel {
+  width: min(560px, 100%);
+  max-height: 100%;
+  overflow: auto;
+  padding: clamp(18px, 3vw, 30px);
+  background: var(--game-panel-solid);
+  border: 1px solid var(--game-rule);
+  border-top: 3px solid var(--signal);
+  color: var(--game-ink);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
+}
+
+.mowan-panel__head {
+  display: grid;
+  gap: 6px;
+}
+
+.mowan-panel__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  color: var(--game-gold);
+}
+
+.mowan-panel__title {
+  font-size: clamp(1.15rem, 2.4vw, 1.5rem);
+  line-height: 1.35;
+  color: #1f3429;
+}
+
+.mowan-panel__note {
+  font-size: 0.76rem;
+  line-height: 1.7;
+  color: var(--game-ink-3);
+}
+
+.mowan-panel__badge {
+  justify-self: start;
+  margin-top: 4px;
+  padding: 3px 10px;
+  background: var(--game-signal);
+  color: #1f3429;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.mowan-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin: 18px 0;
+  padding: 12px 0;
+  border-top: 1px solid var(--game-rule);
+  border-bottom: 1px solid var(--game-rule);
+}
+
+.mowan-stat__label {
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  color: var(--game-ink-3);
+}
+
+.mowan-stat__value {
+  margin-top: 2px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--game-ink);
+}
+
+.mowan-stat--signal .mowan-stat__value {
+  color: var(--game-gold);
+  font-size: 1.24rem;
+}
+
+.mowan-stat__unit {
+  margin-left: 3px;
+  font-size: 0.66rem;
+  color: var(--game-ink-3);
+}
+
+.mowan-panel__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.mowan-panel__settings {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--game-rule);
+}
+
+.mowan-setting {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.76rem;
+  color: var(--game-ink-2);
+}
+
+.mowan-setting__label {
+  letter-spacing: 0.06em;
+}
+
+.mowan-segment {
+  display: inline-flex;
+  border: 1px solid var(--game-rule);
+}
+
+.mowan-segment button {
+  padding: 5px 10px;
+  font-size: 0.74rem;
+  color: var(--game-ink-2);
+  background: transparent;
+}
+
+.mowan-segment button.is-active {
+  background: var(--game-ink);
+  color: #14191e;
+  font-weight: 600;
+}
+
+.mowan-panel__link {
+  margin-left: auto;
+  font-size: 0.78rem;
+  color: var(--game-ink-2);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.mowan-panel__link:hover {
+  color: var(--game-ink);
+}
+
+.mowan-result__line {
+  margin: 0 0 16px;
+  font-size: 0.8rem;
+  line-height: 1.75;
+  color: var(--game-ink-2);
+}
+
+/* 结算页的「顺路看原理」：三件展品的入口，和重试按钮分开一档 */
+.mowan-result__exhibits {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--game-rule);
+}
+
+.mowan-result__exhibits-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  color: var(--game-ink-3);
+}
+
+.mowan-result__exhibits-links {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.mowan-result__exhibits-links .btn {
+  padding: 7px 12px !important;
+  font-size: 0.8rem !important;
+  text-align: center;
+}
+
+.mowan-panel--result .mowan-panel__note {
+  margin-top: 14px;
+}
+
+/* ---------- 碰撞演出 ---------- */
+
+.mowan-crash {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 46%, rgba(184, 67, 45, 0.24), transparent 58%);
+}
+
+.mowan-crash__word {
+  font-size: clamp(3.4rem, 11vw, 7.4rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  color: #fff4ec;
+  text-shadow: 4px 4px 0 var(--signal), 0 0 42px rgba(184, 67, 45, 0.65);
+  transform: rotate(-4deg);
+  animation: mowan-crack 0.42s var(--ease-in);
+}
+
+@keyframes mowan-crack {
+  0% {
+    transform: rotate(-4deg) scale(1.7);
+    opacity: 0;
+  }
+  55% {
+    transform: rotate(-4deg) scale(0.96);
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(-4deg) scale(1);
+    opacity: 1;
+  }
+}
+
+.mowan-crash__note {
+  padding: 4px 12px;
+  background: rgba(12, 18, 23, 0.62);
+  font-size: 0.74rem;
+  letter-spacing: 0.06em;
+  color: rgba(242, 239, 230, 0.82);
+}
+
+.mowan-crash__skip {
+  position: absolute;
+  right: clamp(12px, 3vw, 26px);
+  bottom: clamp(12px, 3vw, 26px);
+  pointer-events: auto;
+}
+
+/* ---------- 旁观者模式 ---------- */
+
+.mowan-spectator {
+  position: absolute;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  max-width: min(760px, calc(100% - 24px));
+  padding: 10px 14px;
+  background: var(--game-panel-solid);
+  border: 1px solid var(--game-rule);
+  border-left: 3px solid var(--blueprint);
+}
+
+.mowan-spectator__text {
+  font-size: 0.76rem;
+  line-height: 1.6;
+  color: var(--game-ink-2);
+}
+
+.mowan-spectator__text strong {
+  color: var(--game-ink);
+}
+
+.mowan-spectator .mowan-tool {
+  white-space: nowrap;
+}
+
+/* ---------- 触屏控制 ---------- */
+
+.mowan-touch {
+  position: absolute;
+  inset: auto 0 0 0;
+  z-index: 6;
+  display: none;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 0 clamp(12px, 4vw, 26px) clamp(14px, 4vw, 26px);
+  pointer-events: none;
+}
+
+.mowan-touch__steer {
+  display: flex;
+  gap: 12px;
+  pointer-events: auto;
+}
+
+.mowan-touch__button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  border: 1px solid rgba(242, 239, 230, 0.42);
+  background: rgba(15, 20, 26, 0.62);
+  color: var(--game-ink);
+  font-size: 0.78rem;
+  backdrop-filter: blur(4px);
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  pointer-events: auto;
+}
+
+.mowan-touch__button:active {
+  background: rgba(184, 67, 45, 0.78);
+  border-color: #fff;
+}
+
+.mowan-touch__glyph {
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+.mowan-touch__sub {
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  color: rgba(242, 239, 230, 0.7);
+}
+
+.mowan-touch__button--boost {
+  width: 92px;
+  height: 92px;
+  background: rgba(184, 67, 45, 0.78);
+  border-color: rgba(255, 214, 196, 0.6);
+}
+
+.mowan-touch__button--boost .mowan-touch__glyph {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+@media (hover: none), (pointer: coarse) {
+  .mowan-touch {
+    display: flex;
+  }
+
+  .mowan-hud__keys {
+    display: none;
+  }
+}
+
+/* ---------- 首页的游戏入口卡 ---------- */
+
+.section--mowan {
+  padding-top: clamp(20px, 3vw, 34px);
+}
+
+.mowan-teaser {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.9fr);
+  gap: clamp(18px, 3vw, 36px);
+  padding: clamp(20px, 3.2vw, 34px);
+  background:
+    linear-gradient(90deg, rgba(12, 18, 23, 0.96) 0%, rgba(12, 18, 23, 0.72) 60%, rgba(12, 18, 23, 0.38) 100%),
+    repeating-linear-gradient(90deg, rgba(244, 241, 233, 0.05) 0 1px, transparent 1px 84px),
+    linear-gradient(150deg, #33485a, #1b2731 72%);
+  border: 1px solid #2b3a46;
+  color: var(--game-ink);
+  transition: transform 0.2s var(--ease-change), border-color 0.2s var(--ease-change);
+}
+
+.mowan-teaser:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 122, 77, 0.6);
+}
+
+.mowan-teaser__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.26em;
+  color: var(--game-gold);
+}
+
+.mowan-teaser__title {
+  margin-top: 10px;
+  font-size: clamp(1.25rem, 2.4vw, 1.75rem);
+  line-height: 1.35;
+  color: #1f3429;
+}
+
+.mowan-teaser__lede {
+  margin-top: 10px;
+  max-width: 52ch;
+  font-size: 0.86rem;
+  line-height: 1.8;
+  color: rgba(242, 239, 230, 0.76);
+}
+
+.mowan-teaser__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin-top: 14px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  color: rgba(242, 239, 230, 0.5);
+}
+
+.mowan-teaser__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 18px;
+  padding: 9px 16px;
+  background: var(--signal);
+  color: #1f3429;
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.mowan-teaser__board {
+  align-self: center;
+  padding: 16px 18px;
+  border: 1px solid rgba(242, 239, 230, 0.18);
+  border-top: 2px solid var(--game-gold);
+  background: rgba(10, 15, 20, 0.45);
+}
+
+.mowan-teaser__board-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  color: var(--game-ink-3);
+}
+
+.mowan-teaser__board-value {
+  margin-top: 2px;
+  font-family: var(--font-mono);
+  font-size: clamp(1.5rem, 2.6vw, 2rem);
+  font-weight: 700;
+  color: var(--game-gold);
+}
+
+.mowan-teaser__board-hint {
+  margin-top: 10px;
+  font-size: 0.78rem;
+  line-height: 1.85;
+  color: rgba(242, 239, 230, 0.7);
+}
+
+.mowan-teaser__board-list {
+  display: grid;
+  gap: 4px;
+  margin-top: 12px;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  color: rgba(242, 239, 230, 0.72);
+}
+
+.mowan-teaser__board-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding-bottom: 3px;
+  border-bottom: 1px dashed rgba(242, 239, 230, 0.12);
+}
+
+.mowan-teaser__board-list li.is-never {
+  margin-top: 4px;
+  border-bottom: none;
+  color: var(--signal);
+  font-weight: 600;
+}
+
+.mowan-teaser__board-foot {
+  margin-top: 10px;
+  font-size: 0.68rem;
+  color: rgba(242, 239, 230, 0.42);
+}
+
+@media (max-width: 820px) {
+  .mowan-teaser {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .mowan-teaser__board {
+    display: none;
+  }
+}
+
+/* ---------- 页面下半部分：规则说明（回到纸面） ---------- */
+
+.mowan-notes {
+  padding: clamp(28px, 5vw, 56px) clamp(16px, 5vw, 48px);
+  background: var(--paper);
+  border-top: 1px solid var(--rule);
+}
+
+.mowan-notes__title {
+  font-size: clamp(1.15rem, 2vw, 1.4rem);
+  margin-bottom: 18px;
+}
+
+.mowan-notes__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(14px, 2vw, 24px);
+}
+
+.mowan-note {
+  padding: 16px 18px;
+  background: var(--paper-card);
+  border: 1px solid var(--rule-strong);
+  font-size: 0.82rem;
+  line-height: 1.8;
+  color: var(--ink-2);
+}
+
+.mowan-note h3 {
+  font-size: 0.92rem;
+  margin-bottom: 8px;
+  color: var(--ink);
+}
+
+.mowan-note p + p {
+  margin-top: 8px;
+}
+
+.mowan-note ul {
+  display: grid;
+  gap: 5px;
+  padding-left: 16px;
+  list-style: disc;
+}
+
+.mowan-note strong {
+  color: var(--ink);
+}
+
+.mowan-note__table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 4px 0 10px;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+}
+
+.mowan-note__table th,
+.mowan-note__table td {
+  padding: 4px 6px;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+}
+
+.mowan-note__table th {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 0.72rem;
+  color: var(--ink-3);
+}
+
+.mowan-notes__foot {
+  margin-top: 18px;
+  font-size: 0.78rem;
+  color: var(--ink-3);
+}
+
+.mowan-notes__foot a {
+  color: var(--blueprint);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* ---------- 窄屏 ---------- */
+
+@media (max-width: 900px) {
+  .mowan-hud__top {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+  }
+
+  .mowan-metrics {
+    grid-column: 1 / -1;
+    justify-self: stretch;
+  }
+
+  .mowan-metric {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .mowan-gpa {
+    min-width: 0;
+  }
+
+  .mowan-gpa__note {
+    font-size: 0.66rem;
+  }
+
+  .mowan-tools {
+    grid-row: 1;
+    grid-column: 2;
+  }
+
+  .mowan-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .mowan-viewport {
+    height: calc(100svh - 60px);
+  }
+
+  /* 手机上的 HUD 要压扁：只留数字，标签缩小，别把路面挤没了 */
+  .mowan-hud {
+    padding: 8px;
+  }
+
+  .mowan-hud__top {
+    gap: 6px;
+  }
+
+  .mowan-gpa {
+    padding: 7px 10px 8px;
+    border-left-width: 2px;
+  }
+
+  .mowan-gpa__label {
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+  }
+
+  .mowan-gpa__value {
+    font-size: 1.55rem;
+  }
+
+  .mowan-gpa__note {
+    font-size: 0.58rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .mowan-tools {
+    gap: 4px;
+  }
+
+  .mowan-tool {
+    padding: 5px 8px;
+    font-size: 0.66rem;
+  }
+
+  .mowan-metrics {
+    gap: 6px;
+  }
+
+  .mowan-metric {
+    padding: 5px 8px 6px;
+  }
+
+  .mowan-metric__label {
+    font-size: 0.58rem;
+    letter-spacing: 0.02em;
+  }
+
+  .mowan-metric__value {
+    font-size: 0.95rem;
+  }
+
+  .mowan-metric__unit {
+    font-size: 0.58rem;
+  }
+
+  .mowan-metric__extra {
+    font-size: 0.56rem;
+  }
+
+  .mowan-boost {
+    height: 6px;
+    margin-top: 4px;
+  }
+
+  .mowan-title__content {
+    width: calc(100% - 36px);
+    padding: 20px 0;
+  }
+
+  .mowan-title__headline {
+    font-size: clamp(1.6rem, 7.4vw, 2.3rem);
+  }
+
+  .mowan-title__controls {
+    margin-top: 16px;
+    font-size: 0.76rem;
+  }
+
+  .mowan-title__lede {
+    font-size: 0.82rem;
+  }
+
+  .mowan-title__credit {
+    display: none;
+  }
+
+  .mowan-panel {
+    width: 100%;
+  }
+
+  .mowan-panel__actions .btn {
+    flex: 1 1 46%;
+    text-align: center;
+  }
+
+  .mowan-notes {
+    padding: 24px 18px 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .mowan-hud__bottom .mowan-progress {
+    width: 88vw;
+  }
+
+  .mowan-touch__button {
+    width: 64px;
+    height: 64px;
+  }
+
+  .mowan-touch__button--boost {
+    width: 80px;
+    height: 80px;
+  }
+}
+
+/* 尊重系统的减少动态效果 */
+@media (prefers-reduced-motion: reduce) {
+  .mowan-gpa__digits,
+  .mowan-countdown__value,
+  .mowan-crash__word {
+    animation: none !important;
+  }
+}
+/* cache-bust: 2026-11-01T17:13:03.2323686+08:00 */

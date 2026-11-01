@@ -1,0 +1,110 @@
+/* ===========================================================================
+   与 Telrest 主站对齐
+   1. 按钮统一成主站的墨绿 + 胶囊形
+   2. 方块容器统一成圆角
+   魔丸模式（html.is-game）保持它自己的红色与方形设计语言。
+   =========================================================================== */
+
+/* ---------- 按钮：墨绿胶囊 ---------- */
+html:not(.is-game) :is(.btn, button, .site-nav__link, .segmented__item, .exhibit-nav__item) {
+  border-radius: 100px;
+}
+
+html:not(.is-game) :is(.btn, button) {
+  background: #23483a;
+  border-color: #23483a;
+  color: #f3f6eb;
+}
+
+html:not(.is-game) :is(.btn, button):hover:not(:disabled) {
+  background: #2c5846;
+  border-color: #2c5846;
+  color: #f3f6eb;
+}
+
+html:not(.is-game) :is(.btn, button):active:not(:disabled) {
+  background: #1c3b30;
+  border-color: #1c3b30;
+}
+
+/* 弱按钮 / 文字链接保持透明底 */
+html:not(.is-game) :is(.btn--quiet, .link) {
+  background: transparent;
+  border-color: transparent;
+  color: var(--ink-2);
+}
+
+html:not(.is-game) :is(.btn--quiet, .link):hover:not(:disabled) {
+  background: transparent;
+  border-color: transparent;
+  color: var(--ink);
+}
+
+/* ---------- 方块容器：圆角 ---------- */
+html:not(.is-game) :is(
+  .bone-badge,
+  .bone-chip,
+  .bone-fallback__figure,
+  .bone-fullscreen-exit,
+  .bone-label,
+  .bone-panel,
+  .bone-panel__preset,
+  .bone-phase,
+  .bone-phase-card,
+  .bone-scene-brief,
+  .bone-stage__meta,
+  .bone-tabs,
+  .bone-term,
+  .bone-terms,
+  .construction__notice,
+  .drv-cog,
+  .drv-shift__state,
+  .gpa-badge,
+  .gpa-badge--sample,
+  .gpa-badge--warn,
+  .gpa-course,
+  .gpa-guide__detail,
+  .gpa-input,
+  .gpa-notice--error,
+  .gpa-notice--info,
+  .gpa-plus5__item,
+  .gpa-row,
+  .gpa-rule__formula,
+  .gpa-samplebar,
+  .gpa-side__block,
+  .gpa-summary__foot,
+  .howto-card,
+  .limits__item,
+  .model-stage__hint,
+  .model-stage__overlay,
+  .part-chip,
+  .principle,
+  .principle-grid,
+  .question-card,
+  .segmented__item,
+  .site-nav__link,
+  .skip-link,
+  .source-legend,
+  .source-legend__item,
+  .stage-notice__action,
+  .title-block
+) {
+  border-radius: 12px;
+}
+
+/* 较大的展示块给更明显的圆角 */
+html:not(.is-game) :is(
+  .bone-panel,
+  .bone-phase-card,
+  .bone-scene-brief,
+  .howto-card,
+  .limits__item,
+  .principle,
+  .principle-grid,
+  .question-card,
+  .title-block,
+  .gpa-course,
+  .gpa-side__block
+) {
+  border-radius: 16px;
+}

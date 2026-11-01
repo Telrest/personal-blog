@@ -1,0 +1,53 @@
+/* ===========================================================================
+   设计的秘密 · 设计变量
+   森林深色展馆：深夜森林底 + 米白字 + 铜色强调 + 图纸蓝标注
+   （与 Telrest 个人博客的主题同源）
+   =========================================================================== */
+
+:root {
+  color-scheme: dark;
+
+  /* 纸面与墨色 ------------------------------------------------------------ */
+  --paper: #12211b;
+  --paper-card: #1a2c23;
+  --paper-inset: #0d1813;
+  --ink: #e6efe2;
+  --ink-2: #b3c4b6;
+  --ink-3: #8ea193;
+  --rule: #2b3f33;
+  --rule-strong: #3c5344;
+
+  /* 唯一强调色：正在工作的零件 / 当前状态 -------------------------------- */
+  --signal: #cf8a5c;
+  --signal-ink: #e8b48c;
+  --signal-wash: #2e2419;
+
+  /* 图纸蓝：尺寸线、引线、来源标记 ---------------------------------------- */
+  --blueprint: #6aa6d6;
+  --blueprint-wash: #1d2f3d;
+
+  /* 状态词（文字优先，颜色只是辅助） -------------------------------------- */
+  --ok: #7fd0a4;
+  --warn: #e0b44f;
+
+  /* 字体 ------------------------------------------------------------------ */
+  --font-sans: "PingFang SC", "HarmonyOS Sans SC", "Source Han Sans SC",
+    "Noto Sans SC", "Microsoft YaHei", system-ui, -apple-system, "Segoe UI",
+    sans-serif;
+  --font-mono: "JetBrains Mono", "Cascadia Mono", "SFMono-Regular", Consolas,
+    "Liberation Mono", monospace;
+
+  /* 尺寸 ------------------------------------------------------------------ */
+  --step: 8px;
+  --shell: 1200px;
+  --radius: 12px;
+  --gutter: clamp(16px, 4vw, 48px);
+
+  /* 动效：入场 / 退场 / 状态切换（参考 teardown 的节奏约定） --------------- */
+  --ease-in: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out: cubic-bezier(0.6, 0, 0.9, 0.35);
+  --ease-change: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* 纸张网格：极低对比度的工程纸 ------------------------------------------ */
+  --grid-line: rgba(230, 239, 226, 0.045);
+}

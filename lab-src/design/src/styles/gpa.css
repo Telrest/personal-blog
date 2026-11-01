@@ -1,0 +1,1035 @@
+/* ===========================================================================
+   GPA 展品（模块 B）样式 —— 二维图表、课程编辑、规则说明
+   =========================================================================== */
+
+/* ---------- 顶部概览 ---------- */
+.gpa-summary {
+  border: 1px solid var(--rule-strong);
+  background: var(--paper-card);
+  margin-bottom: 20px;
+}
+
+.gpa-summary__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.gpa-metric {
+  padding: 16px 18px 14px;
+  border-left: 1px solid var(--rule);
+  min-width: 0;
+}
+
+.gpa-metric:first-child {
+  border-left: none;
+}
+
+.gpa-metric__label {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  color: var(--ink-3);
+}
+
+.gpa-metric__value {
+  margin-top: 6px;
+  font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+.gpa-metric__note {
+  margin-top: 5px;
+  font-size: 0.74rem;
+  line-height: 1.5;
+  color: var(--ink-3);
+}
+
+.gpa-summary__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  padding: 9px 18px;
+  border-top: 1px solid var(--rule);
+  background: var(--paper-inset);
+  font-size: 0.76rem;
+  color: var(--ink-2);
+}
+
+.gpa-check-line__ok {
+  color: var(--ink-3);
+  font-size: 0.72rem;
+}
+
+.gpa-check-line__sep {
+  margin: 0 8px;
+  color: var(--rule-strong);
+}
+
+.gpa-summary__badges {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.gpa-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 7px;
+  border: 1px solid var(--rule-strong);
+  background: var(--paper-card);
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-2);
+}
+
+.gpa-badge--sample {
+  border-color: var(--blueprint);
+  color: var(--blueprint);
+  background: var(--blueprint-wash);
+}
+
+.gpa-badge--warn {
+  border-color: var(--signal);
+  color: var(--signal-ink);
+  background: var(--signal-wash);
+}
+
+.gpa-samplebar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 20px;
+  padding: 10px 14px;
+  border: 1px solid var(--rule-strong);
+  border-left: 3px solid var(--blueprint);
+  background: var(--paper-card);
+  font-size: 0.82rem;
+  line-height: 1.65;
+  color: var(--ink-2);
+}
+
+.gpa-delta--up {
+  color: var(--ok);
+}
+
+.gpa-delta--down {
+  color: var(--signal-ink);
+}
+
+.gpa-delta--flat {
+  color: var(--ink-3);
+}
+
+/* ---------- 图表卡片 ---------- */
+.gpa-chart {
+  border: 1px solid var(--rule-strong);
+  background: var(--paper-card);
+  padding: 18px 20px 20px;
+}
+
+.gpa-chart__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 8px 16px;
+}
+
+.gpa-chart__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  color: var(--ink-3);
+}
+
+.gpa-chart__title {
+  margin-top: 2px;
+  font-size: 1.12rem;
+}
+
+.gpa-chart__formula {
+  font-size: 0.72rem;
+  color: var(--blueprint);
+  white-space: nowrap;
+}
+
+.gpa-chart__hint {
+  margin-top: 8px;
+  font-size: 0.8rem;
+  line-height: 1.65;
+  color: var(--ink-3);
+}
+
+/* ---------- 刻度条 ---------- */
+.gpa-scale {
+  display: block;
+  width: 100%;
+  margin-top: 14px;
+  border-radius: 1px;
+}
+
+.gpa-scale__track {
+  fill: var(--paper-inset);
+}
+
+.gpa-scale__segment {
+  transition: opacity 0.15s var(--ease-change);
+}
+
+.gpa-scale__segment.is-selected {
+  stroke: var(--ink);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+
+.gpa-scale__tick {
+  stroke: color-mix(in srgb, var(--ink) 22%, transparent);
+  stroke-width: 1;
+}
+
+.gpa-scale__marker {
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.gpa-axis {
+  margin-top: 4px;
+}
+
+.gpa-axis__ticks {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--ink-3);
+}
+
+.gpa-axis__caption {
+  margin-top: 8px;
+  font-size: 0.78rem;
+  line-height: 1.65;
+  color: var(--ink-2);
+}
+
+.gpa-axis__caption strong {
+  color: var(--ink);
+}
+
+/* ---------- 课程行 ---------- */
+.gpa-rows {
+  margin-top: 18px;
+  border-top: 1px solid var(--rule);
+}
+
+.gpa-rows li {
+  border-bottom: 1px solid var(--rule);
+}
+
+.gpa-row {
+  display: grid;
+  gap: 6px;
+  width: 100%;
+  padding: 10px 8px 11px;
+  text-align: left;
+  border-left: 2px solid transparent;
+  transition: background-color 0.15s var(--ease-change), border-color 0.15s var(--ease-change);
+}
+
+.gpa-row:hover {
+  background: color-mix(in srgb, var(--paper-inset) 60%, transparent);
+}
+
+.gpa-row.is-active {
+  background: var(--paper-inset);
+  border-left-color: var(--signal);
+}
+
+.gpa-row.is-inactive {
+  opacity: 0.62;
+}
+
+.gpa-row__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.gpa-row__swatch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  flex: none;
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+}
+
+.gpa-row__swatch--sm {
+  width: 12px;
+  height: 12px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+.gpa-row__name {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.88rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gpa-row__stat {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--ink-2);
+  flex: none;
+}
+
+.gpa-row__hl {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.gpa-row__muted {
+  color: var(--ink-3);
+  font-family: var(--font-sans);
+  font-size: 0.74rem;
+}
+
+.gpa-row__bar {
+  display: block;
+}
+
+.gpa-row__note {
+  font-size: 0.74rem;
+  line-height: 1.55;
+  color: var(--ink-3);
+}
+
+.gpa-bar {
+  position: relative;
+  display: block;
+  height: 8px;
+  background: var(--paper-inset);
+}
+
+.gpa-bar__fill {
+  display: block;
+  height: 100%;
+}
+
+.gpa-bar__marker {
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--ink);
+}
+
+.gpa-view__foot {
+  margin-top: 12px;
+  font-size: 0.74rem;
+  line-height: 1.65;
+  color: var(--ink-3);
+}
+
+/* ---------- 无数据 ---------- */
+.gpa-empty {
+  margin-top: 16px;
+  padding: 22px 20px;
+  border: 1px dashed var(--rule-strong);
+  background: var(--paper-inset);
+  text-align: center;
+}
+
+.gpa-empty__title {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.gpa-empty__body {
+  margin-top: 6px;
+  font-size: 0.8rem;
+  line-height: 1.7;
+  color: var(--ink-2);
+}
+
+/* ---------- 提分实验 ---------- */
+.gpa-target-head {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border: 1px solid var(--rule);
+  background: var(--paper-inset);
+}
+
+.gpa-target-head__line {
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.gpa-target-head__note {
+  margin-top: 4px;
+  font-size: 0.76rem;
+  line-height: 1.6;
+  color: var(--ink-3);
+}
+
+.gpa-plus5 {
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.gpa-plus5__title {
+  font-size: 0.98rem;
+}
+
+.gpa-plus5__note {
+  margin-top: 6px;
+  font-size: 0.76rem;
+  line-height: 1.65;
+  color: var(--ink-3);
+}
+
+.gpa-plus5__empty {
+  margin-top: 10px;
+  font-size: 0.82rem;
+  color: var(--ink-3);
+}
+
+.gpa-plus5__list {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.gpa-plus5__item {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1.3fr) auto auto minmax(60px, 0.9fr);
+  align-items: center;
+  gap: 10px;
+  font-size: 0.8rem;
+}
+
+.gpa-plus5__rank {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--ink-3);
+  text-align: right;
+}
+
+.gpa-plus5__name {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gpa-plus5__score {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+.gpa-plus5__added {
+  color: var(--ink-3);
+}
+
+.gpa-plus5__delta {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.gpa-plus5__bar {
+  display: block;
+}
+
+/* ---------- 侧栏 ---------- */
+.gpa-side {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.gpa-side__block {
+  border: 1px solid var(--rule-strong);
+  background: var(--paper-card);
+  padding: 14px 16px 16px;
+}
+
+.gpa-side__title {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  color: var(--ink-3);
+  margin-bottom: 10px;
+}
+
+.gpa-side__hint {
+  font-size: 0.78rem;
+  line-height: 1.7;
+  color: var(--ink-3);
+}
+
+.gpa-side__rule {
+  font-size: 0.86rem;
+  line-height: 1.5;
+  margin-bottom: 6px;
+}
+
+.gpa-side__link {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 0.76rem;
+  color: var(--blueprint);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.gpa-explain__name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.gpa-explain__body {
+  font-size: 0.8rem;
+  line-height: 1.75;
+  color: var(--ink-2);
+  margin-bottom: 8px;
+}
+
+.gpa-explain__note {
+  font-size: 0.75rem;
+  line-height: 1.7;
+  color: var(--ink-3);
+  padding-top: 8px;
+  border-top: 1px dotted var(--rule-strong);
+}
+
+/* ---------- 课程编辑 ---------- */
+.gpa-editor {
+  margin-top: 32px;
+  border: 1px solid var(--rule-strong);
+  background: var(--paper-card);
+}
+
+.gpa-editor__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px 20px;
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.gpa-editor__title {
+  font-size: 1rem;
+}
+
+.gpa-editor__sub {
+  margin-top: 4px;
+  font-size: 0.78rem;
+  line-height: 1.6;
+  color: var(--ink-3);
+}
+
+.gpa-editor__tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.gpa-editor__empty {
+  padding: 26px 18px;
+  font-size: 0.84rem;
+  color: var(--ink-3);
+  text-align: center;
+}
+
+.gpa-notice {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 12px 18px 0;
+  padding: 9px 12px;
+  border: 1px solid var(--rule-strong);
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+.gpa-notice--error {
+  border-color: var(--signal);
+  background: var(--signal-wash);
+  color: var(--signal-ink);
+}
+
+.gpa-notice--info {
+  background: var(--blueprint-wash);
+  border-color: color-mix(in srgb, var(--blueprint) 35%, var(--rule-strong));
+  color: var(--ink-2);
+}
+
+.gpa-notice__close {
+  flex: none;
+  font-size: 1rem;
+  line-height: 1;
+  color: inherit;
+  opacity: 0.6;
+}
+
+.gpa-notice__close:hover {
+  opacity: 1;
+}
+
+.gpa-courses {
+  display: flex;
+  flex-direction: column;
+}
+
+.gpa-course {
+  padding: 14px 18px 16px;
+  border-top: 1px solid var(--rule);
+}
+
+.gpa-course:first-child {
+  border-top: none;
+}
+
+.gpa-course.is-active {
+  background: color-mix(in srgb, var(--paper-inset) 55%, transparent);
+  box-shadow: inset 2px 0 0 var(--signal);
+}
+
+.gpa-course__top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.gpa-course__status {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  padding: 1px 6px;
+  border: 1px solid var(--rule-strong);
+}
+
+.gpa-course__status--ok {
+  color: var(--ink-2);
+}
+
+.gpa-course__status--warn {
+  color: var(--signal-ink);
+  border-color: color-mix(in srgb, var(--signal) 40%, var(--rule-strong));
+}
+
+.gpa-course__hint {
+  font-size: 0.72rem;
+  color: var(--ink-3);
+}
+
+.gpa-course__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2.2fr) repeat(3, minmax(0, 1fr));
+  gap: 10px 12px;
+}
+
+.gpa-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.gpa-field__label {
+  font-size: 0.72rem;
+  color: var(--ink-3);
+}
+
+.gpa-input {
+  width: 100%;
+  min-height: 36px;
+  padding: 6px 9px;
+  border: 1px solid var(--rule-strong);
+  background: var(--paper);
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  color: var(--ink);
+}
+
+.gpa-input:focus-visible {
+  outline: 2px solid var(--blueprint);
+  outline-offset: 1px;
+}
+
+.gpa-field--num .gpa-input {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.gpa-course__sliders {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 18px;
+  margin-top: 10px;
+}
+
+.gpa-slider {
+  display: grid;
+  grid-template-columns: 82px minmax(0, 1fr) 46px;
+  align-items: center;
+  gap: 8px;
+}
+
+.gpa-slider__label {
+  font-size: 0.7rem;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+
+.gpa-slider input[type='range'] {
+  width: 100%;
+  height: 22px;
+  margin: 0;
+  accent-color: var(--ink);
+}
+
+.gpa-slider__value {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  text-align: right;
+  color: var(--ink-2);
+}
+
+.gpa-course__bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dotted var(--rule-strong);
+}
+
+.gpa-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.gpa-check input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--ink);
+}
+
+.gpa-course__detail {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--ink-3);
+}
+
+.gpa-course__remove {
+  margin-left: auto;
+}
+
+/* ---------- 规则说明 ---------- */
+.gpa-rule {
+  margin-top: 32px;
+  border-top: 1px solid var(--rule-strong);
+  padding-top: 24px;
+}
+
+.gpa-rule__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr) minmax(0, 0.85fr);
+  gap: clamp(20px, 3vw, 40px);
+  align-items: start;
+}
+
+.gpa-rule__title {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  color: var(--ink-3);
+  margin-bottom: 10px;
+}
+
+.gpa-rule__rule {
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+}
+
+.gpa-rule__formula {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 12px;
+  border-left: 2px solid var(--blueprint);
+  background: var(--blueprint-wash);
+  font-size: 0.78rem;
+  margin-bottom: 10px;
+}
+
+.gpa-rule__body {
+  font-size: 0.8rem;
+  line-height: 1.75;
+  color: var(--ink-2);
+  margin-bottom: 8px;
+}
+
+.gpa-rule__body--muted {
+  color: var(--ink-3);
+  font-size: 0.76rem;
+}
+
+.gpa-rule__source {
+  font-size: 0.78rem;
+  line-height: 1.7;
+  color: var(--ink-2);
+}
+
+.gpa-rule__source a {
+  color: var(--blueprint);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.gpa-formulas {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.gpa-formulas__row {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px dotted var(--rule-strong);
+}
+
+.gpa-formulas__row dt {
+  font-size: 0.74rem;
+  color: var(--ink-3);
+}
+
+.gpa-formulas__row dd {
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: var(--ink);
+}
+
+.gpa-formulas__note {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.72rem;
+  color: var(--ink-3);
+}
+
+.gpa-rule__list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  font-size: 0.78rem;
+  line-height: 1.65;
+  color: var(--ink-2);
+}
+
+.gpa-rule__list li {
+  padding-left: 12px;
+  position: relative;
+}
+
+.gpa-rule__list li::before {
+  content: '·';
+  position: absolute;
+  left: 2px;
+  color: var(--ink-3);
+}
+
+/* ---------- 导览 ---------- */
+.gpa-guide {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.gpa-guide__banner {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gpa-guide__note {
+  font-size: 0.76rem;
+  line-height: 1.65;
+  color: var(--ink-3);
+  padding-left: 12px;
+  border-left: 2px solid var(--rule);
+}
+
+.gpa-guide__detail {
+  border: 1px solid var(--rule-strong);
+  background: var(--paper-card);
+  padding: 14px 16px 16px;
+}
+
+.gpa-guide__detail-title {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  color: var(--ink-3);
+  margin-bottom: 8px;
+}
+
+.gpa-guide__list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 0.8rem;
+  line-height: 1.65;
+  color: var(--ink-2);
+}
+
+.gpa-guide__list li {
+  font-variant-numeric: tabular-nums;
+}
+
+.gpa-guide__list strong {
+  color: var(--ink);
+}
+
+/* ---------- 断点 ---------- */
+@media (max-width: 1080px) {
+  .gpa-summary__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .gpa-metric:nth-child(3) {
+    border-left: none;
+  }
+
+  .gpa-metric:nth-child(n + 3) {
+    border-top: 1px solid var(--rule);
+  }
+
+  .gpa-rule__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .gpa-course__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .gpa-summary__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .gpa-metric {
+    border-left: none;
+    border-top: 1px solid var(--rule);
+  }
+
+  .gpa-metric:first-child {
+    border-top: none;
+  }
+
+  .gpa-course__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .gpa-course__sliders {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .gpa-plus5__item {
+    grid-template-columns: 16px minmax(0, 1fr) auto;
+    row-gap: 4px;
+  }
+
+  .gpa-plus5__score {
+    grid-column: 2 / -1;
+  }
+
+  .gpa-plus5__bar {
+    grid-column: 2 / -1;
+  }
+
+  .gpa-plus5__delta {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .gpa-chart {
+    padding: 14px 14px 16px;
+  }
+
+  .gpa-editor__head {
+    padding: 14px;
+  }
+
+  .gpa-course {
+    padding: 12px 14px 14px;
+  }
+
+  .gpa-slider {
+    grid-template-columns: 74px minmax(0, 1fr) 42px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gpa-scale__segment,
+  .gpa-row {
+    transition: none;
+  }
+}
+
+.gpa-plus5__item.is-focus {
+  background: var(--paper-inset);
+  box-shadow: inset 2px 0 0 var(--signal);
+}
+
+/* 视图切换放在图表正上方，窄屏也不用翻过图表才能换视图 */
+.gpa-stage {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.gpa-stage > .segmented {
+  background: var(--paper-card);
+}

@@ -1,0 +1,415 @@
+/* ===========================================================================
+   自行车变速器（模块 05）专用样式
+   =========================================================================== */
+
+.drv-stage .model-stage__hint {
+  right: 10px;
+  width: fit-content;
+  max-width: calc(100% - 20px);
+  white-space: normal;
+  line-height: 1.6;
+}
+
+.drv-stage .model-stage__renderer {
+  top: 10px;
+  bottom: auto;
+}
+
+.drv-hint {
+  font-size: 0.74rem;
+  line-height: 1.65;
+  color: var(--ink-3);
+}
+
+.drv-hint strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* ---------- 顶部状态条 ---------- */
+.drv-strip {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 6px 14px;
+  padding: 11px 16px;
+  border: 1px solid var(--rule-strong);
+  border-left: 3px solid var(--rule-strong);
+  background: var(--paper-card);
+}
+
+.drv-strip--drive {
+  border-left-color: var(--ok);
+}
+
+.drv-strip--shift {
+  border-left-color: var(--signal);
+}
+
+.drv-strip--wait {
+  border-left-color: var(--warn);
+}
+
+.drv-strip--coast {
+  border-left-color: var(--blueprint);
+}
+
+.drv-strip__state {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.drv-strip__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ink-3);
+}
+
+.drv-strip--drive .drv-strip__dot {
+  background: var(--ok);
+}
+
+.drv-strip--shift .drv-strip__dot {
+  background: var(--signal);
+}
+
+.drv-strip--wait .drv-strip__dot {
+  background: var(--warn);
+}
+
+.drv-strip--coast .drv-strip__dot {
+  background: var(--blueprint);
+}
+
+.drv-strip__detail {
+  font-size: 0.8rem;
+  color: var(--ink-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---------- 换挡 ---------- */
+.drv-shift {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.drv-shift .btn {
+  flex: 1 1 46%;
+}
+
+.drv-shift__state {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 9px;
+  border: 1px solid var(--rule);
+  background: var(--paper-inset);
+  font-size: 0.76rem;
+  color: var(--ink-2);
+}
+
+.drv-shift__state.is-shifting {
+  border-color: var(--signal);
+  background: var(--signal-wash);
+  color: var(--signal-ink);
+  font-weight: 600;
+}
+
+.drv-shift__state.is-waiting {
+  border-color: var(--warn);
+  color: var(--warn);
+}
+
+.drv-shift__dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.drv-cogs {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.drv-cog {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  width: 100%;
+  padding: 5px 2px 4px;
+  border: 1px solid var(--rule-strong);
+  background: var(--paper-card);
+  color: var(--ink-2);
+  transition: border-color 0.15s var(--ease-change), background-color 0.15s var(--ease-change),
+    color 0.15s var(--ease-change);
+}
+
+.drv-cog:hover {
+  border-color: var(--ink-2);
+  color: var(--ink);
+}
+
+.drv-cog__teeth {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  line-height: 1.2;
+}
+
+.drv-cog__index {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--ink-3);
+}
+
+.drv-cog.is-engaged {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--paper-card);
+}
+
+.drv-cog.is-engaged .drv-cog__index {
+  color: var(--rule);
+}
+
+.drv-cog.is-target {
+  border-style: dashed;
+  border-color: var(--signal);
+  color: var(--signal-ink);
+}
+
+/* ---------- 踏频数字框 ---------- */
+.drv-cadence {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.drv-number {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: var(--ink-2);
+}
+
+.drv-number input {
+  width: 68px;
+  padding: 4px 6px;
+  border: 1px solid var(--rule-strong);
+  background: var(--paper-card);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--ink);
+  text-align: right;
+}
+
+.drv-number input:focus-visible {
+  outline: 2px solid var(--blueprint);
+  outline-offset: 1px;
+}
+
+.drv-number__unit {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--ink-3);
+}
+
+/* ---------- 挡位比较 ---------- */
+.drv-compare {
+  border: 1px solid var(--rule-strong);
+  background: var(--paper-card);
+  padding: 14px 16px 16px;
+}
+
+.drv-compare__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.drv-compare__title {
+  font-size: 0.92rem;
+  letter-spacing: 0.02em;
+}
+
+.drv-compare__sub {
+  margin-top: 3px;
+  font-size: 0.78rem;
+  color: var(--ink-2);
+}
+
+.drv-bars {
+  display: grid;
+  gap: 4px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.drv-bar {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) 82px 62px;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 4px;
+  font-size: 0.74rem;
+  color: var(--ink-2);
+}
+
+.drv-bar.is-current {
+  background: var(--signal-wash);
+  color: var(--ink);
+  outline: 1px solid var(--signal);
+}
+
+.drv-bar__teeth {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--ink-3);
+}
+
+.drv-bar.is-current .drv-bar__teeth {
+  color: var(--signal-ink);
+  font-weight: 700;
+}
+
+.drv-bar__track {
+  position: relative;
+  height: 9px;
+  background: var(--paper-inset);
+  border: 1px solid var(--rule);
+}
+
+.drv-bar__fill {
+  display: block;
+  height: 100%;
+  background: var(--blueprint);
+  transition: width 0.18s var(--ease-change);
+}
+
+.drv-bar.is-current .drv-bar__fill {
+  background: var(--signal);
+}
+
+.drv-bar__value {
+  font-size: 0.72rem;
+  text-align: right;
+  color: var(--ink);
+}
+
+.drv-bar__extra {
+  font-size: 0.68rem;
+  text-align: right;
+  color: var(--ink-3);
+}
+
+.drv-compare__legend {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule);
+  display: grid;
+  gap: 6px;
+  font-size: 0.78rem;
+  line-height: 1.7;
+  color: var(--ink-2);
+}
+
+.drv-compare__aside {
+  color: var(--ink-3);
+}
+
+/* ---------- 说明与出处 ---------- */
+.drv-notes {
+  display: grid;
+  gap: 10px;
+}
+
+.drv-source {
+  font-size: 0.76rem;
+  line-height: 1.8;
+  color: var(--ink-3);
+  padding-left: 12px;
+  border-left: 2px solid var(--rule);
+}
+
+.drv-simplify {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding-left: 18px;
+  font-size: 0.76rem;
+  line-height: 1.7;
+  color: var(--ink-2);
+}
+
+.drv-references {
+  border-top: 1px solid var(--rule);
+  padding-top: 10px;
+  font-size: 0.78rem;
+  color: var(--ink-2);
+}
+
+.drv-references summary {
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: var(--ink-3);
+}
+
+.drv-references summary:hover {
+  color: var(--ink);
+}
+
+.drv-references ol {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+  padding-left: 0;
+}
+
+.drv-references li {
+  font-size: 0.78rem;
+  line-height: 1.7;
+  color: var(--ink-2);
+}
+
+.drv-references a {
+  color: var(--blueprint);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+@media (max-width: 720px) {
+  .drv-strip {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .drv-strip__detail {
+    white-space: normal;
+  }
+
+  .drv-bar {
+    grid-template-columns: 40px minmax(0, 1fr) 78px;
+  }
+
+  .drv-bar__extra {
+    display: none;
+  }
+}
