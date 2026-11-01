@@ -1,7 +1,7 @@
 /* ===========================================================================
-   悬停时的彩虹边缘 —— 与 Telrest 主站保持同一套交互语言
-   与主站的区别：这里的元素是 React 渲染的，所以不用脚本打标记，
-   直接用 :is() 选择器覆盖所有控件；游戏模式（html.is-game）整体排除。
+   悬停时的彩虹边缘 —— 与 Telrest 主站同一套做法
+   不直接给 button 强加 position，因为有些按钮本身就是 absolute 定位的；
+   由 lib/rainbow.ts 判断「计算后的 position 是 static」才补 relative。
    =========================================================================== */
 
 @property --rainbow-angle {
@@ -10,13 +10,15 @@
   inherits: false;
 }
 
-/* 所有可点控件：悬停时亮起彩虹边缘，保留原本底色与文字色 */
-html:not(.is-game) :is(button, .btn, .site-nav__link, .link, summary) {
-  position: relative;
+.rainbow-hover {
   isolation: isolate;
 }
 
-html:not(.is-game) :is(button, .btn, .site-nav__link, .link, summary)::after {
+.rainbow-positioned {
+  position: relative;
+}
+
+.rainbow-hover::after {
   content: '';
   position: absolute;
   inset: 0;
@@ -45,12 +47,12 @@ html:not(.is-game) :is(button, .btn, .site-nav__link, .link, summary)::after {
 }
 
 @media (hover: hover) and (pointer: fine) {
-  html:not(.is-game) :is(button, .btn, .site-nav__link, .link, summary):not(:disabled):not([aria-disabled='true']):hover::after {
+  .rainbow-hover:not(:disabled):not([aria-disabled='true']):hover::after {
     opacity: 1;
     animation-play-state: running;
   }
 
-  html:not(.is-game) :is(button, .btn, .site-nav__link, .link, summary):not(:disabled):not([aria-disabled='true']):hover {
+  .rainbow-hover:not(:disabled):not([aria-disabled='true']):hover {
     box-shadow:
       -4px -2px 14px rgba(255, 134, 170, 0.18),
       4px -2px 14px rgba(113, 217, 244, 0.18),
@@ -58,28 +60,33 @@ html:not(.is-game) :is(button, .btn, .site-nav__link, .link, summary)::after {
   }
 }
 
-html:not(.is-game) :is(button, .btn, .site-nav__link, .link, summary):not(:disabled):not([aria-disabled='true']):focus-visible::after,
-html:not(.is-game) :is(button, .btn, .site-nav__link, .link, summary):not(:disabled):not([aria-disabled='true']):active::after {
+.rainbow-hover:not(:disabled):not([aria-disabled='true']):focus-visible::after,
+.rainbow-hover:not(:disabled):not([aria-disabled='true']):active::after {
   opacity: 1;
   animation-play-state: running;
 }
 
-html:not(.is-game) :is(button, .btn, .site-nav__link, .link, summary):not(:disabled):not([aria-disabled='true']):focus-visible {
+.rainbow-hover:not(:disabled):not([aria-disabled='true']):focus-visible {
   box-shadow:
     -4px -2px 14px rgba(255, 134, 170, 0.16),
     4px -2px 14px rgba(113, 217, 244, 0.16),
     0 5px 16px rgba(158, 154, 255, 0.18);
 }
 
+/* 魔丸模式保留它自己的红色设计语言，不显示彩虹边 */
+html.is-game .rainbow-hover::after {
+  display: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  html:not(.is-game) :is(button, .btn, .site-nav__link, .link, summary)::after {
+  .rainbow-hover::after {
     animation: none;
     transition: none;
   }
 }
 
 @media print {
-  html :is(button, .btn, .site-nav__link, .link, summary)::after {
+  .rainbow-hover::after {
     display: none;
   }
 }

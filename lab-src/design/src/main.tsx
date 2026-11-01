@@ -13,6 +13,7 @@ import './styles/derailleur.css'
 import './styles/mowan.css'
 import './styles/rainbow.css'
 import './styles/blog-alignment.css'
+import { startRainbowControls } from './lib/rainbow'
 
 const container = document.getElementById('root')
 
@@ -25,3 +26,5 @@ createRoot(container).render(
     <RouterProvider router={router} />
   </StrictMode>,
 )
+
+startRainbowControls()
