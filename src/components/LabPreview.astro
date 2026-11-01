@@ -7,7 +7,8 @@ const { kind } = Astro.props;
 
 const isQuickSort = kind === 'quicksort';
 const isPhoto = kind === 'photo';
-const heading = isQuickSort ? 'QUICK SORT' : isPhoto ? 'CHARACTER ART' : 'CODE SYMBOL';
+const isDesign = kind === 'design';
+const heading = isQuickSort ? 'QUICK SORT' : isPhoto ? 'CHARACTER ART' : isDesign ? 'DESIGN MUSEUM' : 'CODE SYMBOL';
 
 const asciiArt = [
   '          .                    .                     .',
@@ -36,6 +37,8 @@ const asciiArt = [
         <span class="head-meta pivot-meta"><span class="pivot-mark"></span>PIVOT 55</span>
       ) : isPhoto ? (
         <span class="head-meta art-meta"><span class="status-dot"></span>ASCII</span>
+      ) : isDesign ? (
+        <span class="head-meta art-meta"><span class="status-dot"></span>EXHIBIT</span>
       ) : (
         <span class="head-meta">GENERIC</span>
       )}

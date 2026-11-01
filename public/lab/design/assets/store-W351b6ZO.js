@@ -1,0 +1,1 @@
+function e(e){let t=e,n=new Set,r=()=>{for(let e of[...n])e()};return{get:()=>t,set(e){let n=typeof e==`function`?e(t):e;Object.is(n,t)||(t=n,r())},patch(e){let n=!1;for(let r of Object.keys(e))if(!Object.is(t[r],e[r])){n=!0;break}n&&(t={...t,...e},r())},subscribe(e){return n.add(e),()=>{n.delete(e)}}}}export{e as t};

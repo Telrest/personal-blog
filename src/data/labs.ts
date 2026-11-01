@@ -30,4 +30,13 @@ export const labs: Lab[] = [
     href: 'lab/photo/',
     meta: 'C · JavaScript',
   },
+  {
+    id: 'design',
+    number: '003',
+    icon: 'book',
+    title: '设计的\n秘密',
+    summary: '一座可以亲手操作的原理展馆：圆珠笔、变速器、航空发动机、骨骼，拆开看它为什么这样工作。',
+    href: 'lab/design/',
+    meta: 'React · Three.js',
+  },
 ];
