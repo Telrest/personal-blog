@@ -984,7 +984,7 @@
   margin-top: 10px;
   font-size: clamp(1.25rem, 2.4vw, 1.75rem);
   line-height: 1.35;
-  color: #1f3429;
+  color: var(--game-ink);
 }
 
 .mowan-teaser__lede {
@@ -1011,9 +1011,10 @@
   align-items: center;
   gap: 6px;
   margin-top: 18px;
-  padding: 9px 16px;
+  padding: 9px 18px;
+  border-radius: 100px;
   background: var(--signal);
-  color: #1f3429;
+  color: #1a2c23;
   font-size: 0.86rem;
   font-weight: 600;
 }
