@@ -9,7 +9,7 @@
  * Only tag controls whose computed position is static, so absolutely
  * positioned controls keep their place.
  */
-const SELECTOR = 'button, .btn, .site-nav__link, .link, summary'
+const SELECTOR = 'button, .btn, .site-nav__link, .link, summary, .segmented__item, .exhibit-nav__item'
 
 function tag(): void {
   for (const el of Array.from(document.querySelectorAll<HTMLElement>(SELECTOR))) {

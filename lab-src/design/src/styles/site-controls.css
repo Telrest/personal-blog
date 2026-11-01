@@ -1,0 +1,28 @@
+/* Shared navigation, pointer and glass surfaces. / 共用导航、指针与玻璃表面。 */
+:root{--cursor-arrow:url('../assets/cursors/arrow-dark.svg') 3 2,auto;--cursor-hand:url('../assets/cursors/hand-dark.svg') 8 2,pointer}
+html[data-theme=light]{--cursor-arrow:url('../assets/cursors/arrow-light.svg') 3 2,auto;--cursor-hand:url('../assets/cursors/hand-light.svg') 8 2,pointer}
+body{background-image:radial-gradient(ellipse at 90% 0,color-mix(in srgb,var(--signal) 7%,transparent),transparent 45%),linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);background-size:auto,96px 96px,96px 96px}
+.site-header{background:color-mix(in srgb,var(--paper) 86%,transparent);backdrop-filter:blur(20px) saturate(1.15)}
+.site-header__inner{flex-wrap:wrap;gap:16px;padding-block:12px}.site-header__actions{display:flex;align-items:center;gap:12px;min-width:0}.site-nav{gap:5px;flex-wrap:wrap}.site-header .theme-switch{min-width:42px;min-height:42px;width:42px;padding:0;flex-shrink:0}.site-nav__link{display:inline-flex;align-items:center;min-height:42px}
+.drawing,.control-panel,.guide,.exhibit-nav{border-radius:var(--radius-panel)}.drawing__ticks{display:none}.title-block{border-radius:0 0 var(--radius-panel) var(--radius-panel)}.question-card{margin-block:8px;padding-inline:20px;border:1px solid transparent}.question-card:hover{border-color:var(--rule-strong);background:var(--paper-card)}
+.model-stage{border-radius:var(--radius-panel)}.model-stage__hint,.model-stage__fs-hint{border-radius:var(--radius-input)}
+html .mowan-title__headline,html .mowan-panel__title,html .mowan-countdown__value{color:var(--game-ink);text-shadow:0 2px 24px #07160f55}
+html .mowan-title__scrim{background:linear-gradient(90deg,#081e18e8,#102b23bb 52%,#102b2344)}
+html .mowan .btn--primary{color:var(--on-primary);background:var(--primary);border-color:var(--primary)}html .mowan .btn--primary:hover:not(:disabled){background:var(--primary-hover);border-color:var(--primary-hover)}
+html .mowan .btn:not(.btn--primary){background:#ffffff08;border-color:var(--game-rule);color:var(--game-ink)}html .mowan .btn:not(.btn--primary):hover:not(:disabled){background:#ffffff14;border-color:#c3d7c388}
+html .mowan-panel{background:var(--game-panel-solid);color:var(--game-ink)}html .mowan-panel__note,html .mowan-setting__label,html .mowan-panel__link{color:var(--game-ink-2)}html .mowan-segment button{color:var(--game-ink-2)}html .mowan-segment button.is-active{background:var(--primary);color:var(--on-primary)}
+html .mowan-tool{border-radius:var(--radius-pill);color:var(--game-ink)}html .mowan-panel__badge{background:var(--primary);color:var(--on-primary)}
+@media(pointer:fine){html,body{cursor:var(--cursor-arrow)}:is(a,button,label[for],.segmented__item,summary):not(:disabled):not(.is-disabled){cursor:var(--cursor-hand)}button:disabled{cursor:not-allowed}}
+@media(max-width:640px){.site-header__inner{gap:12px}.site-header__actions{justify-content:space-between;flex:1 1 100%;gap:8px}.site-nav{gap:3px}.site-nav__link{padding:8px 12px;font-size:.8rem}.brand__sub{white-space:normal}.engine-quick{gap:5px;padding:8px}.engine-quick button{min-width:0;flex-wrap:wrap}.question-card{padding-inline:14px}}
+@media(prefers-reduced-motion:reduce){body{scroll-behavior:auto}}
+
+/* Round switch thumbs and preserve readable dark game overlays in light theme. / 开关圆点与游戏覆盖层对比。 */
+.toggle__thumb{border-radius:50%}.segmented{border-radius:var(--radius-card);padding:4px;gap:4px}.segmented__item{border:1px solid transparent}.segmented--vertical .segmented__item{border-top:1px solid transparent}.segmented__item.is-active{box-shadow:inset 0 0 0 1px var(--selected-border)}.segmented__check{color:var(--signal-ink)}.segmented__item:focus-within:not(:has(input:focus-visible)){outline:none}
+html .mowan .mowan-panel{background:var(--game-panel-solid);border-color:var(--game-rule);color:var(--game-ink);border-top-color:var(--primary)}html .mowan .mowan-panel__title,html .mowan .mowan-stat__value{color:var(--game-ink)}html .mowan :is(.mowan-panel__note,.mowan-panel__link,.mowan-setting,.mowan-result__line,.mowan-result__exhibits-label){color:var(--game-ink-2)}html .mowan :is(.mowan-stat__label,.mowan-stat__unit,.mowan-title__best,.mowan-title__fine,.mowan-title__credit){color:var(--game-ink-2)}
+.rainbow-hover.is-disabled::after{opacity:0!important}.btn:disabled{box-shadow:none}.site-nav__link--play.is-active{color:var(--selected-text);background:var(--selected-bg)}
+@media(hover:hover) and (pointer:fine){.btn:not(:disabled):active{transform:translateY(1px)}}
+
+html body :is(.segmented,.bone-tabs){border-radius:var(--radius-card)}
+@media(pointer:coarse){html body :is(.btn,.site-nav__link,.segmented__item,.engine-quick button,.engine-part-list button,.engine-station-list button,.mowan-tool){min-height:44px}.toggle__row{min-height:44px}}
+html .mowan,html .mowan-teaser{--game-panel:rgba(15,39,30,.84);--game-panel-solid:rgba(13,31,24,.96);--game-ink:#e4eee3;--game-ink-2:#b7cbbd;--game-ink-3:#a4b6a9;--game-rule:rgba(211,232,214,.2)}html .mowan-panel__badge{border-radius:var(--radius-pill)}
+html body :is(.status,.source-tag,.eyebrow__index,.engine-tag,.gpa-badge,.bone-badge){border-radius:var(--radius-pill)}

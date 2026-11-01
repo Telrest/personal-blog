@@ -1,4 +1,6 @@
 import { NavLink } from 'react-router-dom'
+import {useEffect,useRef} from 'react'
+import {ThemeToggle} from './ThemeToggle'
 
 /** 站名标记：直接使用主站的图标（森林绿圆角 + 米白 T + 叶片） */
 function BrandMark() {
@@ -12,8 +14,11 @@ function BrandMark() {
 }
 
 export function SiteHeader() {
+  const header=useRef<HTMLElement>(null)
+  useEffect(()=>{const node=header.current;if(!node)return;const update=()=>document.documentElement.style.setProperty('--site-header-height',node.getBoundingClientRect().height+'px');update();const observer=new ResizeObserver(update);observer.observe(node);return()=>observer.disconnect()},[])
+
   return (
-    <header className="site-header">
+    <header className="site-header" ref={header}>
       {/* 子站上下文：说明这是一座挂在博客实验室下的展馆，而不是独立站点。 */}
       <div className="blog-context">
         <div className="shell blog-context__inner">
@@ -35,7 +40,7 @@ export function SiteHeader() {
           </span>
         </NavLink>
 
-        <nav className="site-nav" aria-label="主导航">
+        <div className="site-header__actions"><nav className="site-nav" aria-label="主导航">
           <NavLink to="/" end className={({ isActive }) => `site-nav__link${isActive ? ' is-active' : ''}`}>
             首页
           </NavLink>
@@ -45,7 +50,7 @@ export function SiteHeader() {
           <NavLink to="/about" className={({ isActive }) => `site-nav__link${isActive ? ' is-active' : ''}`}>
             关于展馆
           </NavLink>
-        </nav>
+        </nav><ThemeToggle /></div>
       </div>
     </header>
   )

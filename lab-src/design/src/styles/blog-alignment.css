@@ -1,135 +1,252 @@
 /* ===========================================================================
-   与 Telrest 主站对齐
-   1. 按钮统一成主站的墨绿 + 胶囊形
-   2. 方块容器统一成圆角
-   魔丸模式（html.is-game）保持它自己的红色与方形设计语言。
+   与 Telrest 主站对齐 · 共享森林 / 玻璃控件层
+   按钮 / chip / tab 统一胶囊；游戏不再有方形、红色按钮例外。
+   画布、危险物、图表几何与控件尺寸不在本层修改。
    =========================================================================== */
 
-/* ---------- 魔丸模式：强调色恢复成它原来自带的朱红 ---------- */
-html.is-game {
-  --signal: #b8432d;
-  --signal-ink: #8f3425;
-  --signal-wash: #f5e6df;
+/* Danger indicators retain --game-signal; interface controls share the blog palette. / 危险标记保留语义色，界面控件共用博客配色。 */
+
+/* ---------- 圆角：控制件一致，含 .is-game ---------- */
+html body :is(
+  button, .btn, .site-nav__link, .exhibit-nav__item, .segmented__item,
+  .bone-chip, .bone-panel__preset, .part-chip, .skip-link,
+  .mowan-segment button, .mowan-touch__button, .toggle__switch
+) {
+  border-radius: var(--radius-pill);
 }
 
-/* ---------- 按钮：墨绿胶囊 ---------- */
-html:not(.is-game) :is(.btn, button, .site-nav__link, .segmented__item, .exhibit-nav__item) {
-  border-radius: 100px;
+html body :is(.segmented__item, .mowan-segment button):first-child,
+html body :is(.segmented__item, .mowan-segment button):last-child {
+  border-radius: var(--radius-pill);
 }
 
-html:not(.is-game) :is(.btn, button) {
-  background: #23483a;
-  border-color: #23483a;
-  color: #f3f6eb;
+/* ---------- 容器：大面板、卡片、胶囊式分段容器 ---------- */
+html body :is(
+  .bone-panel, .mowan-panel, .control-panel, .gpa-side__block,
+  .gpa-summary__foot, .title-block
+) {
+  border-radius: var(--radius-panel);
 }
 
-html:not(.is-game) :is(.btn, button):hover:not(:disabled) {
-  background: #2c5846;
-  border-color: #2c5846;
-  color: #f3f6eb;
+html body :is(
+  .bone-fallback__figure, .bone-phase, .bone-phase-card, .bone-scene-brief,
+  .bone-stage__meta, .bone-term, .bone-terms, .construction__notice,
+  .gpa-course, .gpa-guide__detail, .gpa-notice--error, .gpa-notice--info,
+  .gpa-row, .gpa-rule__formula, .gpa-samplebar, .howto-card, .limits__item,
+  .model-stage__hint, .model-stage__overlay, .principle, .principle-grid,
+  .question-card, .source-legend
+) {
+  border-radius: var(--radius-card);
 }
 
-html:not(.is-game) :is(.btn, button):active:not(:disabled) {
-  background: #1c3b30;
-  border-color: #1c3b30;
+html body :is(
+  .bone-tabs, .segmented, .mowan-segment, .bone-badge, .bone-label,
+  .drv-cog, .drv-shift__state, .gpa-badge, .gpa-plus5__item,
+  .source-legend__item
+) {
+  border-radius: var(--radius-pill);
 }
 
-/* 弱按钮 / 文字链接保持透明底 */
-html:not(.is-game) :is(.btn--quiet, .link) {
+/* ---------- 主操作：鼠尾草绿 + 深森林字 ---------- */
+.btn--primary,
+.mowan .btn.btn--primary {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--on-primary);
+}
+
+:is(.btn--primary, .mowan .btn.btn--primary):hover:not(:disabled) {
+  background: var(--primary-hover);
+  border-color: var(--primary-hover);
+  color: var(--on-primary);
+}
+
+:is(.btn--primary, .mowan .btn.btn--primary):active:not(:disabled) {
+  background: var(--primary-pressed);
+  border-color: var(--primary-pressed);
+  color: var(--on-primary);
+}
+
+/* ---------- 次操作：透明底 + 描边 ---------- */
+.btn:not(.btn--primary):not(.btn--quiet) {
+  background: transparent;
+  border-color: var(--secondary-border);
+  color: var(--text-primary);
+  transition: background-color var(--transition-fast),
+    border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.btn:not(.btn--primary):not(.btn--quiet):hover:not(:disabled) {
+  background: var(--secondary-hover);
+  border-color: var(--selected-border);
+  color: var(--text-primary);
+}
+
+.btn:not(.btn--primary):not(.btn--quiet):active:not(:disabled) {
+  background: var(--secondary-pressed);
+  border-color: var(--selected-border);
+  color: var(--text-primary);
+}
+
+/* ---------- 安静操作：透明、无边框 ---------- */
+:is(.btn--quiet, .link) {
   background: transparent;
   border-color: transparent;
-  color: var(--ink-2);
+  color: var(--quiet-text);
 }
 
-html:not(.is-game) :is(.btn--quiet, .link):hover:not(:disabled) {
+:is(.btn--quiet, .link):hover:not(:disabled) {
   background: transparent;
   border-color: transparent;
-  color: var(--ink);
+  color: var(--text-primary);
 }
 
-/* ---------- 方块容器：圆角 ---------- */
-html:not(.is-game) :is(
-  .bone-badge,
-  .bone-chip,
-  .bone-fallback__figure,
-  .bone-fullscreen-exit,
-  .bone-label,
-  .bone-panel,
-  .bone-panel__preset,
-  .bone-phase,
-  .bone-phase-card,
-  .bone-scene-brief,
-  .bone-stage__meta,
-  .bone-tabs,
-  .bone-term,
-  .bone-terms,
-  .construction__notice,
-  .drv-cog,
-  .drv-shift__state,
-  .gpa-badge,
-  .gpa-badge--sample,
-  .gpa-badge--warn,
-  .gpa-course,
-  .gpa-guide__detail,
-  .gpa-input,
-  .gpa-notice--error,
-  .gpa-notice--info,
-  .gpa-plus5__item,
-  .gpa-row,
-  .gpa-rule__formula,
-  .gpa-samplebar,
-  .gpa-side__block,
-  .gpa-summary__foot,
-  .howto-card,
-  .limits__item,
-  .model-stage__hint,
-  .model-stage__overlay,
-  .part-chip,
-  .principle,
-  .principle-grid,
-  .question-card,
-  .segmented__item,
-  .site-nav__link,
-  .skip-link,
-  .source-legend,
-  .source-legend__item,
-  .stage-notice__action,
-  .title-block
-) {
-  border-radius: 12px;
+:is(.btn--quiet, .link):active:not(:disabled) {
+  background: transparent;
+  border-color: transparent;
+  color: var(--focus-ring);
 }
 
-/* 较大的展示块给更明显的圆角 */
-html:not(.is-game) :is(
-  .bone-panel,
-  .bone-phase-card,
-  .bone-scene-brief,
-  .howto-card,
-  .limits__item,
-  .principle,
-  .principle-grid,
-  .question-card,
-  .title-block,
-  .gpa-course,
-  .gpa-side__block
-) {
-  border-radius: 16px;
+/* ---------- chip / tab / 分段：静止、悬停、选中分离 ---------- */
+:is(.segmented__item, .site-nav__link, .exhibit-nav__item, .bone-chip,
+  .part-chip, .mowan-segment button) {
+  background-color: transparent;
+  color: var(--text-secondary);
+  transition: background-color var(--transition-fast),
+    border-color var(--transition-fast), color var(--transition-fast);
 }
 
-/* ---------- 去掉铜色侧边线 ---------- */
-/* 这些面板原本用 3px 的 --signal 竖线当强调条；换成深色主题后铜色边太跳，统一去掉。 */
-html:not(.is-game) :is(
-  .bone-caption,
-  .bone-phase-card,
-  .bone-scene-brief,
-  .guide,
-  .model-stage__notice,
-  .phase-strip--work,
-  .drv-strip--shift,
-  .gpa-row.is-active,
-  .question-card:hover,
-  .mowan-gpa
+:is(.segmented__item, .site-nav__link, .exhibit-nav__item, .bone-chip,
+  .part-chip, .mowan-segment button):hover:not(:disabled):not(.is-active):not(
+    [aria-current="page"]):not([aria-pressed="true"]) {
+  background-color: var(--surface-hover);
+  color: var(--text-primary);
+}
+
+:is(
+  .segmented__item.is-active, .segmented__item[aria-checked="true"],
+  .mowan-segment button.is-active, .bone-chip.is-active,
+  .part-chip.is-active, .bone-stage-phases button[aria-pressed="true"],
+  .bone-route button[aria-pressed="true"], .site-nav__link.is-active,
+  .site-nav__link[aria-current="page"], .exhibit-nav__item.is-active,
+  .exhibit-nav__item[aria-current="page"]
 ) {
-  border-left: 0;
-  border-inline-start: 0;
+  background-color: var(--selected-bg);
+  border-color: var(--selected-border);
+  color: var(--selected-text);
+}
+
+:is(.segmented__item.is-active, .mowan-segment button.is-active,
+  .bone-chip.is-active, .part-chip.is-active)
+  :is(.segmented__text, .segmented__hint) {
+  color: inherit;
+}
+
+/* ---------- 禁用：与选中、按下明确区分 ---------- */
+:is(.btn, button):disabled,
+:is(.btn, .segmented__item, .site-nav__link, .bone-chip,
+  .mowan-touch__button)[aria-disabled="true"],
+.segmented__item.is-disabled,
+.toggle.is-disabled {
+  opacity: 0.48;
+  cursor: not-allowed;
+}
+
+/* ---------- 键盘焦点：跟随圆角，不改变布局 ---------- */
+:is(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+.segmented__item:has(input:focus-visible) {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.segmented__item:has(input:focus-visible) input {
+  outline: none;
+}
+
+/* ---------- 原生 toggle：:has 读取 checked / focus-visible ---------- */
+.toggle:has(.toggle__input:focus-visible) .toggle__row,
+.toggle__row:has(.toggle__input:focus-visible) {
+  border-radius: var(--radius-input);
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+.toggle__input:focus-visible {
+  outline: none;
+}
+
+.toggle:has(.toggle__input:checked) .toggle__switch {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+
+.toggle:has(.toggle__input:checked) .toggle__thumb {
+  background-color: var(--on-primary);
+}
+
+.toggle__switch,
+.toggle__thumb {
+  transition: background-color var(--transition-control),
+    border-color var(--transition-control);
+}
+
+/* ---------- 文本 / 数字 / 下拉：只加圆角与主题，range 不动 ---------- */
+html body :is(input:not([type]), input[type="text"], input[type="number"],
+  input[type="search"], input[type="email"], input[type="password"],
+  input[type="tel"], input[type="url"], textarea, select) {
+  border-radius: var(--radius-input);
+  background-color: var(--surface-control);
+  border-color: var(--secondary-border);
+  color: var(--text-primary);
+  transition: background-color var(--transition-fast),
+    border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+html body :is(input:not([type]), input[type="text"], input[type="number"],
+  input[type="search"], input[type="email"], input[type="password"],
+  input[type="tel"], input[type="url"], textarea, select):focus-visible {
+  border-color: var(--primary);
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+html body :is(input:not([type]), input[type="text"], input[type="number"],
+  input[type="search"], input[type="email"], input[type="password"],
+  input[type="tel"], input[type="url"], textarea)::placeholder {
+  color: var(--text-muted);
+}
+
+/* ---------- 游戏面板 / UI 文字：森林底与暖字，不碰画布 ---------- */
+.mowan .mowan-panel {
+  background: var(--surface-panel);
+  border-color: var(--rule-strong);
+  color: var(--text-primary);
+}
+
+.mowan .mowan-panel__title,
+.mowan .mowan-stat__value {
+  color: var(--text-primary);
+}
+
+.mowan :is(.mowan-panel__note, .mowan-panel__link, .mowan-setting,
+  .mowan-result__line, .mowan-result__exhibits-label) {
+  color: var(--text-secondary);
+}
+
+.mowan :is(.mowan-stat__label, .mowan-stat__unit, .mowan-title__best,
+  .mowan-title__fine, .mowan-title__credit) {
+  color: var(--text-muted);
+}
+
+/* ---------- 减少动态 ---------- */
+@media (prefers-reduced-motion: reduce) {
+  :is(.btn, button, .segmented__item, .site-nav__link, .exhibit-nav__item,
+    .bone-chip, .part-chip, .mowan-segment button, input, select, textarea,
+    .toggle__switch, .toggle__thumb) {
+    transition: none;
+  }
 }

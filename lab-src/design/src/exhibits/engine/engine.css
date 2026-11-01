@@ -1,13 +1,13 @@
-.engine-stage-wrap { border: 1px solid var(--rule-strong); background: var(--paper-card); }
-.engine-quick { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-bottom: 1px solid var(--rule); }
+.engine-stage-wrap { border: 1px solid var(--rule-strong); border-radius:var(--radius-panel); background: var(--paper-card); overflow:clip; }
+.engine-quick { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap:8px; padding:12px; border-bottom: 1px solid var(--rule); }
 .engine-quick button { display: flex; justify-content: space-between; gap: 8px; padding: 13px 14px; font-size: 0.76rem; color: var(--ink-2); background: var(--paper-card); border: 0; text-align: left; }
-.engine-quick button + button { border-left: 1px solid var(--rule); }
+.engine-quick button + button { border-left: 0; }
 .engine-quick button:hover { background: var(--blueprint-wash); color: var(--blueprint); }
 .engine-quick span { color: var(--blueprint); }
 .engine-viewport { position: relative; }
 .model-stage.engine-stage { border: 0; min-height: 390px; aspect-ratio: 16 / 11; max-height: 76vh; }
 .engine-stage .model-stage__hint { max-width: calc(100% - 32px); bottom: 18px; left: 16px; right: 16px; width: fit-content; white-space: normal; line-height: 1.6; }
-.engine-stage-caption { display: flex; position: absolute; top: 18px; left: 18px; right: 18px; justify-content: space-between; gap: 16px; pointer-events: none; font-family: var(--font-mono); font-size: 0.57rem; letter-spacing: 0.10em; color: #73736d; }
+.engine-stage-caption { display: flex; position: absolute; top: 18px; left: 18px; right: 18px; justify-content: space-between; gap: 16px; pointer-events: none; font-family: var(--font-mono); font-size: 0.57rem; letter-spacing: 0.10em; color: #cbd9cf; }
 .engine-stage-caption span:last-child { font-family: var(--font-sans); letter-spacing: 0.02em; }
 .engine-live-strip { display: grid; grid-template-columns: 1fr 1fr 1.15fr; gap: 16px; align-items: center; padding: 16px 18px; border-top: 1px solid var(--rule); }
 .engine-live-strip > div { display: grid; gap: 7px; }
@@ -32,7 +32,7 @@
 .engine-note-head { display: flex; gap: 12px; align-items: start; justify-content: space-between; }
 .engine-trend svg { display: block; width: 100%; height: auto; margin: 12px 0 8px; }
 .engine-chart-grid { stroke: var(--rule); stroke-dasharray: 3 5; stroke-width: 0.7; }
-.engine-chart-text { fill: #77756f; font-size: 9px; font-family: var(--font-sans); }
+.engine-chart-text { fill: var(--ink-3); font-size: 9px; font-family: var(--font-sans); }
 .engine-part-list, .engine-station-list { display: flex; flex-wrap: wrap; gap: 6px; }
 .engine-part-list button, .engine-station-list button { padding: 6px 9px; color: var(--ink-2); border: 1px solid var(--rule); background: var(--paper-card); font-size: 0.72rem; }
 .engine-part-list button:hover, .engine-station-list button:hover { border-color: var(--blueprint); color: var(--blueprint); }
@@ -55,3 +55,5 @@
   .engine-part-card, .engine-trend { padding: 16px 14px; }
   .engine-chart-text { font-size: 16px; }
 }
+
+.engine-part-card,.engine-trend,.engine-discovery{border-radius:var(--radius-card)}.engine-tag{border-radius:var(--radius-pill)}

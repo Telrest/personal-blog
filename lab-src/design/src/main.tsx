@@ -1,4 +1,5 @@
 import { StrictMode } from 'react'
+import { initializeTheme } from './lib/theme'
 import { createRoot } from 'react-dom/client'
 import { RouterProvider } from 'react-router-dom'
 import { router } from './router'
@@ -14,6 +15,9 @@ import './styles/mowan.css'
 import './styles/rainbow.css'
 import './styles/blog-alignment.css'
 import { startRainbowControls } from './lib/rainbow'
+import './styles/site-controls.css'
+
+initializeTheme()
 
 const container = document.getElementById('root')
 

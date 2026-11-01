@@ -2,7 +2,9 @@
 
 一座可以亲手操作的原理展馆：拆开一个东西，改变一个条件，看见它为什么这样工作。
 
-大学网站作业。中文界面，浅色科学展馆风格，模型是视觉中心。
+大学网站作业。中文界面，沿用 Telrest 博客的森林配色、深浅色偏好、胶囊按钮和彩虹悬停光边，模型是视觉中心。
+
+The exhibit shares the blog’s forest palette, saved light/dark preference, pill controls, and rainbow hover edges.
 
 ---
 
@@ -260,3 +262,9 @@ src/exhibits/bone/
   详细限制见 [魔丸模式说明](docs/mowan-mode.md)。
 - 在受限沙箱里跑 `npm run dev` / `npm test` 可能报 `spawn EPERM`：Vite 在 Windows 上会同步
   调用 `net use` 探测磁盘映射，被沙箱拦下。普通终端里运行不受影响。
+
+## 同步博客构建 / Sync the blog bundle
+
+在博客根目录运行 `npm run build:design`，会先检查并构建设计实验，成功后再替换 `public/lab/design/` 的生成文件。源文件保存在 `lab-src/design/`；不要直接编辑压缩产物。
+
+Run `npm run build:design` from the blog root. It checks and builds the experiment before replacing its generated public bundle. Edit the source in `lab-src/design/`, not the compressed files.

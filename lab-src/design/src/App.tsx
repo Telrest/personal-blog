@@ -14,7 +14,7 @@ export function SiteShell() {
   // 魔丸模式是独立游戏入口：占满一屏，不挂展馆页脚，退出时用页头或页面里的「返回展馆」
   const immersive = pathname === '/game'
 
-  // 游戏模式排除主站的彩虹悬停边缘，保留它自己的红色设计语言
+  // 游戏模式标记用于布局；按钮与主站共用交互样式。
   useEffect(() => {
     const root = document.documentElement
     root.classList.toggle('is-game', immersive)

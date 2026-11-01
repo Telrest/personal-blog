@@ -37,7 +37,7 @@
 
 /* 游戏页自己的加载占位（页头下面） */
 .page-game {
-  min-height: calc(100svh - 68px);
+  min-height: calc(100svh - var(--site-header-height, 106px));
 }
 
 .page-game__loading {
@@ -49,7 +49,7 @@
 
 .mowan-viewport {
   position: relative;
-  height: calc(100svh - 68px);
+  height: calc(100svh - var(--site-header-height, 106px));
   min-height: 520px;
   background: linear-gradient(180deg, #c9dcec 0%, #e6e9e3 55%, #182a21 100%);
   overflow: hidden;

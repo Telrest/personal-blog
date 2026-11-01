@@ -73,10 +73,7 @@
     0 5px 16px rgba(158, 154, 255, 0.18);
 }
 
-/* 魔丸模式保留它自己的红色设计语言，不显示彩虹边 */
-html.is-game .rainbow-hover::after {
-  display: none;
-}
+/* Game controls use the same rainbow edge. / 游戏控件沿用相同的彩虹光边。 */
 
 @media (prefers-reduced-motion: reduce) {
   .rainbow-hover::after {

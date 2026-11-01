@@ -1,6 +1,6 @@
 /* ===========================================================================
    设计的秘密 · 设计变量
-   森林深色展馆：深夜森林底 + 米白字 + 铜色强调 + 图纸蓝标注
+   森林深色展馆：深夜森林底 + 暖米白字 + 鼠尾草主操作 + 图纸蓝标注
    （与 Telrest 个人博客的主题同源）
    =========================================================================== */
 
@@ -8,19 +8,48 @@
   color-scheme: dark;
 
   /* 纸面与墨色 ------------------------------------------------------------ */
-  --paper: #12211b;
-  --paper-card: #1a2c23;
-  --paper-inset: #0d1813;
-  --ink: #e6efe2;
-  --ink-2: #b3c4b6;
-  --ink-3: #8ea193;
-  --rule: #2b3f33;
-  --rule-strong: #3c5344;
+  --paper: #11271f;
+  --paper-card: #1a3327;
+  --paper-inset: #0a1711;
+  --ink: #e4eee3;
+  --ink-2: #c6d0c5;
+  --ink-3: #95a798;
+  --rule: #2b4435;
+  --rule-strong: #506b59;
+
+  /* 语义表面与文字 -------------------------------------------------------- */
+  --surface-page: var(--paper);
+  --surface-panel: var(--paper-card);
+  --surface-control: rgba(10, 23, 17, 0.72);
+  --surface-hover: rgba(184, 214, 168, 0.08);
+  --surface-pressed: rgba(184, 214, 168, 0.14);
+  --text-primary: var(--ink);
+  --text-secondary: var(--ink-2);
+  --text-muted: var(--ink-3);
+
+  /* 控件：主操作 / 次操作 / 安静操作 -------------------------------------- */
+  --primary: #b8d6a8;
+  --primary-hover: #c9e2bb;
+  --primary-pressed: #a8c997;
+  --on-primary: #1a3828;
+  --secondary-border: #55705e;
+  --secondary-hover: var(--surface-hover);
+  --secondary-pressed: var(--surface-pressed);
+  --quiet-text: var(--ink-2);
+  --selected-bg: rgba(184, 214, 168, 0.16);
+  --selected-border: rgba(184, 214, 168, 0.58);
+  --selected-text: #edf5e7;
+  --disabled-bg: rgba(241, 237, 225, 0.07);
+  --disabled-text: #7f9284;
+
+  /* 键盘焦点 -------------------------------------------------------------- */
+  --focus-ring: #b8d6a8;
+  --focus-halo: rgba(184, 214, 168, 0.22);
 
   /* 唯一强调色：正在工作的零件 / 当前状态 -------------------------------- */
-  --signal: #cf8a5c;
-  --signal-ink: #e8b48c;
-  --signal-wash: #2e2419;
+  --signal: #b8d6a8;
+  --signal-ink: #c5dfb7;
+  --signal-wash: #b8d6a81a;
 
   /* 图纸蓝：尺寸线、引线、来源标记 ---------------------------------------- */
   --blueprint: #6aa6d6;
@@ -29,6 +58,7 @@
   /* 状态词（文字优先，颜色只是辅助） -------------------------------------- */
   --ok: #7fd0a4;
   --warn: #e0b44f;
+  --error: #e17a6c;
 
   /* 字体 ------------------------------------------------------------------ */
   --font-sans: "PingFang SC", "HarmonyOS Sans SC", "Source Han Sans SC",
@@ -37,17 +67,61 @@
   --font-mono: "JetBrains Mono", "Cascadia Mono", "SFMono-Regular", Consolas,
     "Liberation Mono", monospace;
 
-  /* 尺寸 ------------------------------------------------------------------ */
+  /* 尺寸与圆角 ------------------------------------------------------------ */
   --step: 8px;
   --shell: 1200px;
-  --radius: 12px;
+  --radius-pill: 999px;
+  --radius-input: 12px;
+  --radius-card: 20px;
+  --radius-panel: 24px;
+  --radius: var(--radius-input);
   --gutter: clamp(16px, 4vw, 48px);
 
   /* 动效：入场 / 退场 / 状态切换（参考 teardown 的节奏约定） --------------- */
   --ease-in: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-out: cubic-bezier(0.6, 0, 0.9, 0.35);
   --ease-change: cubic-bezier(0.65, 0, 0.35, 1);
+  --transition-fast: 140ms var(--ease-change);
+  --transition-control: 180ms var(--ease-change);
+  --transition-surface: 240ms var(--ease-change);
 
   /* 纸张网格：极低对比度的工程纸 ------------------------------------------ */
-  --grid-line: rgba(230, 239, 226, 0.045);
+  --grid-line: rgba(241, 237, 225, 0.045);
+}
+
+html[data-theme="light"] {
+  color-scheme: light;
+
+  --paper: #f0f4eb;
+  --paper-card: #f9fbf5;
+  --paper-inset: #e3ecdd;
+  --ink: #1d3226;
+  --ink-2: #445a4b;
+  --ink-3: #6a7e6e;
+  --rule: #d5e0d1;
+  --rule-strong: #b6c2b4;
+
+  --surface-control: rgba(255, 255, 255, 0.82);
+  --surface-hover: rgba(26, 56, 40, 0.06);
+  --surface-pressed: rgba(26, 56, 40, 0.11);
+  --secondary-border: #9aad96;
+  --quiet-text: #445a4b;
+  --selected-bg: #dcebd4;
+  --selected-border: #8fab88;
+  --selected-text: #1a3828;
+  --disabled-bg: rgba(29, 50, 38, 0.07);
+  --disabled-text: #8a978b;
+  --focus-ring: #386345;
+  --focus-halo: rgba(56, 99, 69, 0.18);
+
+  /* 语义与图纸色相不变，仅按浅底提高对比 */
+  --signal: #487344;
+  --signal-ink: #365c33;
+  --signal-wash: #48734414;
+  --ok: #2f7a53;
+  --warn: #8a6517;
+  --error: #a84436;
+  --blueprint: #2f6f9f;
+  --blueprint-wash: #e2ecf3;
+  --grid-line: rgba(29, 50, 38, 0.06);
 }
