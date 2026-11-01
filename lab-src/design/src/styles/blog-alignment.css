@@ -5,6 +5,13 @@
    魔丸模式（html.is-game）保持它自己的红色与方形设计语言。
    =========================================================================== */
 
+/* ---------- 魔丸模式：强调色恢复成它原来自带的朱红 ---------- */
+html.is-game {
+  --signal: #b8432d;
+  --signal-ink: #8f3425;
+  --signal-wash: #f5e6df;
+}
+
 /* ---------- 按钮：墨绿胶囊 ---------- */
 html:not(.is-game) :is(.btn, button, .site-nav__link, .segmented__item, .exhibit-nav__item) {
   border-radius: 100px;
