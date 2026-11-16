@@ -5,6 +5,8 @@ import '../../styles/writing.css';
 import '../../styles/cloud-writing.css';
 import '../../styles/publishing.css';
 import '../../styles/prose.css';
+import 'katex/dist/katex.min.css';
+import '../../styles/math.css';
 const base = import.meta.env.BASE_URL;
 ---
 <Layout title="写作空间 · Telrest" description="导入文章，慢慢整理想法。Telrest 的写作空间。">
@@ -31,7 +33,7 @@ const base = import.meta.env.BASE_URL;
     <section class="writing-workbench" aria-label="正文编辑与预览">
       <div class="workbench-header"><div class="view-tabs" role="group" aria-label="切换编辑视图"><button data-view="split" aria-pressed="true">双栏</button><button data-view="edit" aria-pressed="false">编辑</button><button data-view="preview" aria-pressed="false">预览</button></div><span id="word-count">0 字符</span></div>
       <div class="workbench-columns" data-view="split">
-        <div class="editor-pane"><div class="format-toolbar" role="group" aria-label="正文排版工具"><button data-format="heading" title="二级标题">标题</button><button data-format="bold" title="加粗"><strong>B</strong></button><button data-format="italic" title="斜体"><em>I</em></button><button data-format="quote">引用</button><button data-format="list">列表</button><button data-format="link">链接</button><button data-format="code">代码</button></div><label class="screen-reader-only" for="article-body">文章正文，使用 Markdown 编辑</label><textarea id="article-body" spellcheck="false" placeholder="从这里开始写，或者导入已经写好的 .md / .txt 文章。&#10;&#10;选中文字后，可以用上面的按钮调整排版。"></textarea></div>
+        <div class="editor-pane"><div class="format-toolbar" role="group" aria-label="正文排版工具"><button data-format="heading" title="二级标题">标题</button><button data-format="bold" title="加粗"><strong>B</strong></button><button data-format="italic" title="斜体"><em>I</em></button><button data-format="quote">引用</button><button data-format="list">列表</button><button data-format="link">链接</button><button data-format="code">代码</button></div><p id="writing-math-hint" class="math-writing-hint">公式：<code>$...$</code> 写在段落里；独立公式用 <code>$$</code> 各占一行包住。</p><label class="screen-reader-only" for="article-body">文章正文，使用 Markdown 编辑</label><textarea id="article-body" aria-describedby="writing-math-hint" spellcheck="false" placeholder="从这里开始写，或者导入已经写好的 .md / .txt 文章。&#10;&#10;选中文字后，可以用上面的按钮调整排版。"></textarea></div>
         <section class="preview-pane" aria-label="文章阅读预览"><p class="preview-label">阅读预览</p><h2 id="preview-title">未命名文章</h2><div id="article-preview" class="prose"><p class="preview-empty">文字会在这里慢慢成形。</p></div></section>
       </div>
     </section>

@@ -1,4 +1,4 @@
-import { marked } from 'marked';
+import { renderMarkdownWithMath } from '../lib/math-markdown';
 import DOMPurify from 'dompurify';
 import { parseImportedArticle } from '../lib/import-article';
 import { exportMarkdown, validateDraft } from '../lib/article';
@@ -26,9 +26,9 @@ function render() {
   get('preview-title').textContent=title.value.trim()||'未命名文章';
   get('word-count').textContent=`${[...body.value].length.toLocaleString('zh-CN')} 字符`;
   if (body.value.length>1_000_000) { notify('正文超过 100 万字符，暂时停止预览。',true); return; }
-  preview.innerHTML = body.value.trim() ? DOMPurify.sanitize(marked.parse(body.value,{async:false,gfm:true}), {
+  preview.innerHTML = body.value.trim() ? renderMarkdownWithMath(body.value, html => DOMPurify.sanitize(html, {
     USE_PROFILES:{html:true},FORBID_TAGS:['style','form','input','button','iframe','object','embed'],FORBID_ATTR:['style','srcset'],
-  }) : '<p class="preview-empty">文字会在这里慢慢成形。</p>';
+  })) : '<p class="preview-empty">文字会在这里慢慢成形。</p>';
   preview.querySelectorAll<HTMLAnchorElement>('a').forEach(link => {link.target='_blank';link.rel='noopener noreferrer';});
   preview.querySelectorAll<HTMLImageElement>('img').forEach(image=>{image.loading='lazy';image.referrerPolicy='no-referrer';});
 }

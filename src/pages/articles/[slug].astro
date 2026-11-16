@@ -5,6 +5,8 @@ import Comments from '../../components/Comments.astro';
 import { getPublishedPosts, renderMarkdown } from '../../lib/posts';
 import type { PublishedArticle } from '../../lib/publication';
 import '../../styles/prose.css';
+import 'katex/dist/katex.min.css';
+import '../../styles/math.css';
 import '../../styles/articles.css';
 
 export async function getStaticPaths() {
