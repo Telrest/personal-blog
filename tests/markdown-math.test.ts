@@ -1,7 +1,7 @@
 import { strict as assert } from 'node:assert';
 import { test } from 'node:test';
 import sanitizeHtml from 'sanitize-html';
-import { renderMarkdownWithMath } from '../src/lib/math-markdown.ts';
+import { renderMarkdownWithMath } from '../src/features/articles/logic/math-markdown.ts';
 
 const render = (markdown: string) => renderMarkdownWithMath(markdown, sanitizeHtml);
 

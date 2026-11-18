@@ -1,6 +1,6 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import {DraftSession} from '../src/lib/draft-session.ts';
-import {parseBackendConfig} from '../src/lib/backend-config.ts';
+import {DraftSession} from '../src/features/writing/logic/draft-session.ts';
+import {parseBackendConfig} from '../src/shared/data/backend-config.ts';
 const empty={title:'',summary:'',category:'学习笔记',tags:[] as string[],slug:'',markdown:''};
 const row=(document=empty,version=1)=>({...document,id:'a',owner_id:'owner',version,created_at:'2026-10-22T00:00:00Z',updated_at:'2026-10-22T00:00:00Z'});
 test('private/legacy keys are rejected before bundling; incomplete config fails closed',()=>{

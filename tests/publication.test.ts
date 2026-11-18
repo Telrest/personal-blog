@@ -1,7 +1,8 @@
+import { preparePublishedBackup, cleanupVerifiedBackup, verifyDownloadedBackup, type Publisher } from '../src/features/publishing/logic/publication-workflow.ts';
 import test from 'node:test';import assert from 'node:assert/strict';
 import {makeBackup,parseBackup,fingerprint,articleRevision,validatePublished,requireCleanup,documentOf} from '../supabase/functions/_shared/publication.ts';
-import {PublishingService} from '../supabase/functions/_shared/publishing-service.ts';
-import {writeVerifiedBackup} from '../src/lib/local-backup.ts';
+import {PublishingService} from '../supabase/functions/blog-publish/logic/service.ts';
+import {writeVerifiedBackup} from '../src/features/publishing/data/local-backup.ts';
 const id='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',owner='11111111-1111-4111-8111-111111111111';
 const document={title:'想法与文字',summary:'摘要',category:'见解与思考',tags:['生活'],slug:'first-post',markdown:'## 正文\n\n私密草稿中的定稿'};
 const snapshot=()=>({draft:{...document,id,owner_id:owner,version:2,archived:false,created_at:'2026-10-22T00:00:00Z',updated_at:'2026-10-22T01:00:00Z'},revisions:[{id:'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',version:1,created_at:'2026-10-22T00:00:00Z',snapshot:{...document,markdown:'不应发布的旧版本'}}]});
@@ -31,3 +32,43 @@ test('publication retry after a lost response is idempotent',async()=>{const r=r
 test('updates preserve identity and first publication time, with explicit revision conflict checks',async()=>{const old={...await post(),markdown:'先前的定稿'};old.revision_id=await articleRevision(old);const r=remote({existing:old});await assert.rejects(()=>r.service.publish(id,2,null),/另一处/);assert.equal(r.writes.length,0);const result=await r.service.publish(id,2,old.revision_id);assert.equal(result.post.id,old.id);assert.equal(result.post.published_at,old.published_at);assert.equal(r.writes[0].sha,'file-sha');});
 test('GitHub failure never removes the private draft',async()=>{const r=remote({failWrite:true});await assert.rejects(()=>r.service.publish(id,2,null),/GitHub/);assert.equal(r.removed(),0);});
 test('cleanup requires deployment, backup verification and exact snapshot before deleting',async()=>{const p=await post(),base={id,version:2,slug:p.slug,revision:p.revision_id,snapshotFingerprint:await fingerprint(snapshot()),backupVerified:true};const unpublished=remote({existing:p,live:false});await assert.rejects(()=>unpublished.service.cleanup(base),/上线/);assert.equal(unpublished.removed(),0);const r=remote({existing:p,live:true});await assert.rejects(()=>r.service.cleanup({...base,backupVerified:false}),/备份/);await assert.rejects(()=>r.service.cleanup({...base,snapshotFingerprint:'0'.repeat(64)}),/已改变/);assert.equal(r.removed(),0);await r.service.cleanup(base);assert.equal(r.removed(),1);});
+
+async function workflow() {
+  const article = await post();
+  const calls: string[] = [];
+  const publisher: Publisher = {
+    capabilities: async () => ({ configured: true, message: '' }),
+    preview: async () => { calls.push('preview'); return { existing: null, url: '/articles/first-post/' }; },
+    publish: async (draft, expected) => {
+      assert.deepEqual(draft, { id, version: 2 });
+      assert.equal(expected, null);
+      calls.push('publish');
+      return { post: article, url: '/articles/first-post/' };
+    },
+    status: async () => { calls.push('status'); return { deployed: calls.filter(c => c === 'status').length === 2 }; },
+    prepareComments: async () => { calls.push('comments'); },
+    snapshot: async draft => { assert.deepEqual(draft, { id, version: 2 }); calls.push('snapshot'); return snapshot(); },
+    cleanup: async proof => { assert.equal(proof.backupVerified, true); calls.push('cleanup'); },
+  };
+  const options = { confirm: () => true, cancelled: () => false, report: () => {}, history: [], wait: async () => {} };
+  return { publisher, calls, options };
+}
+
+test('browser prepares backup only after the version is live and comments are ready', async () => {
+  const { publisher, calls, options } = await workflow();
+  const result = await preparePublishedBackup(publisher, { id, version: 2 }, options);
+  assert.ok(result);
+  assert.deepEqual(calls, ['preview', 'publish', 'status', 'status', 'comments', 'snapshot']);
+  assert.throws(() => verifyDownloadedBackup(result.backup, { ...result.backup, fingerprint: 'wrong' }), /校验|未清理/);
+  verifyDownloadedBackup(result.backup, await parseBackup(JSON.stringify(result.backup)));
+  await cleanupVerifiedBackup(publisher, result.backup);
+  assert.equal(calls.at(-1), 'cleanup');
+});
+
+test('cancelling while the final live status is in flight protects the cloud draft', async () => {
+  const { publisher, calls, options } = await workflow();
+  let cancelled = false;
+  publisher.status = async () => { calls.push('status'); cancelled = true; return { deployed: true }; };
+  await assert.rejects(() => preparePublishedBackup(publisher, { id, version: 2 }, { ...options, cancelled: () => cancelled }), /已停止等待/);
+  assert.deepEqual(calls, ['preview', 'publish', 'status']);
+});

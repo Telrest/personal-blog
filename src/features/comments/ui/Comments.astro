@@ -1,5 +1,5 @@
 ---
-import Icon from '../../../components/Icon.astro';
+import Icon from '../../../shared/ui/Icon.astro';
 import { COMMENT_MAX_LENGTH } from '../logic/model';
 import './comments.css';
 interface Props{articleId:string;slug:string;}
@@ -13,6 +13,6 @@ const {articleId,slug}=Astro.props;
   <ol class="comment-list" data-comment-list></ol><button type="button" class="site-auth-button" data-comment-more hidden>更多留言</button>
 </section>
 <script>
-  import '../../../scripts/site-auth';
+  import '../../auth/ui/site-auth';
   import './mount-comments';
 </script>

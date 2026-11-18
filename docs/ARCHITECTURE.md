@@ -1,14 +1,25 @@
 # 博客源码结构
 
-博客逐步改为先按功能组织，每个功能再按需拆分展示、逻辑和数据存取。现阶段已完成评论模块，其余页面暂时保留原目录。
+修改功能时，在对应模块里找界面、流程或数据读写。页面地址由 Astro 路由提供，文章详情路由也负责列出要生成的文章。
 
-| 改动内容 | 首选位置 |
-| --- | --- |
-| 评论区结构、文案、样式与事件 | `src/features/comments/ui/` |
-| 评论翻页状态、去重、提交及登录变化处理 | `src/features/comments/logic/` |
-| Supabase 查询、分页条件、评论写入和开启评论区 | `src/features/comments/data/` |
-| 评论表、写入限频、数据库访问策略 | `supabase/migrations/`（新变更新建迁移） |
+| 功能                                   | 源码位置                                                 |
+| -------------------------------------- | -------------------------------------------------------- |
+| 首页、滚动和导航                       | src/features/home/ui/                                    |
+| 关于页与自我介绍                       | src/features/about/ui/、src/features/about/data/about.ts |
+| 文章列表、详情、Markdown 与 LaTeX      | src/features/articles/{ui,logic,data}/                   |
+| GitHub 登录、作者识别、跳转状态        | src/features/auth/{ui,logic,data}/                       |
+| 写作、排版、私密草稿、归档和历史       | src/features/writing/{ui,logic,data}/                    |
+| 发布确认、本地备份、导入恢复和清理     | src/features/publishing/{ui,logic,data}/                 |
+| 评论列表、提交、开启评论区             | src/features/comments/{ui,logic,data}/                   |
+| 实验目录、照片转字符画、快速排序       | src/features/lab/{catalog,photo,quicksort}/              |
+| 《设计的秘密》的展品、小游戏和成绩计算 | lab-src/design/src/                                      |
+| 全站布局、主题、光标与通用按钮         | src/shared/ui/                                           |
+| 站点信息与 Supabase 客户端配置         | src/shared/data/                                         |
 
-页面路由负责装配功能。评论界面订阅登录状态、转发用户操作并绘制结果；控制器通过 `CommentStore` 接口执行流程，可用模拟数据测试；数据适配器处理 Supabase 的读写和错误映射。文章发布和文章评论共用一个开启评论区的调用。
+- **ui** 负责页面结构、样式、事件绑定和状态展示。跨模块的页面入口位于 src/pages/。
+- **logic** 负责排版、数据转换、权限状态、保存顺序和发布确认。草稿与发布逻辑接收读写接口，可以用测试数据验证。浏览器预览与静态文章共用公式解析，各自使用适用的 HTML 清理器。
+- **data** 读写 Supabase、浏览器存储、本地文件或站内资源。新文章公开定稿仍由 src/content/published/ 提供。
 
-评论展示仅接受公开字段，使用纯文字呈现正文。真实写入权限和频率限制仍由数据库强制执行。运行 `npm test` 可同时检查评论控制器及数据库权限。
+Supabase 发布入口位于 supabase/functions/blog-publish/index.ts。服务逻辑在 logic/，GitHub 文件、Pages 上线状态和草稿快照由 data/ 读取。浏览器与发布服务共用 supabase/functions/_shared/publication.ts 中的文章和备份协议。数据库表及权限规则位于 supabase/migrations/，通过新的迁移文件更新。
+
+运行 npm test 验证博客逻辑与数据库权限，运行 npm run build 验证 GitHub Pages 静态构建。运行 npm run prepare:publisher 生成可部署的 Supabase 函数。设计实验可在 lab-src/design/ 下单独运行 npm test。

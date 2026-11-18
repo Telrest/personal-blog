@@ -1,0 +1,211 @@
+---
+import Layout from '../../../../shared/ui/Layout.astro';
+import Icon from '../../../../shared/ui/Icon.astro';
+import '../../shared/ui/lab.css';
+const base = import.meta.env.BASE_URL;
+---
+<Layout
+  title="小伙的照片打印 · Telrest"
+  description="把一张照片拆成几万个字符，再按亮度重新拼回来。先看本站图标，也可以换成你自己的照片。"
+>
+  <main id="main" class="lab-page">
+    <header class="lab-hero">
+      <a class="lab-back" href={base}><Icon name="arrow" size={15} class="flip-arrow" />回到首页</a>
+      <p class="lab-eyebrow">TELREST / LAB <span>EXPERIMENT NO. 002</span></p>
+      <h1>小伙的照片打印</h1>
+      <p class="lab-lead">把一张照片拆成几万个字符，再按亮度重新拼回来。<br />页面打开时先拿本站图标做示例，然后可以换成你自己的照片。</p>
+      <p class="lab-code">示例 / Demo · <strong>本站图标</strong></p>
+    </header>
+
+    <div class="lab-body lab-body-wide">
+      <section class="card" aria-labelledby="pp-title">
+        <div class="section-head">
+          <h2 id="pp-title">字符画 <span lang="en">/ ASCII art</span></h2>
+          <span id="pp-meta" class="pivot-label" hidden></span>
+        </div>
+
+        <div class="pp-source">
+          <button id="pp-demo" type="button" class="secondary is-on">示例 · 本站图标</button>
+          <button id="pp-pick" type="button" class="secondary">选择自己的照片</button>
+          <input id="pp-file" type="file" accept="image/*" hidden />
+          <span id="pp-status" class="status" role="status">准备中 / Loading</span>
+        </div>
+
+        <div class="actions pp-actions">
+          <button id="pp-play" type="button">播放 / Play</button>
+          <button id="pp-finish" type="button" class="secondary">立即完成 / Finish</button>
+          <button id="pp-hold" type="button" class="secondary pp-hold">按住看原图 / Hold</button>
+        </div>
+
+        <div class="pp-controls">
+          <label>字符宽度 <span lang="en">/ Width</span>
+            <input id="pp-width" type="range" min="80" max="600" step="20" value="320" />
+          </label>
+          <label>字符集 <span lang="en">/ Charset</span>
+            <select id="pp-mode">
+              <option value="detail">详细字符 / Detail</option>
+              <option value="braille">点阵 / Braille</option>
+            </select>
+          </label>
+          <label>速度 <span lang="en">/ Speed</span>
+            <select id="pp-speed">
+              <option value="6">慢 / Slow</option>
+              <option value="3" selected>正常 / Normal</option>
+              <option value="1.2">快 / Fast</option>
+            </select>
+          </label>
+          <label class="pp-check"><input id="pp-light" type="checkbox" /> 浅底黑字</label>
+          <label class="pp-check"><input id="pp-enhance" type="checkbox" checked /> 增强对比</label>
+          <label class="pp-check"><input id="pp-follow" type="checkbox" checked /> 跟随打印</label>
+        </div>
+
+        <div id="pp-stage" class="pp-stage">
+          <pre id="pp-art" class="pp-art"></pre>
+          <img id="pp-original" class="pp-original" alt="原图对照" hidden />
+        </div>
+
+        <p class="hint">每个字符代表原图里的一小块，按区域平均亮度映射到字符梯度。照片只在你的浏览器里处理，不会上传到任何服务器。</p>
+      </section>
+
+      <footer class="lab-foot">
+        <p>原程序用 C 编写，这里把同一套算法搬到了浏览器：灰度公式、67 级字符梯度、直方图拉伸与锐化、点阵误差扩散。</p>
+        <p>参考 <a href="https://github.com/Telrest" target="_blank" rel="noopener noreferrer">Telrest</a> · C · JavaScript</p>
+      </footer>
+    </div>
+  </main>
+</Layout>
+
+<script>import './photo-lab.js';</script>
+
+<style>
+  /* 字符画页需要更宽的画布，才装得下高密度字符 / Wider canvas for dense output. */
+  .lab-body-wide { width: min(1440px, 100%); }
+
+  .pp-source {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin: 6px 0 18px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .pp-source .status { margin-left: auto; }
+  .lab-page .pp-source button.is-on {
+    background: #23483a;
+    border-color: #23483a;
+    color: #f3f6eb;
+  }
+  html:not([data-theme=light]) .lab-page .pp-source button.is-on {
+    background: #2f5a48;
+    border-color: #2f5a48;
+  }
+
+  .pp-actions { margin-bottom: 6px; }
+
+  .pp-controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(168px, 1fr));
+    gap: 16px 20px;
+    margin: 20px 0 22px;
+    padding-top: 4px;
+  }
+  .lab-page .pp-controls label {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 0;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .lab-page .pp-controls select {
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    padding: 9px 10px;
+    font-size: 11px;
+    border-radius: 9px;
+  }
+  .pp-controls input[type='range'] {
+    width: 100%;
+    margin: 0;
+    accent-color: #23483a;
+    cursor: pointer;
+  }
+  html:not([data-theme=light]) .pp-controls input[type='range'] { accent-color: #8fae78; }
+  .lab-page .pp-controls .pp-check {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    font-weight: 400;
+    font-size: 11.5px;
+    color: var(--muted);
+    padding-top: 20px;
+  }
+  .pp-check input[type='checkbox'] {
+    width: 15px;
+    height: 15px;
+    accent-color: #23483a;
+    margin: 0;
+    cursor: pointer;
+  }
+  html:not([data-theme=light]) .pp-check input[type='checkbox'] { accent-color: #8fae78; }
+
+  .pp-stage {
+    height: clamp(400px, 72vh, 920px);
+    overflow: auto;
+    /* 常驻滚动条位置，避免滚动条出现/消失改变可用尺寸。 */
+    /* Reserve the scrollbar gutter so its appearance cannot shift the layout. */
+    scrollbar-gutter: stable;
+    padding: 18px;
+    border-radius: 16px;
+    background: #0f1b16;
+    border: 1px solid #26382e;
+  }
+  .pp-stage.is-light {
+    background: #f7f7f2;
+    border-color: #dde3d6;
+  }
+  .pp-art {
+    margin: 0 auto;
+    width: max-content;
+    font-family: ui-monospace, Consolas, 'Courier New', monospace;
+    font-size: 6px;
+    line-height: 1;
+    letter-spacing: 0;
+    white-space: pre;
+    color: #dbe7d3;
+  }
+  .pp-stage.is-light .pp-art { color: #24342b; }
+  /* 盲文区块在等宽字体里通常缺失，显式指定带字形的字体，宽度才一致。 */
+  /* Monospace fonts rarely ship the braille block; use fonts that do. */
+  .pp-art.is-braille {
+    font-family: 'Segoe UI Symbol', 'Apple Symbols', 'Noto Sans Symbols 2', 'DejaVu Sans', 'Symbols Nerd Font', ui-monospace, monospace;
+  }
+  .pp-original {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 8px;
+  }
+  .lab-page .pp-hold.is-on {
+    background: #2c5846;
+    border-color: #2c5846;
+    color: #f3f6eb;
+  }
+  html:not([data-theme=light]) .lab-page .pp-hold.is-on {
+    background: #3a6b56;
+    border-color: #3a6b56;
+  }
+
+  @media (max-width: 760px) {
+    .pp-stage { height: clamp(320px, 64vh, 640px); padding: 14px; }
+    .pp-controls { grid-template-columns: 1fr; gap: 14px; }
+    .lab-page .pp-controls .pp-check { padding-top: 0; }
+    .pp-source .status { margin-left: 0; }
+    /* iOS 聚焦小于 16px 的控件会强制放大页面。 */
+    /* iOS zooms the page when a focused control is under 16px. */
+    .lab-page .pp-controls select { font-size: 16px; }
+  }
+</style>

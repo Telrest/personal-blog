@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { parseImportedArticle } from '../src/lib/import-article.ts';
-import { exportMarkdown, validateDraft } from '../src/lib/article.ts';
+import { parseImportedArticle } from '../src/features/writing/logic/import-article.ts';
+import { exportMarkdown, validateDraft } from '../src/features/writing/logic/article.ts';
 test('Markdown BOM/CRLF and first heading become editable metadata',()=>{
   const article=parseImportedArticle('\uFEFF# 我的文章\r\n\r\n正文。','example.md');
   assert.equal(article.title,'我的文章');assert.equal(article.markdown,'正文。');

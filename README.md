@@ -25,7 +25,7 @@ Expected URL: https://telrest.github.io/personal-blog/
 
 ## 内容与图片 / Content and artwork
 
-- 个人信息：`src/data/site.ts`；首页：`src/pages/index.astro`；样式：`src/styles/global.css`。
+- 个人信息：`src/shared/data/site.ts`；首页：`src/features/home/ui/HomePage.astro`；样式：`src/shared/ui/global.css`。
 - Wallpaper: `public/images/forest-wallpaper.jpg`. Supplied by the owner; artist and license currently unconfirmed. See `ASSETS.md`.
 - There are no published articles yet. Category names are provisional. No sample posts are presented as real writing.
 - `admin/` 支持 Markdown 编辑、文件及粘贴导入、排版、清理后的预览和导出。配置 Supabase 后可用 GitHub 登录，作者可以自动或手动保存私密草稿、归档和查看历史版本。接入步骤见 [私密草稿配置](docs/PRIVATE-DRAFTS-SETUP.md)。未配置时仍为本次页面试写，离开前请导出；不把草稿存入 localStorage。图片上传及评论稍后接入。
